@@ -1,0 +1,31 @@
+[project]
+name = "medicine-agent"
+version = "0.1.0"
+description = "Provider-neutral medical knowledge skill runtime and experimental package pipeline"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "httpx>=0.28,<1",
+    "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+medicine-agent = "medicine_agent.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<10",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.18,<0.13"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.uv.build-backend]
+module-name = "medicine_agent"
+module-root = "src"
+

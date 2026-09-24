@@ -1,0 +1,10 @@
+[skill]
+skill_id = "material-ingestion"
+version = "0.1.0"
+name = "Material Ingestion"
+description = "Read a UTF-8 Markdown or TXT test material and preserve source identity and fragment positions."
+entrypoint = "medicine_agent.skills.material_ingestion.handler:MaterialIngestionSkill"
+input_model = "MaterialIngestionInput"
+output_model = "MaterialIngestionOutput"
+permissions = ["read_local_file"]
+

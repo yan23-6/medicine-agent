@@ -1,0 +1,10 @@
+[skill]
+skill_id = "knowledge-distillation"
+version = "0.1.0"
+name = "Knowledge Distillation"
+description = "Produce minimal evidence-linked knowledge candidates for protocol validation."
+entrypoint = "medicine_agent.skills.knowledge_distillation.handler:KnowledgeDistillationSkill"
+input_model = "KnowledgeDistillationInput"
+output_model = "KnowledgeDistillationOutput"
+permissions = ["optional_model_call"]
+

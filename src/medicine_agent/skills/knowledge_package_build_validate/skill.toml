@@ -1,0 +1,10 @@
+[skill]
+skill_id = "knowledge-package-build-validate"
+version = "0.1.0"
+name = "Knowledge Package Build and Validate"
+description = "Build and validate an atomic directory-form experimental knowledge package."
+entrypoint = "medicine_agent.skills.knowledge_package_build_validate.handler:KnowledgePackageBuildValidateSkill"
+input_model = "KnowledgePackageBuildValidateInput"
+output_model = "KnowledgePackageBuildValidateOutput"
+permissions = ["write_candidate_package"]
+
