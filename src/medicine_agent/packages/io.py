@@ -73,6 +73,7 @@ def validate_package_path(package_path: Path) -> QualityReport:
             )
     evidence = {item["evidence_id"] for item in read_jsonl(package_path / "evidence.jsonl")}
     knowledge = read_jsonl(package_path / "knowledge.jsonl")
+    raw_fields = read_jsonl(package_path / "raw_fields.jsonl")
     for item in knowledge:
         for evidence_id in item.get("evidence_refs", []):
             if evidence_id not in evidence:
@@ -84,13 +85,34 @@ def validate_package_path(package_path: Path) -> QualityReport:
                         path=item.get("knowledge_id"),
                     )
                 )
+    for item in raw_fields:
+        status = item.get("mapping_status")
+        if status == "ambiguous":
+            issues.append(
+                SkillIssue(
+                    code="AMBIGUOUS_FIELD_MAPPING",
+                    severity=IssueSeverity.WARNING,
+                    message=f"Ambiguous field mapping preserved: {item.get('raw_key', '')}",
+                    path=item.get("observation_id"),
+                )
+            )
+        elif status == "unmapped":
+            issues.append(
+                SkillIssue(
+                    code="UNMAPPED_FIELD_PRESERVED",
+                    severity=IssueSeverity.WARNING,
+                    message=f"Unmapped field preserved: {item.get('raw_key', '')}",
+                    path=item.get("observation_id"),
+                )
+            )
     counts = {
         "sources": len(read_jsonl(package_path / "sources.jsonl")),
         "fragments": len(read_jsonl(package_path / "fragments.jsonl")),
         "evidence": len(evidence),
-        "raw_fields": len(read_jsonl(package_path / "raw_fields.jsonl")),
+        "raw_fields": len(raw_fields),
         "knowledge": len(knowledge),
         "relations": len(read_jsonl(package_path / "relations.jsonl")),
+        "runs": len(read_jsonl(package_path / "runs.jsonl")),
     }
     return QualityReport(
         valid=not any(issue.severity == IssueSeverity.ERROR for issue in issues),

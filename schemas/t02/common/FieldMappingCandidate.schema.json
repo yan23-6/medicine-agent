@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "canonical_field": {
+      "title": "Canonical Field",
+      "type": "string"
+    },
+    "confidence": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    }
+  },
+  "required": [
+    "canonical_field",
+    "rationale"
+  ],
+  "title": "FieldMappingCandidate",
+  "type": "object"
+}

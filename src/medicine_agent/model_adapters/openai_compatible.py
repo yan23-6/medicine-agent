@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import httpx
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from medicine_agent.runtime.errors import ModelCallFailedError, ModelConfigMissingError
 
@@ -26,12 +26,17 @@ class LlmConfig(BaseModel):
 def load_llm_config(path: Path) -> LlmConfig:
     if not path.exists():
         raise ModelConfigMissingError(f"LLM config not found: {path}")
-    with path.open("rb") as stream:
-        payload = tomllib.load(stream).get("llm", {})
-    env_key = os.getenv("MEDICINE_AGENT_LLM_API_KEY")
-    if env_key:
-        payload["api_key"] = env_key
-    config = LlmConfig.model_validate(payload)
+    try:
+        with path.open("rb") as stream:
+            payload = tomllib.load(stream).get("llm", {})
+        env_key = os.getenv("MEDICINE_AGENT_LLM_API_KEY")
+        if env_key:
+            payload["api_key"] = env_key
+        config = LlmConfig.model_validate(payload)
+    except (OSError, tomllib.TOMLDecodeError, ValidationError) as exc:
+        raise ModelConfigMissingError(
+            "LLM config is invalid or unreadable"
+        ) from exc
     if not config.base_url or not config.api_key or not config.model:
         raise ModelConfigMissingError(
             "base_url, api_key and model are required for live LLM calls"
@@ -68,7 +73,7 @@ class OpenAICompatibleModelClient:
                 response.raise_for_status()
                 content = response.json()["choices"][0]["message"]["content"]
                 result = json.loads(content)
-        except (httpx.HTTPError, KeyError, TypeError, json.JSONDecodeError) as exc:
+        except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
             raise ModelCallFailedError(
                 "OpenAI-compatible request failed",
                 details={"provider": self.provider, "model": self.model},

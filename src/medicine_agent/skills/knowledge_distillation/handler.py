@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from pydantic import ValidationError
+
 from medicine_agent.domain.ids import stable_id
-from medicine_agent.domain.models import GenerationMethod, KnowledgeCandidate
+from medicine_agent.domain.models import EvidenceRecord, GenerationMethod, KnowledgeCandidate
 from medicine_agent.runtime.base import SkillContext, manifest_path
-from medicine_agent.runtime.errors import ModelConfigMissingError
+from medicine_agent.runtime.errors import ModelConfigMissingError, OutputSchemaInvalidError
 from medicine_agent.runtime.manifest import load_manifest
 from medicine_agent.skills.knowledge_distillation.models import (
     KnowledgeDistillationInput,
     KnowledgeDistillationOutput,
+    GeneratedKnowledgePayload,
 )
 
 
@@ -22,12 +25,12 @@ class KnowledgeDistillationSkill:
         if value.use_model and context.model_client is None:
             raise ModelConfigMissingError("A model client is required when use_model is true")
         knowledge: list[KnowledgeCandidate] = []
-        for item in value.evidence:
-            readable = (
-                item.corrected_text
-                if item.correction_status == "confirmed" and item.corrected_text
-                else item.raw_text
-            )
+        groups = [value.evidence] if value.combine_evidence and value.evidence else [
+            [item] for item in value.evidence
+        ]
+        for group in groups:
+            readable_parts = [_readable_text(item) for item in group]
+            readable = "\n\n".join(readable_parts)
             if value.use_model:
                 assert context.model_client is not None
                 generated = context.model_client.generate_json(
@@ -45,14 +48,21 @@ class KnowledgeDistillationSkill:
                         },
                     },
                 )
-                label = str(generated["label"])
-                statement = str(generated["statement"])
+                try:
+                    parsed = GeneratedKnowledgePayload.model_validate(generated)
+                except ValidationError as exc:
+                    raise OutputSchemaInvalidError(
+                        "Model output failed the knowledge payload schema",
+                        details={"errors": exc.errors(include_url=False)},
+                    ) from exc
+                label = parsed.label
+                statement = parsed.statement
                 method = GenerationMethod.MODEL
             else:
                 label = readable.splitlines()[0][:80]
                 statement = readable
                 method = GenerationMethod.RULE
-            evidence_refs = [item.evidence_id]
+            evidence_refs = [item.evidence_id for item in group]
             knowledge.append(
                 KnowledgeCandidate(
                     knowledge_id=stable_id(
@@ -71,4 +81,10 @@ class KnowledgeDistillationSkill:
                 )
             )
         return KnowledgeDistillationOutput(knowledge=knowledge)
+
+
+def _readable_text(item: EvidenceRecord) -> str:
+    if item.correction_status == "confirmed" and item.corrected_text:
+        return item.corrected_text
+    return item.raw_text
 

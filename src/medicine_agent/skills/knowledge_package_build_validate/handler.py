@@ -65,6 +65,7 @@ class KnowledgePackageBuildValidateSkill:
                 "raw_fields.jsonl": [item.model_dump(mode="json") for item in value.raw_fields],
                 "knowledge.jsonl": [item.model_dump(mode="json") for item in value.knowledge],
                 "relations.jsonl": [item.model_dump(mode="json") for item in value.relations],
+                "runs.jsonl": [item.model_dump(mode="json") for item in value.runs],
             }
             for file_name, items in payloads.items():
                 write_jsonl(work / file_name, items)

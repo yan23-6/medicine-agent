@@ -145,6 +145,7 @@ class SkillManifest(StrictModel):
     input_model: str
     output_model: str
     permissions: list[str] = Field(default_factory=list)
+    status: str = "available"
 
 
 class SkillInvocation(StrictModel):
@@ -160,12 +161,35 @@ class SkillResult(StrictModel):
     task_id: str
     skill_id: str
     skill_version: str
+    input_id: str
+    output_id: str | None = None
     status: SkillStatus
     output: dict[str, Any] | None = None
     issues: list[SkillIssue] = Field(default_factory=list)
     evidence_refs: list[str] = Field(default_factory=list)
     generation_method: GenerationMethod = GenerationMethod.RULE
     review_status: ReviewStatus = ReviewStatus.UNREVIEWED
+    runtime: dict[str, Any] = Field(default_factory=dict)
+    started_at: datetime
+    completed_at: datetime
+    duration_ms: int = Field(ge=0)
+
+
+class RunRecord(StrictModel):
+    invocation_id: str
+    task_id: str
+    caller: str
+    skill_id: str
+    skill_version: str
+    input_id: str
+    output_id: str | None = None
+    input_schema_id: str
+    output_schema_id: str
+    status: SkillStatus
+    issues: list[SkillIssue] = Field(default_factory=list)
+    evidence_refs: list[str] = Field(default_factory=list)
+    generation_method: GenerationMethod
+    review_status: ReviewStatus
     runtime: dict[str, Any] = Field(default_factory=dict)
     started_at: datetime
     completed_at: datetime

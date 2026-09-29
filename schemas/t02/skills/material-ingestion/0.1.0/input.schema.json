@@ -1,0 +1,229 @@
+{
+  "$defs": {
+    "FieldMappingCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_field": {
+          "title": "Canonical Field",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonical_field",
+        "rationale"
+      ],
+      "title": "FieldMappingCandidate",
+      "type": "object"
+    },
+    "FieldMappingStatus": {
+      "enum": [
+        "mapped",
+        "ambiguous",
+        "unmapped",
+        "rejected"
+      ],
+      "title": "FieldMappingStatus",
+      "type": "string"
+    },
+    "RawFieldInput": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "mapping_candidates": {
+          "items": {
+            "$ref": "#/$defs/FieldMappingCandidate"
+          },
+          "title": "Mapping Candidates",
+          "type": "array"
+        },
+        "mapping_rule_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "t01-explicit-v1",
+          "title": "Mapping Rule Version"
+        },
+        "mapping_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FieldMappingStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_value": {
+          "title": "Raw Value"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        }
+      },
+      "required": [
+        "raw_key",
+        "raw_value"
+      ],
+      "title": "RawFieldInput",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/SourceMetadata"
+    },
+    "path": {
+      "title": "Path",
+      "type": "string"
+    },
+    "raw_fields": {
+      "items": {
+        "$ref": "#/$defs/RawFieldInput"
+      },
+      "title": "Raw Fields",
+      "type": "array"
+    }
+  },
+  "required": [
+    "path",
+    "metadata"
+  ],
+  "title": "MaterialIngestionInput",
+  "type": "object"
+}

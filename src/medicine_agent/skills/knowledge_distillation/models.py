@@ -13,6 +13,12 @@ from medicine_agent.domain.models import (
 class KnowledgeDistillationInput(StrictModel):
     evidence: list[EvidenceRecord]
     use_model: bool = False
+    combine_evidence: bool = False
+
+
+class GeneratedKnowledgePayload(StrictModel):
+    label: str
+    statement: str
 
 
 class KnowledgeDistillationOutput(StrictModel):

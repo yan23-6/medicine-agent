@@ -1,0 +1,1762 @@
+{
+  "$defs": {
+    "BooleanValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "boolean"
+        },
+        "value_type": {
+          "const": "boolean",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "value"
+      ],
+      "title": "BooleanValue",
+      "type": "object"
+    },
+    "CanonicalCase": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "case_types": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Case Types",
+          "type": "array"
+        },
+        "enabled_profiles": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Enabled Profiles",
+          "type": "array"
+        },
+        "encounters": {
+          "items": {
+            "$ref": "#/$defs/Encounter"
+          },
+          "minItems": 1,
+          "title": "Encounters",
+          "type": "array"
+        },
+        "identifiers": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "title": "Identifiers",
+          "type": "array"
+        },
+        "jurisdiction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Jurisdiction"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "patient": {
+          "$ref": "#/$defs/PatientProfile"
+        },
+        "provenance_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Provenance Refs",
+          "type": "array"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "semantic_registry_id": {
+          "title": "Semantic Registry Id",
+          "type": "string"
+        },
+        "semantic_registry_version": {
+          "title": "Semantic Registry Version",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "source_use_scope": {
+          "title": "Source Use Scope",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "uncertainties": {
+          "items": {
+            "$ref": "#/$defs/CaseUncertainty"
+          },
+          "title": "Uncertainties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "case_id",
+        "semantic_registry_id",
+        "semantic_registry_version",
+        "enabled_profiles",
+        "source_ids",
+        "source_use_scope",
+        "patient",
+        "encounters"
+      ],
+      "title": "CanonicalCase",
+      "type": "object"
+    },
+    "CaseUncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To Ref"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "correction_candidates": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Correction Candidates",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "raw_value": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Path"
+        },
+        "uncertainty_id": {
+          "title": "Uncertainty Id",
+          "type": "string"
+        },
+        "uncertainty_type": {
+          "default": "transcription_or_mapping",
+          "title": "Uncertainty Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uncertainty_id",
+        "raw_key",
+        "raw_text",
+        "raw_value",
+        "correction_candidates",
+        "evidence_refs"
+      ],
+      "title": "CaseUncertainty",
+      "type": "object"
+    },
+    "ClinicalObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "body_sites": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Body Sites",
+          "type": "array"
+        },
+        "categories": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Categories",
+          "type": "array"
+        },
+        "category": {
+          "$ref": "#/$defs/ObservationCategory"
+        },
+        "certainty": {
+          "$ref": "#/$defs/ObservationCertainty"
+        },
+        "concept": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "effective_time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod",
+          "default": "imported"
+        },
+        "information_origin": {
+          "$ref": "#/$defs/InformationOrigin",
+          "default": "document"
+        },
+        "interpretations": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Interpretations",
+          "type": "array"
+        },
+        "mapping_candidates": {
+          "items": {
+            "$ref": "#/$defs/FieldMappingCandidate"
+          },
+          "title": "Mapping Candidates",
+          "type": "array"
+        },
+        "mapping_rule_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mapping Rule Version"
+        },
+        "mapping_status": {
+          "$ref": "#/$defs/FieldMappingStatus",
+          "default": "unmapped"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "normalized_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Normalized Text"
+        },
+        "observation_id": {
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "performer_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Performer Refs",
+          "type": "array"
+        },
+        "polarity": {
+          "$ref": "#/$defs/ObservationPolarity",
+          "default": "present"
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "raw_type": {
+          "default": "text",
+          "title": "Raw Type",
+          "type": "string"
+        },
+        "raw_value": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Path"
+        },
+        "status": {
+          "$ref": "#/$defs/ObservationStatus",
+          "default": "unknown"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "boolean": "#/$defs/BooleanValue",
+                  "coded": "#/$defs/CodedValue",
+                  "date_time": "#/$defs/DateTimeValue",
+                  "integer": "#/$defs/IntegerValue",
+                  "missing": "#/$defs/MissingValue",
+                  "period": "#/$defs/PeriodValue",
+                  "quantity": "#/$defs/QuantityValue",
+                  "range": "#/$defs/RangeValue",
+                  "ratio": "#/$defs/RatioValue",
+                  "reference": "#/$defs/ReferenceValue",
+                  "text": "#/$defs/TextValue"
+                },
+                "propertyName": "value_type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TextValue"
+                },
+                {
+                  "$ref": "#/$defs/CodedValue"
+                },
+                {
+                  "$ref": "#/$defs/QuantityValue"
+                },
+                {
+                  "$ref": "#/$defs/RangeValue"
+                },
+                {
+                  "$ref": "#/$defs/RatioValue"
+                },
+                {
+                  "$ref": "#/$defs/BooleanValue"
+                },
+                {
+                  "$ref": "#/$defs/IntegerValue"
+                },
+                {
+                  "$ref": "#/$defs/DateTimeValue"
+                },
+                {
+                  "$ref": "#/$defs/PeriodValue"
+                },
+                {
+                  "$ref": "#/$defs/ReferenceValue"
+                },
+                {
+                  "$ref": "#/$defs/MissingValue"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "observation_id",
+        "raw_key",
+        "raw_text",
+        "raw_value",
+        "category",
+        "certainty",
+        "evidence_refs"
+      ],
+      "title": "ClinicalObservation",
+      "type": "object"
+    },
+    "CodeableConcept": {
+      "additionalProperties": false,
+      "properties": {
+        "codings": {
+          "items": {
+            "$ref": "#/$defs/Coding"
+          },
+          "title": "Codings",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "title": "CodeableConcept",
+      "type": "object"
+    },
+    "CodedValue": {
+      "additionalProperties": false,
+      "properties": {
+        "concept": {
+          "$ref": "#/$defs/CodeableConcept"
+        },
+        "value_type": {
+          "const": "coded",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "concept"
+      ],
+      "title": "CodedValue",
+      "type": "object"
+    },
+    "Coding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "user_selected": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Selected"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "Coding",
+      "type": "object"
+    },
+    "DateTimeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "value_type": {
+          "const": "date_time",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "value"
+      ],
+      "title": "DateTimeValue",
+      "type": "object"
+    },
+    "Encounter": {
+      "additionalProperties": false,
+      "properties": {
+        "date_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Date Raw"
+        },
+        "encounter_classes": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Encounter Classes",
+          "type": "array"
+        },
+        "encounter_id": {
+          "title": "Encounter Id",
+          "type": "string"
+        },
+        "encounter_types": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Encounter Types",
+          "type": "array"
+        },
+        "historical_actions": {
+          "items": {
+            "$ref": "#/$defs/HistoricalRecord"
+          },
+          "title": "Historical Actions",
+          "type": "array"
+        },
+        "historical_diagnoses": {
+          "items": {
+            "$ref": "#/$defs/HistoricalRecord"
+          },
+          "title": "Historical Diagnoses",
+          "type": "array"
+        },
+        "identifiers": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "title": "Identifiers",
+          "type": "array"
+        },
+        "location_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Location Refs",
+          "type": "array"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/ClinicalObservation"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "parent_encounter_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Encounter Ref"
+        },
+        "participants": {
+          "items": {
+            "$ref": "#/$defs/Participant"
+          },
+          "title": "Participants",
+          "type": "array"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "priority": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "service_provider_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Service Provider Ref"
+        },
+        "service_types": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Service Types",
+          "type": "array"
+        },
+        "source_encounter_key": {
+          "title": "Source Encounter Key",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "title": "Status",
+          "type": "string"
+        },
+        "subject_age": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "encounter_id",
+        "source_encounter_key",
+        "sequence"
+      ],
+      "title": "Encounter",
+      "type": "object"
+    },
+    "FieldMappingCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_field": {
+          "title": "Canonical Field",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonical_field",
+        "rationale"
+      ],
+      "title": "FieldMappingCandidate",
+      "type": "object"
+    },
+    "FieldMappingStatus": {
+      "enum": [
+        "mapped",
+        "ambiguous",
+        "unmapped",
+        "rejected"
+      ],
+      "title": "FieldMappingStatus",
+      "type": "string"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "HistoricalRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Actor Refs",
+          "type": "array"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "effective_time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "event_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "information_origin": {
+          "$ref": "#/$defs/InformationOrigin",
+          "default": "document"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "normalized_value": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "boolean": "#/$defs/BooleanValue",
+                  "coded": "#/$defs/CodedValue",
+                  "date_time": "#/$defs/DateTimeValue",
+                  "integer": "#/$defs/IntegerValue",
+                  "missing": "#/$defs/MissingValue",
+                  "period": "#/$defs/PeriodValue",
+                  "quantity": "#/$defs/QuantityValue",
+                  "range": "#/$defs/RangeValue",
+                  "ratio": "#/$defs/RatioValue",
+                  "reference": "#/$defs/ReferenceValue",
+                  "text": "#/$defs/TextValue"
+                },
+                "propertyName": "value_type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TextValue"
+                },
+                {
+                  "$ref": "#/$defs/CodedValue"
+                },
+                {
+                  "$ref": "#/$defs/QuantityValue"
+                },
+                {
+                  "$ref": "#/$defs/RangeValue"
+                },
+                {
+                  "$ref": "#/$defs/RatioValue"
+                },
+                {
+                  "$ref": "#/$defs/BooleanValue"
+                },
+                {
+                  "$ref": "#/$defs/IntegerValue"
+                },
+                {
+                  "$ref": "#/$defs/DateTimeValue"
+                },
+                {
+                  "$ref": "#/$defs/PeriodValue"
+                },
+                {
+                  "$ref": "#/$defs/ReferenceValue"
+                },
+                {
+                  "$ref": "#/$defs/MissingValue"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Normalized Value"
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "raw_value": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Path"
+        },
+        "status": {
+          "default": "reported_history",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "record_id",
+        "raw_key",
+        "kind",
+        "raw_text",
+        "raw_value",
+        "evidence_refs"
+      ],
+      "title": "HistoricalRecord",
+      "type": "object"
+    },
+    "Identifier": {
+      "additionalProperties": false,
+      "properties": {
+        "system": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "System"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Type"
+        },
+        "use": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Use"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Identifier",
+      "type": "object"
+    },
+    "InformationOrigin": {
+      "enum": [
+        "patient",
+        "family_or_caregiver",
+        "practitioner",
+        "device",
+        "document",
+        "model_derived",
+        "rule_derived",
+        "unknown"
+      ],
+      "title": "InformationOrigin",
+      "type": "string"
+    },
+    "IntegerValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "integer"
+        },
+        "value_type": {
+          "const": "integer",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "value"
+      ],
+      "title": "IntegerValue",
+      "type": "object"
+    },
+    "IssueSeverity": {
+      "enum": [
+        "warning",
+        "error"
+      ],
+      "title": "IssueSeverity",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "MissingValue": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "$ref": "#/$defs/CodeableConcept"
+        },
+        "value_type": {
+          "const": "missing",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "reason"
+      ],
+      "title": "MissingValue",
+      "type": "object"
+    },
+    "NamedAttribute": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "name": {
+          "$ref": "#/$defs/CodeableConcept"
+        },
+        "value": {
+          "discriminator": {
+            "mapping": {
+              "boolean": "#/$defs/BooleanValue",
+              "coded": "#/$defs/CodedValue",
+              "date_time": "#/$defs/DateTimeValue",
+              "integer": "#/$defs/IntegerValue",
+              "missing": "#/$defs/MissingValue",
+              "period": "#/$defs/PeriodValue",
+              "quantity": "#/$defs/QuantityValue",
+              "range": "#/$defs/RangeValue",
+              "ratio": "#/$defs/RatioValue",
+              "reference": "#/$defs/ReferenceValue",
+              "text": "#/$defs/TextValue"
+            },
+            "propertyName": "value_type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TextValue"
+            },
+            {
+              "$ref": "#/$defs/CodedValue"
+            },
+            {
+              "$ref": "#/$defs/QuantityValue"
+            },
+            {
+              "$ref": "#/$defs/RangeValue"
+            },
+            {
+              "$ref": "#/$defs/RatioValue"
+            },
+            {
+              "$ref": "#/$defs/BooleanValue"
+            },
+            {
+              "$ref": "#/$defs/IntegerValue"
+            },
+            {
+              "$ref": "#/$defs/DateTimeValue"
+            },
+            {
+              "$ref": "#/$defs/PeriodValue"
+            },
+            {
+              "$ref": "#/$defs/ReferenceValue"
+            },
+            {
+              "$ref": "#/$defs/MissingValue"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "NamedAttribute",
+      "type": "object"
+    },
+    "ObservationCategory": {
+      "enum": [
+        "chief_complaint",
+        "history",
+        "symptom",
+        "sign",
+        "tongue",
+        "pulse",
+        "vital_sign",
+        "measurement",
+        "laboratory",
+        "imaging",
+        "functional",
+        "social",
+        "lifestyle",
+        "family_history",
+        "historical_diagnosis",
+        "historical_action",
+        "outcome",
+        "other"
+      ],
+      "title": "ObservationCategory",
+      "type": "string"
+    },
+    "ObservationCertainty": {
+      "enum": [
+        "asserted",
+        "probable",
+        "possible",
+        "uncertain",
+        "unknown"
+      ],
+      "title": "ObservationCertainty",
+      "type": "string"
+    },
+    "ObservationPolarity": {
+      "enum": [
+        "present",
+        "absent",
+        "conditional",
+        "unknown"
+      ],
+      "title": "ObservationPolarity",
+      "type": "string"
+    },
+    "ObservationStatus": {
+      "enum": [
+        "preliminary",
+        "final",
+        "amended",
+        "corrected",
+        "cancelled",
+        "entered_in_error",
+        "unknown"
+      ],
+      "title": "ObservationStatus",
+      "type": "string"
+    },
+    "Participant": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_ref": {
+          "title": "Actor Ref",
+          "type": "string"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "role": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "actor_ref"
+      ],
+      "title": "Participant",
+      "type": "object"
+    },
+    "PatientProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "age": {
+          "anyOf": [
+            {
+              "maximum": 130,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Age"
+        },
+        "age_unit": {
+          "default": "years",
+          "title": "Age Unit",
+          "type": "string"
+        },
+        "age_value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "attributes": {
+          "items": {
+            "$ref": "#/$defs/NamedAttribute"
+          },
+          "title": "Attributes",
+          "type": "array"
+        },
+        "birth_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birth Date"
+        },
+        "gender": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "identifiers": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "title": "Identifiers",
+          "type": "array"
+        },
+        "privacy_labels": {
+          "items": {
+            "$ref": "#/$defs/CodeableConcept"
+          },
+          "title": "Privacy Labels",
+          "type": "array"
+        },
+        "sex": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sex"
+        },
+        "sex_at_birth": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "subject_kind": {
+          "$ref": "#/$defs/SubjectKind",
+          "default": "person"
+        }
+      },
+      "title": "PatientProfile",
+      "type": "object"
+    },
+    "PeriodValue": {
+      "additionalProperties": false,
+      "properties": {
+        "period": {
+          "$ref": "#/$defs/TemporalExtent"
+        },
+        "value_type": {
+          "const": "period",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "period"
+      ],
+      "title": "PeriodValue",
+      "type": "object"
+    },
+    "Quantity": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code"
+        },
+        "comparator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comparator"
+        },
+        "system": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "System"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Quantity",
+      "type": "object"
+    },
+    "QuantityValue": {
+      "additionalProperties": false,
+      "properties": {
+        "quantity": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "value_type": {
+          "const": "quantity",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "quantity"
+      ],
+      "title": "QuantityValue",
+      "type": "object"
+    },
+    "RangeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "high": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "low": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value_type": {
+          "const": "range",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type"
+      ],
+      "title": "RangeValue",
+      "type": "object"
+    },
+    "RatioValue": {
+      "additionalProperties": false,
+      "properties": {
+        "denominator": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "numerator": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "value_type": {
+          "const": "ratio",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "numerator",
+        "denominator"
+      ],
+      "title": "RatioValue",
+      "type": "object"
+    },
+    "ReferenceValue": {
+      "additionalProperties": false,
+      "properties": {
+        "display": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        },
+        "value_type": {
+          "const": "reference",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "reference"
+      ],
+      "title": "ReferenceValue",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SkillIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "SkillIssue",
+      "type": "object"
+    },
+    "SubjectKind": {
+      "enum": [
+        "person",
+        "group",
+        "unknown"
+      ],
+      "title": "SubjectKind",
+      "type": "string"
+    },
+    "TemporalCertainty": {
+      "enum": [
+        "exact",
+        "approximate",
+        "uncertain",
+        "unknown"
+      ],
+      "title": "TemporalCertainty",
+      "type": "string"
+    },
+    "TemporalExtent": {
+      "additionalProperties": false,
+      "properties": {
+        "certainty": {
+          "$ref": "#/$defs/TemporalCertainty",
+          "default": "unknown"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "point": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point"
+        },
+        "precision": {
+          "$ref": "#/$defs/TemporalPrecision",
+          "default": "unknown"
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        }
+      },
+      "title": "TemporalExtent",
+      "type": "object"
+    },
+    "TemporalPrecision": {
+      "enum": [
+        "year",
+        "month",
+        "day",
+        "minute",
+        "second",
+        "range",
+        "relative",
+        "unknown"
+      ],
+      "title": "TemporalPrecision",
+      "type": "string"
+    },
+    "TextValue": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "value_type": {
+          "const": "text",
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type",
+        "text"
+      ],
+      "title": "TextValue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "canonical_case": {
+      "$ref": "#/$defs/CanonicalCase"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/SkillIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    }
+  },
+  "required": [
+    "canonical_case"
+  ],
+  "title": "CaseDistillationOutput",
+  "type": "object"
+}

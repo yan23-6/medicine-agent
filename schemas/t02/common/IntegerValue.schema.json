@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "value": {
+      "title": "Value",
+      "type": "integer"
+    },
+    "value_type": {
+      "const": "integer",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "value"
+  ],
+  "title": "IntegerValue",
+  "type": "object"
+}

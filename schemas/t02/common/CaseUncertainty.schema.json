@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "JsonValue": {},
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "applies_to_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Applies To Ref"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context"
+    },
+    "correction_candidates": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Correction Candidates",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "raw_key": {
+      "title": "Raw Key",
+      "type": "string"
+    },
+    "raw_text": {
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "raw_value": {
+      "$ref": "#/$defs/JsonValue"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "source_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Path"
+    },
+    "uncertainty_id": {
+      "title": "Uncertainty Id",
+      "type": "string"
+    },
+    "uncertainty_type": {
+      "default": "transcription_or_mapping",
+      "title": "Uncertainty Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "uncertainty_id",
+    "raw_key",
+    "raw_text",
+    "raw_value",
+    "correction_candidates",
+    "evidence_refs"
+  ],
+  "title": "CaseUncertainty",
+  "type": "object"
+}

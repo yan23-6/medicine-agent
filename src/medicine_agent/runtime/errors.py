@@ -33,3 +33,19 @@ class ModelCallFailedError(PlatformError):
 class PackageValidationError(PlatformError):
     code = "PACKAGE_VALIDATION_FAILED"
 
+
+class RunNotFoundError(PlatformError):
+    code = "RUN_NOT_FOUND"
+
+
+class DependencyUnavailableError(PlatformError):
+    code = "DEPENDENCY_UNAVAILABLE"
+
+
+class OutputSchemaInvalidError(PlatformError):
+    code = "OUTPUT_SCHEMA_INVALID"
+
+
+class SemanticContractError(PlatformError):
+    code = "SEMANTIC_CONTRACT_INVALID"
+

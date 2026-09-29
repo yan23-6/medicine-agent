@@ -1,0 +1,743 @@
+{
+  "$defs": {
+    "AssertionStatus": {
+      "enum": [
+        "source_explicit",
+        "rule_inferred",
+        "model_candidate",
+        "human_confirmed",
+        "human_rejected"
+      ],
+      "title": "AssertionStatus",
+      "type": "string"
+    },
+    "CodeableConcept": {
+      "additionalProperties": false,
+      "properties": {
+        "codings": {
+          "items": {
+            "$ref": "#/$defs/Coding"
+          },
+          "title": "Codings",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "title": "CodeableConcept",
+      "type": "object"
+    },
+    "Coding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "user_selected": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Selected"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "Coding",
+      "type": "object"
+    },
+    "ConfidenceLevel": {
+      "enum": [
+        "unknown",
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "ConfidenceLevel",
+      "type": "string"
+    },
+    "EvidenceLink": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To"
+        },
+        "evidence_ref": {
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "role": {
+          "$ref": "#/$defs/EvidenceRole"
+        },
+        "strength": {
+          "$ref": "#/$defs/ConfidenceLevel",
+          "default": "unknown"
+        }
+      },
+      "required": [
+        "evidence_ref",
+        "role"
+      ],
+      "title": "EvidenceLink",
+      "type": "object"
+    },
+    "EvidenceRole": {
+      "enum": [
+        "supporting",
+        "weak_supporting",
+        "counterevidence",
+        "ambiguous",
+        "context"
+      ],
+      "title": "EvidenceRole",
+      "type": "string"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "MedicalSystem": {
+      "enum": [
+        "general",
+        "tcm",
+        "western",
+        "safety",
+        "integrative",
+        "research",
+        "unknown"
+      ],
+      "title": "MedicalSystem",
+      "type": "string"
+    },
+    "ReasoningEdge": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "edge_id": {
+          "title": "Edge Id",
+          "type": "string"
+        },
+        "evidence_links": {
+          "items": {
+            "$ref": "#/$defs/EvidenceLink"
+          },
+          "title": "Evidence Links",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "polarity": {
+          "default": "positive",
+          "title": "Polarity",
+          "type": "string"
+        },
+        "provenance_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Provenance Refs",
+          "type": "array"
+        },
+        "relation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_node_id": {
+          "title": "Source Node Id",
+          "type": "string"
+        },
+        "target_node_id": {
+          "title": "Target Node Id",
+          "type": "string"
+        },
+        "valid_time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "edge_id",
+        "source_node_id",
+        "target_node_id",
+        "relation_type",
+        "generation_method"
+      ],
+      "title": "ReasoningEdge",
+      "type": "object"
+    },
+    "ReasoningNode": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applicability",
+          "type": "array"
+        },
+        "assertion_status": {
+          "$ref": "#/$defs/AssertionStatus"
+        },
+        "concept": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CodeableConcept"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "confidence": {
+          "$ref": "#/$defs/ConfidenceLevel",
+          "default": "unknown"
+        },
+        "counterevidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Counterevidence Refs",
+          "type": "array"
+        },
+        "encounter_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Encounter Refs",
+          "type": "array"
+        },
+        "evidence_links": {
+          "items": {
+            "$ref": "#/$defs/EvidenceLink"
+          },
+          "title": "Evidence Links",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "medical_system": {
+          "$ref": "#/$defs/MedicalSystem"
+        },
+        "missing_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Evidence",
+          "type": "array"
+        },
+        "narrative": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Narrative"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "node_type": {
+          "$ref": "#/$defs/ReasoningNodeType"
+        },
+        "provenance_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Provenance Refs",
+          "type": "array"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "role": {
+          "$ref": "#/$defs/ReasoningRole"
+        },
+        "valid_time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TemporalExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "node_id",
+        "node_type",
+        "medical_system",
+        "label",
+        "role",
+        "assertion_status",
+        "generation_method"
+      ],
+      "title": "ReasoningNode",
+      "type": "object"
+    },
+    "ReasoningNodeType": {
+      "enum": [
+        "observation",
+        "feature",
+        "etiology",
+        "anatomical_location",
+        "nature",
+        "hypothesis",
+        "pathomechanism",
+        "syndrome",
+        "diagnosis",
+        "differential",
+        "risk",
+        "contradiction",
+        "state",
+        "goal",
+        "operator",
+        "action",
+        "outcome",
+        "other"
+      ],
+      "title": "ReasoningNodeType",
+      "type": "string"
+    },
+    "ReasoningRole": {
+      "enum": [
+        "primary",
+        "secondary",
+        "concomitant",
+        "candidate",
+        "differential",
+        "excluded",
+        "context"
+      ],
+      "title": "ReasoningRole",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SafetyContext": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Alert Refs",
+          "type": "array"
+        },
+        "assessed_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assessed At"
+        },
+        "assessed_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assessed By"
+        },
+        "policy_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Policy Refs",
+          "type": "array"
+        },
+        "restrictions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Restrictions",
+          "type": "array"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/SafetyStatus"
+        },
+        "unmet_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unmet Requirements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "source"
+      ],
+      "title": "SafetyContext",
+      "type": "object"
+    },
+    "SafetyStatus": {
+      "enum": [
+        "unassessed",
+        "blocked",
+        "restricted",
+        "cleared"
+      ],
+      "title": "SafetyStatus",
+      "type": "string"
+    },
+    "TemporalCertainty": {
+      "enum": [
+        "exact",
+        "approximate",
+        "uncertain",
+        "unknown"
+      ],
+      "title": "TemporalCertainty",
+      "type": "string"
+    },
+    "TemporalExtent": {
+      "additionalProperties": false,
+      "properties": {
+        "certainty": {
+          "$ref": "#/$defs/TemporalCertainty",
+          "default": "unknown"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "point": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point"
+        },
+        "precision": {
+          "$ref": "#/$defs/TemporalPrecision",
+          "default": "unknown"
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        }
+      },
+      "title": "TemporalExtent",
+      "type": "object"
+    },
+    "TemporalPrecision": {
+      "enum": [
+        "year",
+        "month",
+        "day",
+        "minute",
+        "second",
+        "range",
+        "relative",
+        "unknown"
+      ],
+      "title": "TemporalPrecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "actionability": {
+      "title": "Actionability",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/ReasoningEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "enabled_profiles": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Enabled Profiles",
+      "type": "array"
+    },
+    "encounter_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Encounter Refs",
+      "type": "array"
+    },
+    "graph_id": {
+      "title": "Graph Id",
+      "type": "string"
+    },
+    "graph_type": {
+      "title": "Graph Type",
+      "type": "string"
+    },
+    "medical_systems": {
+      "items": {
+        "$ref": "#/$defs/MedicalSystem"
+      },
+      "minItems": 1,
+      "title": "Medical Systems",
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/ReasoningNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "protocol_version": {
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "provenance_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Provenance Refs",
+      "type": "array"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "safety_context": {
+      "$ref": "#/$defs/SafetyContext"
+    },
+    "semantic_registry_id": {
+      "title": "Semantic Registry Id",
+      "type": "string"
+    },
+    "semantic_registry_version": {
+      "title": "Semantic Registry Version",
+      "type": "string"
+    },
+    "treatment_recommendations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Treatment Recommendations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "graph_id",
+    "graph_type",
+    "semantic_registry_id",
+    "semantic_registry_version",
+    "enabled_profiles",
+    "case_id",
+    "medical_systems",
+    "protocol_version",
+    "safety_context",
+    "actionability"
+  ],
+  "title": "ClinicalReasoningGraph",
+  "type": "object"
+}

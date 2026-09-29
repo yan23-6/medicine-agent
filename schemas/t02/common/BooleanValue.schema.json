@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "value": {
+      "title": "Value",
+      "type": "boolean"
+    },
+    "value_type": {
+      "const": "boolean",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "value"
+  ],
+  "title": "BooleanValue",
+  "type": "object"
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "raw_key": "主诉",
+    "raw_value": "反复咳嗽",
+    "location": {"path": "首诊.主诉"},
+    "context": "首诊",
+    "mapping_candidates": [
+      {"canonical_field": "chief_complaint", "rationale": "中医医案常用字段"}
+    ]
+  },
+  {
+    "raw_key": "chief_complaint",
+    "raw_value": "反复咳嗽",
+    "location": {"path": "imported.chief_complaint"},
+    "context": "外部结构化记录",
+    "mapping_candidates": [
+      {"canonical_field": "chief_complaint", "rationale": "规范英文键"}
+    ]
+  },
+  {
+    "raw_key": "状态",
+    "raw_value": "未复核",
+    "location": {"path": "审核.状态"},
+    "context": "审核信息",
+    "mapping_candidates": [
+      {"canonical_field": "review_status", "rationale": "审核上下文"}
+    ]
+  },
+  {
+    "raw_key": "状态",
+    "raw_value": "咳嗽减轻",
+    "location": {"path": "复诊.状态"},
+    "context": "临床变化",
+    "mapping_candidates": [
+      {"canonical_field": "clinical_state", "rationale": "复诊上下文"},
+      {"canonical_field": "outcome_summary", "rationale": "也可能是疗效摘要"}
+    ]
+  },
+  {
+    "raw_key": "舌象",
+    "raw_value": "舌淡",
+    "location": {"path": "四诊.舌象[0]"},
+    "context": "同一次四诊",
+    "mapping_candidates": [
+      {"canonical_field": "tongue_observation", "rationale": "舌诊字段"}
+    ]
+  },
+  {
+    "raw_key": "舌象",
+    "raw_value": "苔薄白",
+    "location": {"path": "四诊.舌象[1]"},
+    "context": "同一次四诊",
+    "mapping_candidates": [
+      {"canonical_field": "tongue_observation", "rationale": "重复键的第二次观察"}
+    ]
+  },
+  {
+    "raw_key": "旧系统字段X",
+    "raw_value": {"原值": "不可确定"},
+    "location": {"path": "legacy.X"},
+    "context": "未知旧系统字段",
+    "mapping_candidates": []
+  }
+]

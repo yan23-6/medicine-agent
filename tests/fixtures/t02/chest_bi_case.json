@@ -1,0 +1,126 @@
+{
+  "raw_case": {
+    "case_ref": "T02-LOCAL-CASE-001",
+    "source_id": "src_t02_local_case_001",
+    "source_use_scope": "local_research_test_only",
+    "patient": {
+      "sex": "male",
+      "age": 47
+    },
+    "encounters": [
+      {
+        "encounter_key": "initial",
+        "sequence": 1,
+        "date_raw": "原记录日期存在转录疑点",
+        "fields": [
+          {
+            "raw_key": "主诉",
+            "raw_value": "心前区不适2年余",
+            "category": "chief_complaint",
+            "evidence_refs": ["ev_case_001"]
+          },
+          {
+            "raw_key": "诱因",
+            "raw_value": "劳累后出现心前区疼痛",
+            "category": "history",
+            "evidence_refs": ["ev_case_002"]
+          },
+          {
+            "raw_key": "缓解因素",
+            "raw_value": "休息或既往使用硝酸甘油后缓解",
+            "category": "history",
+            "evidence_refs": ["ev_case_003"]
+          },
+          {
+            "raw_key": "近期变化",
+            "raw_value": "近日心前区闷痛加重并放射至后背及上臂",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_004"],
+            "context": "原医案近期变化段"
+          },
+          {
+            "raw_key": "伴随症状",
+            "raw_value": "全身乏力",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_005"]
+          },
+          {
+            "raw_key": "伴随症状",
+            "raw_value": "气短",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_006"]
+          },
+          {
+            "raw_key": "寒热",
+            "raw_value": "腰背怕冷",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_007"]
+          },
+          {
+            "raw_key": "饮食",
+            "raw_value": "食后腹胀",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_008"],
+            "correction_candidates": ["原记录疑似为食后腹胀，待核原件"]
+          },
+          {
+            "raw_key": "小便",
+            "raw_value": "小便黄",
+            "category": "symptom",
+            "evidence_refs": ["ev_case_009"]
+          },
+          {
+            "raw_key": "望诊",
+            "raw_value": "口唇暗有瘀点",
+            "category": "sign",
+            "evidence_refs": ["ev_case_010"]
+          },
+          {
+            "raw_key": "舌诊",
+            "raw_value": "舌暗",
+            "category": "tongue",
+            "evidence_refs": ["ev_case_011"]
+          },
+          {
+            "raw_key": "舌苔",
+            "raw_value": "苔微厚",
+            "category": "tongue",
+            "evidence_refs": ["ev_case_012"]
+          },
+          {
+            "raw_key": "脉诊原文",
+            "raw_value": "脉弓玄细，略有歇止",
+            "category": "pulse",
+            "evidence_refs": ["ev_case_013"],
+            "correction_candidates": ["脉弦细，略有歇止"]
+          },
+          {
+            "raw_key": "血压",
+            "raw_value": "100/80 mmHg",
+            "category": "vital_sign",
+            "evidence_refs": ["ev_case_014"]
+          },
+          {
+            "raw_key": "原医案诊断",
+            "raw_value": "西医诊断心绞痛；中医诊断胸痹（气虚血瘀）",
+            "category": "historical_diagnosis",
+            "evidence_refs": ["ev_case_015"]
+          },
+          {
+            "raw_key": "原医案治疗",
+            "raw_value": "历史记录采用针灸及益气通络思路",
+            "category": "historical_action",
+            "evidence_refs": ["ev_case_016"]
+          },
+          {
+            "raw_key": "排眠不佳",
+            "raw_value": "排眠不佳",
+            "category": null,
+            "evidence_refs": ["ev_case_017"],
+            "correction_candidates": ["睡眠不佳"]
+          }
+        ]
+      }
+    ]
+  }
+}

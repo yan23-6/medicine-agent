@@ -1,0 +1,132 @@
+{
+  "$defs": {
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "KnowledgeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "knowledge_id": {
+          "title": "Knowledge Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_id",
+        "kind",
+        "label",
+        "statement",
+        "evidence_refs",
+        "generation_method"
+      ],
+      "title": "KnowledgeCandidate",
+      "type": "object"
+    },
+    "RelationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "relation_id": {
+          "title": "Relation Id",
+          "type": "string"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_knowledge_id": {
+          "title": "Source Knowledge Id",
+          "type": "string"
+        },
+        "target_knowledge_id": {
+          "title": "Target Knowledge Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relation_id",
+        "relation_type",
+        "source_knowledge_id",
+        "target_knowledge_id",
+        "generation_method"
+      ],
+      "title": "RelationCandidate",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "knowledge": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeCandidate"
+      },
+      "title": "Knowledge",
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/RelationCandidate"
+      },
+      "title": "Relations",
+      "type": "array"
+    }
+  },
+  "title": "KnowledgeDistillationOutput",
+  "type": "object"
+}

@@ -1,0 +1,14 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "package_path": {
+      "title": "Package Path",
+      "type": "string"
+    }
+  },
+  "required": [
+    "package_path"
+  ],
+  "title": "QualityEvaluationInput",
+  "type": "object"
+}

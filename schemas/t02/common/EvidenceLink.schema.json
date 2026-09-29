@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "ConfidenceLevel": {
+      "enum": [
+        "unknown",
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "ConfidenceLevel",
+      "type": "string"
+    },
+    "EvidenceRole": {
+      "enum": [
+        "supporting",
+        "weak_supporting",
+        "counterevidence",
+        "ambiguous",
+        "context"
+      ],
+      "title": "EvidenceRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "applies_to": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Applies To"
+    },
+    "evidence_ref": {
+      "title": "Evidence Ref",
+      "type": "string"
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rationale"
+    },
+    "role": {
+      "$ref": "#/$defs/EvidenceRole"
+    },
+    "strength": {
+      "$ref": "#/$defs/ConfidenceLevel",
+      "default": "unknown"
+    }
+  },
+  "required": [
+    "evidence_ref",
+    "role"
+  ],
+  "title": "EvidenceLink",
+  "type": "object"
+}

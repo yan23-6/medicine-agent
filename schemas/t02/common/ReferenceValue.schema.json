@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "display": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Display"
+    },
+    "reference": {
+      "title": "Reference",
+      "type": "string"
+    },
+    "value_type": {
+      "const": "reference",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "reference"
+  ],
+  "title": "ReferenceValue",
+  "type": "object"
+}

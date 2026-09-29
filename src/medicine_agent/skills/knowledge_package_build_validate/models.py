@@ -10,6 +10,7 @@ from medicine_agent.domain.models import (
     QualityReport,
     RawFieldObservation,
     RelationCandidate,
+    RunRecord,
     SourceDocument,
     StrictModel,
 )
@@ -23,6 +24,7 @@ class KnowledgePackageBuildValidateInput(StrictModel):
     knowledge: list[KnowledgeCandidate]
     relations: list[RelationCandidate] = Field(default_factory=list)
     raw_fields: list[RawFieldObservation] = Field(default_factory=list)
+    runs: list[RunRecord] = Field(default_factory=list)
 
 
 class KnowledgePackageBuildValidateOutput(StrictModel):

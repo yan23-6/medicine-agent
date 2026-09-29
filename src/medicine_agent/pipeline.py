@@ -8,7 +8,7 @@ from medicine_agent.runtime.facade import ApplicationFacade
 
 
 def _require_success(result: SkillResult) -> dict[str, Any]:
-    if result.status != SkillStatus.SUCCESS or result.output is None:
+    if result.status not in {SkillStatus.SUCCESS, SkillStatus.PARTIAL} or result.output is None:
         codes = ", ".join(issue.code for issue in result.issues)
         raise RuntimeError(f"Skill {result.skill_id} failed: {codes}")
     return result.output
@@ -21,6 +21,8 @@ def run_minimal_pipeline(
     output_root: Path,
     metadata: SourceMetadata | None = None,
     use_model: bool = False,
+    raw_fields: list[dict[str, Any]] | None = None,
+    combine_evidence: bool = False,
 ) -> dict[str, Any]:
     source_metadata = metadata or SourceMetadata(
         title=None,
@@ -38,6 +40,7 @@ def run_minimal_pipeline(
                 input_data={
                     "path": str(input_path),
                     "metadata": source_metadata.model_dump(mode="json"),
+                    "raw_fields": raw_fields or [],
                 },
             )
         )
@@ -56,7 +59,11 @@ def run_minimal_pipeline(
             SkillInvocation(
                 task_id="pipeline-distill",
                 skill_id="knowledge-distillation",
-                input_data={"evidence": grounding["evidence"], "use_model": use_model},
+                input_data={
+                    "evidence": grounding["evidence"],
+                    "use_model": use_model,
+                    "combine_evidence": combine_evidence,
+                },
             )
         )
     )
@@ -72,7 +79,10 @@ def run_minimal_pipeline(
                     "evidence": grounding["evidence"],
                     "knowledge": distilled["knowledge"],
                     "relations": distilled["relations"],
-                    "raw_fields": [],
+                    "raw_fields": ingestion["raw_fields"],
+                    "runs": [
+                        item.model_dump(mode="json") for item in facade.list_runs()
+                    ],
                 },
             )
         )
