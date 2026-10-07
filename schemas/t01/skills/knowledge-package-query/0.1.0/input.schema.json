@@ -1,0 +1,38 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "knowledge_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Knowledge Id"
+    },
+    "package_path": {
+      "title": "Package Path",
+      "type": "string"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    }
+  },
+  "required": [
+    "package_path"
+  ],
+  "title": "KnowledgePackageQueryInput",
+  "type": "object"
+}

@@ -1,0 +1,502 @@
+{
+  "$defs": {
+    "GovernanceDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "ai_usage_policy": {
+          "title": "Ai Usage Policy",
+          "type": "string"
+        },
+        "change_policy": {
+          "title": "Change Policy",
+          "type": "string"
+        },
+        "normative_registry": {
+          "title": "Normative Registry",
+          "type": "string"
+        },
+        "profile_override_policy": {
+          "title": "Profile Override Policy",
+          "type": "string"
+        },
+        "unknown_concept_policy": {
+          "title": "Unknown Concept Policy",
+          "type": "string"
+        },
+        "unknown_field_policy": {
+          "title": "Unknown Field Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "normative_registry",
+        "unknown_field_policy",
+        "unknown_concept_policy",
+        "profile_override_policy",
+        "ai_usage_policy",
+        "change_policy"
+      ],
+      "title": "GovernanceDefinition",
+      "type": "object"
+    },
+    "RelationDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "direction": {
+          "title": "Direction",
+          "type": "string"
+        },
+        "evidence_required": {
+          "title": "Evidence Required",
+          "type": "boolean"
+        },
+        "label_zh": {
+          "title": "Label Zh",
+          "type": "string"
+        },
+        "prohibited_interpretation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prohibited Interpretation"
+        },
+        "relation_id": {
+          "title": "Relation Id",
+          "type": "string"
+        },
+        "source_types": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Types",
+          "type": "array"
+        },
+        "target_types": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Target Types",
+          "type": "array"
+        }
+      },
+      "required": [
+        "relation_id",
+        "label_zh",
+        "definition",
+        "direction",
+        "source_types",
+        "target_types",
+        "evidence_required"
+      ],
+      "title": "RelationDefinition",
+      "type": "object"
+    },
+    "SchemaBindingDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "binding_id": {
+          "title": "Binding Id",
+          "type": "string"
+        },
+        "schema_field": {
+          "title": "Schema Field",
+          "type": "string"
+        },
+        "schema_object": {
+          "title": "Schema Object",
+          "type": "string"
+        },
+        "semantic_field_ref": {
+          "title": "Semantic Field Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding_id",
+        "schema_object",
+        "schema_field",
+        "semantic_field_ref"
+      ],
+      "title": "SchemaBindingDefinition",
+      "type": "object"
+    },
+    "SemanticFieldDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_on": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Allowed On",
+          "type": "array"
+        },
+        "cardinality": {
+          "title": "Cardinality",
+          "type": "string"
+        },
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "example": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Example"
+        },
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "label_zh": {
+          "title": "Label Zh",
+          "type": "string"
+        },
+        "null_semantics": {
+          "title": "Null Semantics",
+          "type": "string"
+        },
+        "owner_profile": {
+          "title": "Owner Profile",
+          "type": "string"
+        },
+        "prohibited_interpretation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prohibited Interpretation"
+        },
+        "scope": {
+          "enum": [
+            "common",
+            "specialized"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "semantic_key": {
+          "title": "Semantic Key",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "value_type": {
+          "title": "Value Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field_id",
+        "semantic_key",
+        "label_zh",
+        "definition",
+        "scope",
+        "owner_profile",
+        "value_type",
+        "cardinality",
+        "null_semantics",
+        "allowed_on"
+      ],
+      "title": "SemanticFieldDefinition",
+      "type": "object"
+    },
+    "SemanticProfileDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "field_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Field Refs",
+          "type": "array"
+        },
+        "inherits": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inherits",
+          "type": "array"
+        },
+        "label_zh": {
+          "title": "Label Zh",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "routing_rule": {
+          "title": "Routing Rule",
+          "type": "string"
+        },
+        "terminology_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Terminology Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "profile_id",
+        "label_zh",
+        "purpose",
+        "routing_rule"
+      ],
+      "title": "SemanticProfileDefinition",
+      "type": "object"
+    },
+    "SourceDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "use_scope": {
+          "title": "Use Scope",
+          "type": "string"
+        },
+        "version_or_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version Or Date"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "publisher",
+        "url",
+        "use_scope"
+      ],
+      "title": "SourceDefinition",
+      "type": "object"
+    },
+    "TerminologySystemDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "enum": [
+            "reference_only",
+            "not_loaded",
+            "project_internal"
+          ],
+          "title": "Availability",
+          "type": "string"
+        },
+        "license_note": {
+          "title": "License Note",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "terminology_id": {
+          "title": "Terminology Id",
+          "type": "string"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uri"
+        },
+        "version_policy": {
+          "title": "Version Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "terminology_id",
+        "name",
+        "version_policy",
+        "availability",
+        "license_note",
+        "source_url"
+      ],
+      "title": "TerminologySystemDefinition",
+      "type": "object"
+    },
+    "ValueTypeDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "representation": {
+          "title": "Representation",
+          "type": "string"
+        },
+        "value_type_id": {
+          "title": "Value Type Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value_type_id",
+        "definition",
+        "representation"
+      ],
+      "title": "ValueTypeDefinition",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fields": {
+      "items": {
+        "$ref": "#/$defs/SemanticFieldDefinition"
+      },
+      "minItems": 1,
+      "title": "Fields",
+      "type": "array"
+    },
+    "governance": {
+      "$ref": "#/$defs/GovernanceDefinition"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/SemanticProfileDefinition"
+      },
+      "minItems": 1,
+      "title": "Profiles",
+      "type": "array"
+    },
+    "registry_id": {
+      "title": "Registry Id",
+      "type": "string"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/RelationDefinition"
+      },
+      "minItems": 1,
+      "title": "Relations",
+      "type": "array"
+    },
+    "schema_bindings": {
+      "items": {
+        "$ref": "#/$defs/SchemaBindingDefinition"
+      },
+      "title": "Schema Bindings",
+      "type": "array"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/SourceDefinition"
+      },
+      "minItems": 1,
+      "title": "Sources",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "review",
+        "released"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "terminology_systems": {
+      "items": {
+        "$ref": "#/$defs/TerminologySystemDefinition"
+      },
+      "minItems": 1,
+      "title": "Terminology Systems",
+      "type": "array"
+    },
+    "value_types": {
+      "items": {
+        "$ref": "#/$defs/ValueTypeDefinition"
+      },
+      "minItems": 1,
+      "title": "Value Types",
+      "type": "array"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "registry_id",
+    "version",
+    "status",
+    "value_types",
+    "fields",
+    "relations",
+    "terminology_systems",
+    "sources",
+    "profiles",
+    "governance"
+  ],
+  "title": "SemanticRegistry",
+  "type": "object"
+}

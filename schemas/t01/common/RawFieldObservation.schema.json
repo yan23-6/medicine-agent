@@ -1,0 +1,137 @@
+{
+  "$defs": {
+    "FieldMappingCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_field": {
+          "title": "Canonical Field",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonical_field",
+        "rationale"
+      ],
+      "title": "FieldMappingCandidate",
+      "type": "object"
+    },
+    "FieldMappingStatus": {
+      "enum": [
+        "mapped",
+        "ambiguous",
+        "unmapped",
+        "rejected"
+      ],
+      "title": "FieldMappingStatus",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context"
+    },
+    "location": {
+      "additionalProperties": true,
+      "title": "Location",
+      "type": "object"
+    },
+    "mapping_candidates": {
+      "items": {
+        "$ref": "#/$defs/FieldMappingCandidate"
+      },
+      "title": "Mapping Candidates",
+      "type": "array"
+    },
+    "mapping_rule_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mapping Rule Version"
+    },
+    "mapping_status": {
+      "$ref": "#/$defs/FieldMappingStatus"
+    },
+    "observation_id": {
+      "title": "Observation Id",
+      "type": "string"
+    },
+    "occurrence": {
+      "title": "Occurrence",
+      "type": "integer"
+    },
+    "raw_key": {
+      "title": "Raw Key",
+      "type": "string"
+    },
+    "raw_type": {
+      "title": "Raw Type",
+      "type": "string"
+    },
+    "raw_value": {
+      "title": "Raw Value"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "observation_id",
+    "source_id",
+    "raw_key",
+    "raw_value",
+    "occurrence",
+    "location",
+    "raw_type",
+    "mapping_status"
+  ],
+  "title": "RawFieldObservation",
+  "type": "object"
+}

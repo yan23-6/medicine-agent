@@ -1,0 +1,355 @@
+{
+  "$defs": {
+    "CodeableConcept": {
+      "additionalProperties": false,
+      "properties": {
+        "codings": {
+          "items": {
+            "$ref": "#/$defs/Coding"
+          },
+          "title": "Codings",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "title": "CodeableConcept",
+      "type": "object"
+    },
+    "Coding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "user_selected": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Selected"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "Coding",
+      "type": "object"
+    },
+    "ConfidenceLevel": {
+      "enum": [
+        "unknown",
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "ConfidenceLevel",
+      "type": "string"
+    },
+    "EvidenceLink": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To"
+        },
+        "evidence_ref": {
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "role": {
+          "$ref": "#/$defs/EvidenceRole"
+        },
+        "strength": {
+          "$ref": "#/$defs/ConfidenceLevel",
+          "default": "unknown"
+        }
+      },
+      "required": [
+        "evidence_ref",
+        "role"
+      ],
+      "title": "EvidenceLink",
+      "type": "object"
+    },
+    "EvidenceRole": {
+      "enum": [
+        "supporting",
+        "weak_supporting",
+        "counterevidence",
+        "ambiguous",
+        "context"
+      ],
+      "title": "EvidenceRole",
+      "type": "string"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "TemporalCertainty": {
+      "enum": [
+        "exact",
+        "approximate",
+        "uncertain",
+        "unknown"
+      ],
+      "title": "TemporalCertainty",
+      "type": "string"
+    },
+    "TemporalExtent": {
+      "additionalProperties": false,
+      "properties": {
+        "certainty": {
+          "$ref": "#/$defs/TemporalCertainty",
+          "default": "unknown"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "point": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point"
+        },
+        "precision": {
+          "$ref": "#/$defs/TemporalPrecision",
+          "default": "unknown"
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        }
+      },
+      "title": "TemporalExtent",
+      "type": "object"
+    },
+    "TemporalPrecision": {
+      "enum": [
+        "year",
+        "month",
+        "day",
+        "minute",
+        "second",
+        "range",
+        "relative",
+        "unknown"
+      ],
+      "title": "TemporalPrecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "condition": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Condition"
+    },
+    "edge_id": {
+      "title": "Edge Id",
+      "type": "string"
+    },
+    "evidence_links": {
+      "items": {
+        "$ref": "#/$defs/EvidenceLink"
+      },
+      "title": "Evidence Links",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "generation_method": {
+      "$ref": "#/$defs/GenerationMethod"
+    },
+    "polarity": {
+      "default": "positive",
+      "title": "Polarity",
+      "type": "string"
+    },
+    "provenance_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Provenance Refs",
+      "type": "array"
+    },
+    "relation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CodeableConcept"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "relation_type": {
+      "title": "Relation Type",
+      "type": "string"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "source_node_id": {
+      "title": "Source Node Id",
+      "type": "string"
+    },
+    "target_node_id": {
+      "title": "Target Node Id",
+      "type": "string"
+    },
+    "valid_time": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TemporalExtent"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "edge_id",
+    "source_node_id",
+    "target_node_id",
+    "relation_type",
+    "generation_method"
+  ],
+  "title": "ReasoningEdge",
+  "type": "object"
+}

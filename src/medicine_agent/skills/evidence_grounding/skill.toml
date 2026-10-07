@@ -1,0 +1,10 @@
+[skill]
+skill_id = "evidence-grounding"
+version = "0.1.0"
+name = "Evidence Grounding"
+description = "Create immutable evidence records from positioned document fragments."
+entrypoint = "medicine_agent.skills.evidence_grounding.handler:EvidenceGroundingSkill"
+input_model = "EvidenceGroundingInput"
+output_model = "EvidenceGroundingOutput"
+permissions = []
+

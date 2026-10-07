@@ -1,0 +1,94 @@
+{
+  "$defs": {
+    "SafetyStatus": {
+      "enum": [
+        "unassessed",
+        "blocked",
+        "restricted",
+        "cleared"
+      ],
+      "title": "SafetyStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alert_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Alert Refs",
+      "type": "array"
+    },
+    "assessed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assessed At"
+    },
+    "assessed_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assessed By"
+    },
+    "policy_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Policy Refs",
+      "type": "array"
+    },
+    "restrictions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Restrictions",
+      "type": "array"
+    },
+    "scope": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scope"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/SafetyStatus"
+    },
+    "unmet_requirements": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unmet Requirements",
+      "type": "array"
+    }
+  },
+  "required": [
+    "status",
+    "source"
+  ],
+  "title": "SafetyContext",
+  "type": "object"
+}

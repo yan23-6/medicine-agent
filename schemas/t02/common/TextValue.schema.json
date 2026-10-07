@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "value_type": {
+      "const": "text",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "text"
+  ],
+  "title": "TextValue",
+  "type": "object"
+}

@@ -1,0 +1,10 @@
+[skill]
+skill_id = "quality-evaluation"
+version = "0.1.0"
+name = "Quality Evaluation"
+description = "Run deterministic structure, checksum, count, and evidence-reference checks."
+entrypoint = "medicine_agent.skills.quality_evaluation.handler:QualityEvaluationSkill"
+input_model = "QualityEvaluationInput"
+output_model = "QualityEvaluationOutput"
+permissions = ["read_candidate_package"]
+

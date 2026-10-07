@@ -1,0 +1,20 @@
+# Local Python environment and generated caches
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Local secrets: never commit real model credentials
+config/llm.local.toml
+.env
+.env.*
+!.env.example
+
+# Local runtime outputs
+artifacts/
+runs/
+dist/
+build/
+

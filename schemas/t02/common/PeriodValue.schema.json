@@ -1,0 +1,108 @@
+{
+  "$defs": {
+    "TemporalCertainty": {
+      "enum": [
+        "exact",
+        "approximate",
+        "uncertain",
+        "unknown"
+      ],
+      "title": "TemporalCertainty",
+      "type": "string"
+    },
+    "TemporalExtent": {
+      "additionalProperties": false,
+      "properties": {
+        "certainty": {
+          "$ref": "#/$defs/TemporalCertainty",
+          "default": "unknown"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "point": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point"
+        },
+        "precision": {
+          "$ref": "#/$defs/TemporalPrecision",
+          "default": "unknown"
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        }
+      },
+      "title": "TemporalExtent",
+      "type": "object"
+    },
+    "TemporalPrecision": {
+      "enum": [
+        "year",
+        "month",
+        "day",
+        "minute",
+        "second",
+        "range",
+        "relative",
+        "unknown"
+      ],
+      "title": "TemporalPrecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "period": {
+      "$ref": "#/$defs/TemporalExtent"
+    },
+    "value_type": {
+      "const": "period",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "period"
+  ],
+  "title": "PeriodValue",
+  "type": "object"
+}

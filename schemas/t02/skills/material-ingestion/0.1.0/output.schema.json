@@ -1,0 +1,372 @@
+{
+  "$defs": {
+    "DocumentFragment": {
+      "additionalProperties": false,
+      "properties": {
+        "end_line": {
+          "title": "End Line",
+          "type": "integer"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "start_line": {
+          "title": "Start Line",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fragment_id",
+        "source_id",
+        "ordinal",
+        "text",
+        "start_line",
+        "end_line"
+      ],
+      "title": "DocumentFragment",
+      "type": "object"
+    },
+    "FieldMappingCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_field": {
+          "title": "Canonical Field",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonical_field",
+        "rationale"
+      ],
+      "title": "FieldMappingCandidate",
+      "type": "object"
+    },
+    "FieldMappingStatus": {
+      "enum": [
+        "mapped",
+        "ambiguous",
+        "unmapped",
+        "rejected"
+      ],
+      "title": "FieldMappingStatus",
+      "type": "string"
+    },
+    "IssueSeverity": {
+      "enum": [
+        "warning",
+        "error"
+      ],
+      "title": "IssueSeverity",
+      "type": "string"
+    },
+    "RawFieldObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "mapping_candidates": {
+          "items": {
+            "$ref": "#/$defs/FieldMappingCandidate"
+          },
+          "title": "Mapping Candidates",
+          "type": "array"
+        },
+        "mapping_rule_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mapping Rule Version"
+        },
+        "mapping_status": {
+          "$ref": "#/$defs/FieldMappingStatus"
+        },
+        "observation_id": {
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "occurrence": {
+          "title": "Occurrence",
+          "type": "integer"
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_type": {
+          "title": "Raw Type",
+          "type": "string"
+        },
+        "raw_value": {
+          "title": "Raw Value"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observation_id",
+        "source_id",
+        "raw_key",
+        "raw_value",
+        "occurrence",
+        "location",
+        "raw_type",
+        "mapping_status"
+      ],
+      "title": "RawFieldObservation",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SkillIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "SkillIssue",
+      "type": "object"
+    },
+    "SourceDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "file_name": {
+          "title": "File Name",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/SourceMetadata"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "file_name",
+        "media_type",
+        "sha256",
+        "metadata"
+      ],
+      "title": "SourceDocument",
+      "type": "object"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fragments": {
+      "items": {
+        "$ref": "#/$defs/DocumentFragment"
+      },
+      "title": "Fragments",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/SkillIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "raw_fields": {
+      "items": {
+        "$ref": "#/$defs/RawFieldObservation"
+      },
+      "title": "Raw Fields",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceDocument"
+    }
+  },
+  "required": [
+    "source"
+  ],
+  "title": "MaterialIngestionOutput",
+  "type": "object"
+}

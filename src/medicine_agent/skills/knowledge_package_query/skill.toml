@@ -1,0 +1,10 @@
+[skill]
+skill_id = "knowledge-package-query"
+version = "0.1.0"
+name = "Knowledge Package Query"
+description = "Query an experimental package and return matching knowledge with supporting evidence."
+entrypoint = "medicine_agent.skills.knowledge_package_query.handler:KnowledgePackageQuerySkill"
+input_model = "KnowledgePackageQueryInput"
+output_model = "KnowledgePackageQueryOutput"
+permissions = ["read_candidate_package"]
+

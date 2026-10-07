@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "CodeableConcept": {
+      "additionalProperties": false,
+      "properties": {
+        "codings": {
+          "items": {
+            "$ref": "#/$defs/Coding"
+          },
+          "title": "Codings",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "title": "CodeableConcept",
+      "type": "object"
+    },
+    "Coding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "user_selected": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Selected"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "Coding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "concept": {
+      "$ref": "#/$defs/CodeableConcept"
+    },
+    "value_type": {
+      "const": "coded",
+      "title": "Value Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value_type",
+    "concept"
+  ],
+  "title": "CodedValue",
+  "type": "object"
+}
