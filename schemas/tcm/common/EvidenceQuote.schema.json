@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evidence_id": {
+      "minLength": 1,
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "text": {
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "text"
+  ],
+  "title": "EvidenceQuote",
+  "type": "object"
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Build an unreviewed, evidence-linked TCM reasoning candidate graph from a CanonicalCase under an explicit safety context.",
+  "entrypoint": "medicine_agent.skills.tcm_reasoning.handler:TCMReasoningSkill",
+  "input_model": "TCMReasoningInput",
+  "name": "TCM Reasoning",
+  "output_model": "TCMReasoningOutput",
+  "permissions": [],
+  "skill_id": "tcm-reasoning",
+  "status": "available",
+  "version": "0.3.0"
+}

@@ -231,7 +231,7 @@ def validate_semantic_context(
             "Semantic registry identity does not match the runtime registry",
             details={"expected": registry.registry_id, "actual": context.registry_id},
         )
-    if context.registry_version != registry.version:
+    if context.registry_version not in {"0.1.0", "0.2.0", "0.3.0", "0.3.1", registry.version}:
         raise SemanticContractError(
             "Semantic registry version is unsupported",
             details={"expected": registry.version, "actual": context.registry_version},

@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "analyzed": {
+      "title": "Analyzed",
+      "type": "integer"
+    },
+    "errors": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "extracted": {
+      "title": "Extracted",
+      "type": "integer"
+    },
+    "next_unit": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Next Unit"
+    },
+    "package_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Package Path"
+    },
+    "parent_task_id": {
+      "title": "Parent Task Id",
+      "type": "string"
+    },
+    "role": {
+      "title": "Role",
+      "type": "string"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "unit_count": {
+      "title": "Unit Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "task_id",
+    "parent_task_id",
+    "role",
+    "status",
+    "unit_count",
+    "extracted",
+    "analyzed",
+    "next_unit"
+  ],
+  "title": "TaskCheckpoint",
+  "type": "object"
+}

@@ -13,6 +13,7 @@ from medicine_agent.packages.io import validate_package_path, write_jsonl
 from medicine_agent.runtime.base import SkillContext, manifest_path
 from medicine_agent.runtime.errors import PackageValidationError
 from medicine_agent.runtime.manifest import load_manifest
+from medicine_agent.runtime.files import replace_path
 from medicine_agent.skills.knowledge_package_build_validate.models import (
     KnowledgePackageBuildValidateInput,
     KnowledgePackageBuildValidateOutput,
@@ -101,7 +102,7 @@ class KnowledgePackageBuildValidateSkill:
                     "Experimental package validation failed",
                     details={"issues": [item.model_dump(mode="json") for item in report.issues]},
                 )
-            os.replace(work, target)
+            replace_path(work, target)
             return KnowledgePackageBuildValidateOutput(
                 package_path=str(target), manifest=manifest, report=report
             )

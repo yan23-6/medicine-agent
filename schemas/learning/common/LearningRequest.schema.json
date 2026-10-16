@@ -1,0 +1,277 @@
+{
+  "$defs": {
+    "PackageClassification": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "knowledge_categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Categories",
+          "type": "array"
+        },
+        "knowledge_layers": {
+          "items": {
+            "enum": [
+              "general_pathomechanism",
+              "physician_experience",
+              "individual_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Layers",
+          "type": "array"
+        },
+        "material_types": {
+          "items": {
+            "enum": [
+              "textbook",
+              "paper",
+              "physician_experience",
+              "case_record",
+              "clinical_record",
+              "specialty_material",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "title": "Material Types",
+          "type": "array"
+        },
+        "medical_profiles": {
+          "items": {
+            "enum": [
+              "common",
+              "tcm",
+              "western",
+              "safety",
+              "formula"
+            ],
+            "type": "string"
+          },
+          "title": "Medical Profiles",
+          "type": "array"
+        },
+        "status": {
+          "default": "unclassified",
+          "enum": [
+            "unclassified",
+            "declared",
+            "candidate"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "subjects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subjects",
+          "type": "array"
+        }
+      },
+      "title": "PackageClassification",
+      "type": "object"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_use": {
+      "minLength": 1,
+      "title": "Allowed Use",
+      "type": "string"
+    },
+    "base_packages": {
+      "description": "已完成的数据包文件；作为完整知识基础，不是新资料或更新权限",
+      "items": {
+        "type": "string"
+      },
+      "title": "Base Packages",
+      "type": "array"
+    },
+    "classification": {
+      "$ref": "#/$defs/PackageClassification"
+    },
+    "force_ocr": {
+      "default": false,
+      "title": "Force Ocr",
+      "type": "boolean"
+    },
+    "max_attempts": {
+      "default": 2,
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "metadata": {
+      "$ref": "#/$defs/SourceMetadata"
+    },
+    "mode": {
+      "default": "model",
+      "enum": [
+        "extractive",
+        "model"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "owner_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Owner Id"
+    },
+    "parent_package": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Package"
+    },
+    "paths": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Paths",
+      "type": "array"
+    },
+    "timeout_seconds": {
+      "default": 120,
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Timeout Seconds",
+      "type": "integer"
+    },
+    "units": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Units"
+    }
+  },
+  "required": [
+    "paths",
+    "allowed_use"
+  ],
+  "title": "LearningRequest",
+  "type": "object"
+}

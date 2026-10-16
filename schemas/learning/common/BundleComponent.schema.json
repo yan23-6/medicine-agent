@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active": {
+      "default": true,
+      "description": "该来源版本是否进入默认知识视图；历史内容仍保存在文件内",
+      "title": "Active",
+      "type": "boolean"
+    },
+    "manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Manifest Sha256",
+      "type": "string"
+    },
+    "package_id": {
+      "description": "原来源包身份，复制后保持稳定以回溯原节点",
+      "title": "Package Id",
+      "type": "string"
+    },
+    "path": {
+      "description": "归档文件内部的来源分区路径，由运行时管理",
+      "title": "Path",
+      "type": "string"
+    }
+  },
+  "required": [
+    "path",
+    "package_id",
+    "manifest_sha256"
+  ],
+  "title": "BundleComponent",
+  "type": "object"
+}

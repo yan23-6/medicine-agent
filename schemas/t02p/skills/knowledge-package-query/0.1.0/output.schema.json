@@ -1,0 +1,23 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evidence": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "matches": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Matches",
+      "type": "array"
+    }
+  },
+  "title": "KnowledgePackageQueryOutput",
+  "type": "object"
+}

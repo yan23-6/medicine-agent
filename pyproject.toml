@@ -6,7 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "httpx>=0.28,<1",
+    "onnxruntime>=1.20,<2",
+    "pillow>=11,<13",
     "pydantic>=2.12,<3",
+    "pypdfium2>=4.30,<6",
+    "python-docx>=1.2,<2",
+    "rapidocr>=3,<4",
 ]
 
 [project.scripts]
@@ -15,6 +20,7 @@ medicine-agent = "medicine_agent.cli:main"
 [dependency-groups]
 dev = [
     "pytest>=8.4,<10",
+    "reportlab>=4,<5",
 ]
 
 [build-system]

@@ -14,6 +14,7 @@ from medicine_agent.semantics import (
 )
 from medicine_agent.runtime.errors import SemanticContractError
 from medicine_agent.bootstrap import create_facade
+from medicine_agent.analysis.models import DocumentBlock, DocumentUnit, TaskCheckpoint, PackageClassification, PackageRevision
 from medicine_agent.domain.clinical import (
     CanonicalCase,
     ClinicalObservation,
@@ -32,7 +33,7 @@ def test_unified_semantic_registry_is_valid_and_has_expected_profiles() -> None:
     registry = load_semantic_registry()
 
     assert report["valid"] is True
-    assert report["version"] == "0.1.0"
+    assert report["version"] == "0.3.2"
     assert {profile.profile_id for profile in registry.profiles} == {
         "common",
         "tcm",
@@ -65,9 +66,20 @@ def test_schema_bindings_point_to_real_schema_fields_and_semantics() -> None:
             ClinicalReasoningGraph,
             ReasoningNode,
             SafetyContext,
+            DocumentBlock,
+            DocumentUnit,
+            TaskCheckpoint,
+            PackageClassification,
+            PackageRevision,
         )
     }
     semantic_fields = {field.field_id for field in registry.fields}
+    from medicine_agent.domain.tcm_knowledge import TCM_MODELS
+    models.update({m.__name__: m for m in TCM_MODELS})
+    from medicine_agent.domain.reviews import REVIEW_MODELS
+    models.update({m.__name__: m for m in REVIEW_MODELS})
+    from medicine_agent.skills.tcm_knowledge_analysis.handler import TCMAnalysisInput
+    models['TCMAnalysisInput'] = TCMAnalysisInput
 
     assert registry.schema_bindings
     for binding in registry.schema_bindings:

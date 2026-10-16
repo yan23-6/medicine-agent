@@ -1,0 +1,24 @@
+{
+  "contract_set": "correction",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/CorrectionBundle.schema.json": "7665bfb1628ee0de0a780b43691cadcef48c26cb9fff8e85979efc0d3ecb6bff",
+    "common/CorrectionEvent.schema.json": "1b1c83846592b10b5105865f0f284ff004c4fb90434986d396b7575f7455aafa",
+    "common/CorrectionRequest.schema.json": "d9a7cf55f016bc8becfdca569eb3299ed76cb36b46438ba23e1daf32a9096cd6",
+    "common/DocumentFragment.schema.json": "2017732ddd39a2e153c377a1dd894ed81a35408934efa8ed0545c7a9123c4e5c",
+    "common/EvidenceRecord.schema.json": "2d82f8d64329f5f425153e80c6c44dd26ec979b4fb909a8a28dba2a8cf813bb7",
+    "common/ExperimentalPackageManifest.schema.json": "d3d4f3b23da73c045d8d7903a87552602d909ed61bec84fe61b257aead415c7f",
+    "common/FieldMappingCandidate.schema.json": "a2d5abedc91da0e2642d84358ecb35efd8c2093de05fed31a3313d330f36c609",
+    "common/KnowledgeCandidate.schema.json": "13db8ecc4f45bc3492848d43f365c0ad9454258213a68fc53c41f9a1a90f692e",
+    "common/QualityReport.schema.json": "a10ad26694bbba20b10e7b30def01e9ea7bb453ced842962bd3f0e575a0afe78",
+    "common/RawFieldObservation.schema.json": "88da4f8a2088da23688e0c6c2d464ea0a59250a0a8a501e0db02162ab82853b6",
+    "common/RelationCandidate.schema.json": "62e71a2ba8f60a3817c8d9c213adcb7a9e1dcb51773124d93b5279509a497342",
+    "common/RunRecord.schema.json": "462742cda1fd6b88711ca626e0881b05143d9d8ca7380b8c77b30ef8a1e30c3f",
+    "common/SkillInvocation.schema.json": "b8424e9bc2e89d5e38e7fc1dda067df9250bcda827d01ec9df9c470e3f6ed5b5",
+    "common/SkillIssue.schema.json": "d5c8597c27dc83fcba1e9c30ca57ecc1c9310682697bab99efe1b360b93ef6df",
+    "common/SkillManifest.schema.json": "888ed029f795d67403785d67f68a3b1c0d318f6810cd04b3e536d64e08af74cc",
+    "common/SkillResult.schema.json": "882b728040a26f24bd83f416f0f3410a61b7e2d291055b62e8c796f771bd527a",
+    "common/SourceDocument.schema.json": "d663677bfaf8551bd54b1385955acfb80efa6078a402bad166209a3e7c7370cd",
+    "common/SourceMetadata.schema.json": "565c1206171077ac8d4b1f27966f4738a9e3e1b6172722642b93eec3bf5a0989"
+  }
+}

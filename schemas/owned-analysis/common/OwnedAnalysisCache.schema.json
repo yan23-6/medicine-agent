@@ -1,0 +1,884 @@
+{
+  "$defs": {
+    "AnalysisGap": {
+      "additionalProperties": false,
+      "properties": {
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "quotes"
+      ],
+      "title": "AnalysisGap",
+      "type": "object"
+    },
+    "CachedAnalysisUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis": {
+          "$ref": "#/$defs/UnitAnalysis"
+        },
+        "extraction": {
+          "$ref": "#/$defs/DocumentUnit"
+        },
+        "ordinal": {
+          "minimum": 1,
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "predecessor_unit": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Predecessor Unit"
+        }
+      },
+      "required": [
+        "ordinal",
+        "extraction",
+        "analysis"
+      ],
+      "title": "CachedAnalysisUnit",
+      "type": "object"
+    },
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "DocumentBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "position": {
+          "$ref": "#/$defs/DocumentPosition"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "position"
+      ],
+      "title": "DocumentBlock",
+      "type": "object"
+    },
+    "DocumentFragment": {
+      "additionalProperties": false,
+      "properties": {
+        "end_line": {
+          "title": "End Line",
+          "type": "integer"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "start_line": {
+          "title": "Start Line",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fragment_id",
+        "source_id",
+        "ordinal",
+        "text",
+        "start_line",
+        "end_line"
+      ],
+      "title": "DocumentFragment",
+      "type": "object"
+    },
+    "DocumentPosition": {
+      "additionalProperties": false,
+      "properties": {
+        "coordinate_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Coordinate Unit"
+        },
+        "origin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Origin"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "page_size": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Size"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_scale": {
+          "default": 1,
+          "title": "Render Scale",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "title": "Rotation",
+          "type": "integer"
+        },
+        "structure_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Structure Path"
+        },
+        "unit": {
+          "minimum": 1,
+          "title": "Unit",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit"
+      ],
+      "title": "DocumentPosition",
+      "type": "object"
+    },
+    "DocumentUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/DocumentBlock"
+          },
+          "title": "Blocks",
+          "type": "array"
+        },
+        "index": {
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "index",
+        "method"
+      ],
+      "title": "DocumentUnit",
+      "type": "object"
+    },
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "GroundedFact": {
+      "additionalProperties": false,
+      "properties": {
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "state": {
+          "default": "stated",
+          "enum": [
+            "stated",
+            "inferred",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "field_id"
+      ],
+      "title": "GroundedFact",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "KnowledgeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "knowledge_id": {
+          "title": "Knowledge Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_id",
+        "kind",
+        "label",
+        "statement",
+        "evidence_refs",
+        "generation_method"
+      ],
+      "title": "KnowledgeCandidate",
+      "type": "object"
+    },
+    "MedicalRecordGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "about_group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "About Group Id"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/GroundedFact"
+          },
+          "minItems": 1,
+          "title": "Facts",
+          "type": "array"
+        },
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "theory",
+            "herb",
+            "differentiation",
+            "formula",
+            "case",
+            "dose",
+            "outcome",
+            "safety"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id",
+        "kind",
+        "facts"
+      ],
+      "title": "MedicalRecordGroup",
+      "type": "object"
+    },
+    "RelationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "relation_id": {
+          "title": "Relation Id",
+          "type": "string"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_knowledge_id": {
+          "title": "Source Knowledge Id",
+          "type": "string"
+        },
+        "target_knowledge_id": {
+          "title": "Target Knowledge Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relation_id",
+        "relation_type",
+        "source_knowledge_id",
+        "target_knowledge_id",
+        "generation_method"
+      ],
+      "title": "RelationCandidate",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "TCMKnowledgeGraph": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_status": {
+          "const": "candidate_partial",
+          "default": "candidate_partial",
+          "title": "Analysis Status",
+          "type": "string"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/TCMKnowledgeNode"
+          },
+          "title": "Nodes",
+          "type": "array"
+        },
+        "semantic_version": {
+          "default": "0.3.2",
+          "enum": [
+            "0.3.0",
+            "0.3.2"
+          ],
+          "title": "Semantic Version",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "TCMKnowledgeGraph",
+      "type": "object"
+    },
+    "TCMKnowledgeNode": {
+      "additionalProperties": false,
+      "properties": {
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Categories",
+          "type": "array"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "generation_method": {
+          "const": "model",
+          "default": "model",
+          "title": "Generation Method",
+          "type": "string"
+        },
+        "groups": {
+          "items": {
+            "$ref": "#/$defs/MedicalRecordGroup"
+          },
+          "minItems": 1,
+          "title": "Groups",
+          "type": "array"
+        },
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "review_status": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "source_id": {
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "topics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Topics",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node_id",
+        "source_id",
+        "title",
+        "statement",
+        "categories",
+        "quotes",
+        "groups"
+      ],
+      "title": "TCMKnowledgeNode",
+      "type": "object"
+    },
+    "UnitAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "current_evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Current Evidence",
+          "type": "array"
+        },
+        "fragments": {
+          "items": {
+            "$ref": "#/$defs/DocumentFragment"
+          },
+          "title": "Fragments",
+          "type": "array"
+        },
+        "knowledge": {
+          "items": {
+            "$ref": "#/$defs/KnowledgeCandidate"
+          },
+          "title": "Knowledge",
+          "type": "array"
+        },
+        "relations": {
+          "items": {
+            "$ref": "#/$defs/RelationCandidate"
+          },
+          "title": "Relations",
+          "type": "array"
+        },
+        "tcm_graph": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TCMKnowledgeGraph"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "current_evidence",
+        "fragments",
+        "knowledge",
+        "relations",
+        "tcm_graph",
+        "warnings"
+      ],
+      "title": "UnitAnalysis",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "content_package_id": {
+      "title": "Content Package Id",
+      "type": "string"
+    },
+    "derivation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Derivation Id"
+    },
+    "document_unit_count": {
+      "minimum": 1,
+      "title": "Document Unit Count",
+      "type": "integer"
+    },
+    "invalidated_context_units": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Invalidated Context Units",
+      "type": "array"
+    },
+    "options_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Options Fingerprint",
+      "type": "string"
+    },
+    "owner_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Owner Id",
+      "type": "string"
+    },
+    "reused_analysis_units": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Reused Analysis Units",
+      "type": "array"
+    },
+    "reused_extraction_units": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Reused Extraction Units",
+      "type": "array"
+    },
+    "reused_from_package_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reused From Package Id"
+    },
+    "runtime": {
+      "additionalProperties": true,
+      "title": "Runtime",
+      "type": "object"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "units": {
+      "items": {
+        "$ref": "#/$defs/CachedAnalysisUnit"
+      },
+      "minItems": 1,
+      "title": "Units",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "owner_id",
+    "content_package_id",
+    "source_sha256",
+    "source_id",
+    "runtime",
+    "options_fingerprint",
+    "document_unit_count",
+    "units"
+  ],
+  "title": "OwnedAnalysisCache",
+  "type": "object"
+}

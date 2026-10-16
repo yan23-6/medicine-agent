@@ -1,0 +1,7 @@
+# Preserve binary fixtures and package files across Windows checkouts.
+*.pdf binary
+*.docx binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.medpkg binary

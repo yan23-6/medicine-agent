@@ -1,0 +1,58 @@
+{
+  "$defs": {
+    "DocumentFragment": {
+      "additionalProperties": false,
+      "properties": {
+        "end_line": {
+          "title": "End Line",
+          "type": "integer"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "start_line": {
+          "title": "Start Line",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fragment_id",
+        "source_id",
+        "ordinal",
+        "text",
+        "start_line",
+        "end_line"
+      ],
+      "title": "DocumentFragment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fragments": {
+      "items": {
+        "$ref": "#/$defs/DocumentFragment"
+      },
+      "title": "Fragments",
+      "type": "array"
+    }
+  },
+  "required": [
+    "fragments"
+  ],
+  "title": "EvidenceGroundingInput",
+  "type": "object"
+}

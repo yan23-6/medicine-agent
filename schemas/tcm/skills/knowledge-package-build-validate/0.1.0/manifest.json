@@ -1,0 +1,13 @@
+{
+  "description": "Build and validate an atomic directory-form experimental knowledge package.",
+  "entrypoint": "medicine_agent.skills.knowledge_package_build_validate.handler:KnowledgePackageBuildValidateSkill",
+  "input_model": "KnowledgePackageBuildValidateInput",
+  "name": "Knowledge Package Build and Validate",
+  "output_model": "KnowledgePackageBuildValidateOutput",
+  "permissions": [
+    "write_candidate_package"
+  ],
+  "skill_id": "knowledge-package-build-validate",
+  "status": "available",
+  "version": "0.1.0"
+}

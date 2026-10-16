@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "generation_method": {
+      "$ref": "#/$defs/GenerationMethod"
+    },
+    "relation_id": {
+      "title": "Relation Id",
+      "type": "string"
+    },
+    "relation_type": {
+      "title": "Relation Type",
+      "type": "string"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "source_knowledge_id": {
+      "title": "Source Knowledge Id",
+      "type": "string"
+    },
+    "target_knowledge_id": {
+      "title": "Target Knowledge Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "relation_id",
+    "relation_type",
+    "source_knowledge_id",
+    "target_knowledge_id",
+    "generation_method"
+  ],
+  "title": "RelationCandidate",
+  "type": "object"
+}

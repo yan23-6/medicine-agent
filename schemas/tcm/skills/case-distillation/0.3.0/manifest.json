@@ -1,0 +1,11 @@
+{
+  "description": "Convert an ordered, source-grounded raw case into a CanonicalCase without discarding uncertainty or historical context.",
+  "entrypoint": "medicine_agent.skills.case_distillation.handler:CaseDistillationSkill",
+  "input_model": "CaseDistillationInput",
+  "name": "Case Distillation",
+  "output_model": "CaseDistillationOutput",
+  "permissions": [],
+  "skill_id": "case-distillation",
+  "status": "available",
+  "version": "0.3.0"
+}

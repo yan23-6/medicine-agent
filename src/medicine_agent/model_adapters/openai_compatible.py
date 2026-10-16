@@ -74,9 +74,23 @@ class OpenAICompatibleModelClient:
                 content = response.json()["choices"][0]["message"]["content"]
                 result = json.loads(content)
         except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
+            # Only bounded diagnostic categories leave the adapter. Exception text,
+            # response bodies, request URLs and headers may contain private data.
+            if isinstance(exc, httpx.TimeoutException):
+                failure_kind = 'timeout'
+            elif isinstance(exc, httpx.HTTPStatusError):
+                failure_kind = 'http_status'
+            elif isinstance(exc, httpx.TransportError):
+                failure_kind = 'connection'
+            else:
+                failure_kind = 'invalid_response'
+            details = {'provider': self.provider, 'model': self.model,
+                       'failure_kind': failure_kind}
+            if isinstance(exc, httpx.HTTPStatusError):
+                details['http_status'] = exc.response.status_code
             raise ModelCallFailedError(
                 "OpenAI-compatible request failed",
-                details={"provider": self.provider, "model": self.model},
+                details=details,
             ) from exc
         if not isinstance(result, dict):
             raise ModelCallFailedError("Model response must be a JSON object")

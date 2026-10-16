@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "enabled_profiles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Enabled Profiles",
+      "type": "array"
+    },
+    "registry_id": {
+      "default": "medicine-agent.semantic-registry",
+      "title": "Registry Id",
+      "type": "string"
+    },
+    "registry_version": {
+      "default": "0.1.0",
+      "title": "Registry Version",
+      "type": "string"
+    },
+    "terminology_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Terminology Versions",
+      "type": "object"
+    }
+  },
+  "title": "SemanticContext",
+  "type": "object"
+}

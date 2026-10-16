@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "association_id": {
+      "title": "Association Id",
+      "type": "string"
+    },
+    "rationale": {
+      "minLength": 1,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "relation": {
+      "enum": [
+        "same_definition",
+        "related",
+        "expands",
+        "contradicts"
+      ],
+      "title": "Relation",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    },
+    "status": {
+      "const": "candidate",
+      "default": "candidate",
+      "title": "Status",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "association_id",
+    "source",
+    "target",
+    "relation",
+    "rationale"
+  ],
+  "title": "KnowledgeAssociation",
+  "type": "object"
+}

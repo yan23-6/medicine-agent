@@ -105,6 +105,36 @@ def test_model_call_failure_does_not_expose_credentials(monkeypatch) -> None:
         client.generate_json(system="test", user="test", schema={"type": "object"})
     assert "must-not-appear" not in str(raised.value)
     assert raised.value.code == "MODEL_CALL_FAILED"
+    assert raised.value.details['failure_kind'] == 'connection'
+
+
+@pytest.mark.parametrize('kind,expected,status', [
+    ('timeout', 'timeout', None), ('http', 'http_status', 503),
+    ('invalid', 'invalid_response', None),
+])
+def test_model_failure_diagnostics_are_specific_and_redacted(monkeypatch, kind, expected, status):
+    class DiagnosticClient:
+        def __init__(self, **kwargs):
+            pass
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def post(self, url, json):
+            request = httpx.Request('POST', 'https://private.invalid/secret-path')
+            if kind == 'timeout':
+                raise httpx.ReadTimeout('secret exception body', request=request)
+            if kind == 'http':
+                return httpx.Response(503, request=request, text='secret provider body')
+            return httpx.Response(200, request=request, json={'secret': 'not an API response'})
+    monkeypatch.setattr(httpx, 'Client', DiagnosticClient)
+    client = OpenAICompatibleModelClient(LlmConfig(base_url='https://private.invalid',
+        api_key='secret-key', model='fixture'))
+    with pytest.raises(ModelCallFailedError) as raised:
+        client.generate_json(system='test', user='test', schema={'type': 'object'})
+    assert raised.value.details['failure_kind'] == expected
+    assert raised.value.details.get('http_status') == status
+    assert 'secret' not in str(raised.value.details) and 'private.invalid' not in str(raised.value.details)
 
 
 def test_broken_evidence_is_reported_and_query_is_blocked(tmp_path: Path) -> None:

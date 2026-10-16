@@ -11,6 +11,8 @@ from medicine_agent.skills.knowledge_package_query.handler import KnowledgePacka
 from medicine_agent.skills.material_ingestion.handler import MaterialIngestionSkill
 from medicine_agent.skills.quality_evaluation.handler import QualityEvaluationSkill
 from medicine_agent.skills.tcm_reasoning.handler import TCMReasoningSkill
+from medicine_agent.skills.document_extraction.handler import DocumentExtractionSkill
+from medicine_agent.skills.tcm_knowledge_analysis.handler import TCMKnowledgeAnalysisSkill
 
 
 def build_registry() -> SkillRegistry:
@@ -24,6 +26,8 @@ def build_registry() -> SkillRegistry:
             QualityEvaluationSkill(),
             CaseDistillationSkill(),
             TCMReasoningSkill(),
+            DocumentExtractionSkill(),
+            TCMKnowledgeAnalysisSkill(),
         ]
     )
 

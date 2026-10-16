@@ -65,9 +65,11 @@ uv run medicine-agent pipeline tests/fixtures/basic.md --output-root artifacts/p
 
 ## 当前能力边界
 
-- 仅支持 UTF-8 Markdown/TXT；
-- 当前知识蒸馏只验证协议和证据闭环，不代表完整医学抽取；
+- 文件入口支持 PDF、DOCX、UTF-8 Markdown/TXT、PNG/JPEG 及本地 OCR；其他格式尚未支持；
+- 当前已有结构化中医候选分析及复核/更正软件首版，不代表医学正确性或完整问诊验收；
 - T02-A 病例与中医推理输出均为 `unreviewed`、`research_candidate_only`，不能用于临床决策；
 - 实验知识包不是正式知识包 v0；
-- 尚未实现 Agent、MCP、REST、LadybugDB、PDF/DOCX/OCR 或正式蒸馏。
+- 受控总智能体/数据分析 Agent、断点续跑和包目录查询已有首版；MCP/REST 服务、LadybugDB、正式医学蒸馏与完整问诊尚未实现。
 
+
+产品入口使用 `analyze submit <新资料> --base-package <包1.medpkg> --base-package <包2.medpkg> --allowed-use <用途>`；owner-id 可选，仅记录贡献。最终单文件放固定用户目录，操作命令见 [数据分析说明](src/medicine_agent/analysis/README.md)。目录 API 仅内部兼容；精确缓存与新资料学习分开。验收见 tasks/STATE.md 与当前阶段 T02B2_ACCEPTANCE.md。

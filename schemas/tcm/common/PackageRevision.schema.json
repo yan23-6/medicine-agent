@@ -1,0 +1,204 @@
+{
+  "$defs": {
+    "PackageClassification": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "knowledge_categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Categories",
+          "type": "array"
+        },
+        "knowledge_layers": {
+          "items": {
+            "enum": [
+              "general_pathomechanism",
+              "physician_experience",
+              "individual_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Layers",
+          "type": "array"
+        },
+        "material_types": {
+          "items": {
+            "enum": [
+              "textbook",
+              "paper",
+              "physician_experience",
+              "case_record",
+              "clinical_record",
+              "specialty_material",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "title": "Material Types",
+          "type": "array"
+        },
+        "medical_profiles": {
+          "items": {
+            "enum": [
+              "common",
+              "tcm",
+              "western",
+              "safety",
+              "formula"
+            ],
+            "type": "string"
+          },
+          "title": "Medical Profiles",
+          "type": "array"
+        },
+        "status": {
+          "default": "unclassified",
+          "enum": [
+            "unclassified",
+            "declared",
+            "candidate"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "subjects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subjects",
+          "type": "array"
+        }
+      },
+      "title": "PackageClassification",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_use": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allowed Use"
+    },
+    "changes": {
+      "additionalProperties": {
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      },
+      "title": "Changes",
+      "type": "object"
+    },
+    "classification": {
+      "$ref": "#/$defs/PackageClassification"
+    },
+    "family": {
+      "title": "Family",
+      "type": "string"
+    },
+    "parent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Parent"
+    },
+    "processing_scope": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Processing Scope"
+    },
+    "review_status": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Review Status",
+      "type": "string"
+    },
+    "runtime": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runtime"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "source_sha256": {
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "units": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Units",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "family",
+    "task_id",
+    "source_sha256",
+    "parent",
+    "sequence",
+    "units",
+    "changes"
+  ],
+  "title": "PackageRevision",
+  "type": "object"
+}

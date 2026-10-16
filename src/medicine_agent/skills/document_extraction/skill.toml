@@ -1,0 +1,9 @@
+[skill]
+skill_id = "document-extraction"
+version = "0.1.0"
+name = "Document Extraction"
+description = "Material-ingestion family: extract one located unit from PDF, DOCX, UTF-8 text or image using native parsers or local Chinese OCR."
+entrypoint = "medicine_agent.skills.document_extraction.handler:DocumentExtractionSkill"
+input_model = "ExtractionInput"
+output_model = "DocumentUnit"
+permissions = ["read_local_file", "execute_local_parser"]

@@ -144,17 +144,47 @@ def export_schemas(
     *,
     contract_set: str = "t01",
 ) -> dict[str, Any]:
-    if contract_set not in {"t01", "t02"}:
+    if contract_set not in {"t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning'}:
         raise ValueError(f"Unsupported contract set: {contract_set}")
     output_root = output_root.resolve()
     written: list[Path] = []
     common_models = COMMON_MODELS + (T02_CLINICAL_MODELS if contract_set == "t02" else ())
+    if contract_set in {"t02p", "tcm"}:
+        from medicine_agent.analysis.models import (
+            AnalysisRequest, DocumentPosition, DocumentBlock, DocumentUnit, ExtractionInput,
+            TaskCheckpoint,
+            PackageClassification, PackageRevision,
+        )
+        common_models += (AnalysisRequest, DocumentPosition, DocumentBlock, DocumentUnit,
+                          ExtractionInput, TaskCheckpoint, PackageClassification, PackageRevision,
+                          SemanticRegistry, SemanticContext)
+    if contract_set == 'tcm':
+        from medicine_agent.domain.tcm_knowledge import TCM_MODELS
+        common_models += TCM_MODELS
+    if contract_set == 'review':
+        from medicine_agent.domain.reviews import REVIEW_MODELS
+        common_models += REVIEW_MODELS
+    if contract_set == 'correction':
+        from medicine_agent.domain.corrections import CORRECTION_MODELS
+        common_models += CORRECTION_MODELS
+    if contract_set == 'owned-analysis':
+        from medicine_agent.domain.owned_analysis import OWNED_MODELS
+        common_models += OWNED_MODELS
+    if contract_set == 'learning':
+        from medicine_agent.domain.learning import LEARNING_MODELS
+        common_models += LEARNING_MODELS
     for model in common_models:
         path = output_root / "common" / f"{model.__name__}.schema.json"
         _write_json(path, model.model_json_schema())
         written.append(path)
 
     for manifest in facade.list_skills():
+        if contract_set in {'review', 'correction', 'owned-analysis','learning'}:
+            continue
+        if contract_set != 'tcm' and manifest.skill_id == 'tcm-knowledge-analysis':
+            continue
+        if contract_set in {"t01", "t02"} and manifest.skill_id == "document-extraction":
+            continue
         if contract_set == "t01" and manifest.skill_id not in T01_SKILL_IDS:
             continue
         description = facade.describe_skill(manifest.skill_id, manifest.version)
@@ -173,7 +203,7 @@ def export_schemas(
     }
     index = {
         "contract_set": contract_set,
-        "contract_version": "0.1.0" if contract_set == "t01" else "0.4.0",
+        "contract_version": {"t01": "0.1.0", "t02": "0.4.0", "t02p": "0.2.0", "tcm": "0.2.0", 'review': '0.1.0', 'correction': '0.1.0', 'owned-analysis': '0.2.0','learning':'0.1.0'}[contract_set],
         "files": files,
     }
     _write_json(output_root / "schema-index.json", index)

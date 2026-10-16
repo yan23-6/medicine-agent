@@ -34,6 +34,8 @@ def _print(value: Any) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="medicine-agent")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    from medicine_agent.analysis.cli import add_commands
+    add_commands(subparsers)
     subparsers.add_parser("list-skills", help="List registered skills")
 
     describe = subparsers.add_parser("describe-skill", help="Show manifest and schemas")
@@ -67,12 +69,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     schemas = subparsers.add_parser("export-schemas", help="Export versioned JSON Schemas")
     schemas.add_argument("--output-dir", type=Path, default=Path("schemas/t01"))
-    schemas.add_argument("--contract-set", choices=["t01", "t02"], default="t01")
+    schemas.add_argument("--contract-set", choices=["t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning'], default="t01")
 
     subparsers.add_parser(
         "validate-semantics", help="Validate the unified semantic registry"
     )
 
+    guide = subparsers.add_parser('export-field-guide', help='Generate Chinese TCM field guide from the registry')
+    guide.add_argument('--output-file', type=Path, required=True)
     smoke = subparsers.add_parser("llm-smoke", help="Run an explicit live LLM smoke test")
     smoke.add_argument("--config", type=Path, default=Path("config/llm.local.toml"))
     return parser
@@ -80,6 +84,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _main() -> None:
     args = build_parser().parse_args()
+    if args.command == "analyze":
+        from medicine_agent.analysis.cli import execute
+        output = execute(args)
+        _print(output)
+        if output.get("status") == "failed":
+            raise SystemExit(1)
+        return
     if args.command == "list-skills":
         _print([item.model_dump(mode="json") for item in create_facade().list_skills()])
         return
@@ -144,6 +155,10 @@ def _main() -> None:
                 create_facade(), args.output_dir, contract_set=args.contract_set
             )
         )
+        return
+    if args.command == 'export-field-guide':
+        from medicine_agent.semantics.guide import export_tcm_field_guide
+        _print(export_tcm_field_guide(args.output_file))
         return
     if args.command == "validate-semantics":
         try:

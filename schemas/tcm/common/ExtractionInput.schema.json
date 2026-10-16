@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "force_ocr": {
+      "default": false,
+      "title": "Force Ocr",
+      "type": "boolean"
+    },
+    "path": {
+      "title": "Path",
+      "type": "string"
+    },
+    "timeout_seconds": {
+      "default": 120,
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Timeout Seconds",
+      "type": "integer"
+    },
+    "unit": {
+      "minimum": 1,
+      "title": "Unit",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "path",
+    "unit"
+  ],
+  "title": "ExtractionInput",
+  "type": "object"
+}

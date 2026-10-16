@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "caller": {
+      "default": "human",
+      "title": "Caller",
+      "type": "string"
+    },
+    "input_data": {
+      "additionalProperties": true,
+      "title": "Input Data",
+      "type": "object"
+    },
+    "skill_id": {
+      "title": "Skill Id",
+      "type": "string"
+    },
+    "skill_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Version"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "skill_id",
+    "input_data"
+  ],
+  "title": "SkillInvocation",
+  "type": "object"
+}

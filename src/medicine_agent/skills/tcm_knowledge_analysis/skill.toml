@@ -1,0 +1,9 @@
+[skill]
+skill_id = "tcm-knowledge-analysis"
+version = "0.2.0"
+name = "TCM Knowledge Analysis"
+description = "Knowledge analysis family: source-grounded TCM concepts, propositions, herbs, differentiation, formulas, cases and outcomes; independent source nodes."
+entrypoint = "medicine_agent.skills.tcm_knowledge_analysis.handler:TCMKnowledgeAnalysisSkill"
+input_model = "TCMAnalysisInput"
+output_model = "TCMAnalysisOutput"
+permissions = ["call_model"]

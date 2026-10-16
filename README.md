@@ -2,7 +2,9 @@
 
 本项目建设一个“通用医学主干 + 中医专业分支 + 西医专业分支”的知识蒸馏与智能体平台。平台通过可调用 Skill，把教材、论文、医家经验和病例转化为有来源、可校验、可查询、可追溯的知识包；后续再由 Agent 负责任务协作与决策。
 
-当前处于阶段 02 的 T02-A 评审点。仓库已有第一版可运行骨架、六个通用实验 Skill，以及两个中医病例契约基线 Skill；尚未进入正式医学知识蒸馏或多 Agent 阶段。
+当前阶段02的 T02-B4 已完成原文优先修复：133个不同用例、同3页真实分析及单文件迁移通过；完整原文和旧包保留。不确定建议显式标歧义，医学内容仍未审核。进度见[任务状态](tasks/STATE.md)。 B5真实新页增量核验也已完成，旧内容完整保留并通过单文件迁移；发现异名自动关联不足，下一步先修关联。
+
+最终产品有资料学习和基于知识包的问诊辅助两条主线：用户交文件后由产品自身分析、保存断点并更新数据包；完成包放入统一目录，复制到另一台兼容产品即可使用。Codex 只是开发工具，业务运行不得依赖它。范围与验收见 [独立运行与文件分析设计](md/16-PDF资料处理与数据包更新.md)。
 
 ## 当前运行环境
 
@@ -48,6 +50,12 @@ $uv = "$env:USERPROFILE\.local\bin\uv.exe"
 
 ## 当前已经实现
 
+- 产品原生 `OrchestratorAgent` 与数据分析 Agent，受控任务分派及独立 CLI，使用说明见 [数据分析模块](src/medicine_agent/analysis/README.md)；
+- PDF 文本/扫描/混合、DOCX 段落/表格/嵌图、TXT/Markdown 和 PNG/JPEG 的读取与实际中文 OCR；
+- 分阶段 SQLite 检查点、暂停和跨进程继续、OS 任务互斥与故障恢复；
+- 包目录发现、分类筛选、不可覆盖修订、旧版选择、复制后查询与证据回溯；
+- `document-extraction` 和第 10 个工具 `tcm-knowledge-analysis`，真实模型短材料与三页教材试用已通过技术检查；以上仍为实验候选，不是正式医学验收。
+
 - Skill manifest、注册表、版本选择和统一调用入口；
 - Pydantic 输入输出模型、版本化 JSON Schema 快照及契约回归测试；
 - 统一成功、失败、警告和错误结果信封；
@@ -67,7 +75,7 @@ $uv = "$env:USERPROFILE\.local\bin\uv.exe"
 - 重复 key、同 key 异义、不同 key 同义和未映射字段的原值保留与质量警告；
 - 多段证据合并后返回全部证据的查询与回溯；
 - Markdown/TXT 测试材料到实验知识包，再到查询和证据回溯的闭环；
-- 10 个 CLI 命令、8 个已登记 Skill、29 项自动测试、wheel/sdist 构建和幂等验证。
+- T02-A 历史基线为 10 个 CLI 命令、8 个工具及 29 项测试；T02-P 扩展检查见其实现记录，wheel/sdist 构建可用。
 
 以上仍是协议与边界基线，不代表完整医学推理能力、医学金标准或正式知识包已经完成。
 
@@ -100,10 +108,10 @@ uv run medicine-agent pipeline tests/fixtures/basic.md --output-root artifacts/p
 
 - 正式教材或医案批量蒸馏；
 - 完整中医、西医、方剂和安全 Skill，以及经过医学复核的病例推理 Skill；
-- Agent 与多 Agent 编排；
+- 完整问诊与多专业 Agent 编排；现有仅资料构建的受控父子入口；
 - MCP、REST API 和 Web；
 - LadybugDB 导入与联合查询；
-- PDF、DOCX、OCR、批处理和断点恢复；
+- 高并发批处理；文件解析/OCR、单任务断点及多基础包增量学习已有首版；
 - 正式知识包 v0、金标准和后训练。
 
 ## 文档入口
@@ -125,3 +133,8 @@ uv run medicine-agent pipeline tests/fixtures/basic.md --output-root artifacts/p
 当用户询问“下一步做什么”时，应先读取 `AGENTS.md` 和 `tasks/STATE.md`，只执行当前阶段的正式任务。
 
 `docs` 保存导师原始资料，默认只读；`log` 只有在用户明确要求时才更新。
+
+
+## 2026-10-16 真实教材质量核验
+
+B3曾发现字段与缺口问题，历史见[核验记录](tasks/phases/02-tcm-distillation/T02B3_ACCEPTANCE.md)；B4已针对性修复并保留原包，见[修复验收](tasks/phases/02-tcm-distillation/T02B4_ACCEPTANCE.md)。

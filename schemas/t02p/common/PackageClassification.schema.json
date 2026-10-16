@@ -1,0 +1,87 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "basis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Basis",
+      "type": "array"
+    },
+    "knowledge_categories": {
+      "items": {
+        "enum": [
+          "tcm_foundation",
+          "chinese_materia_medica",
+          "tcm_pattern_differentiation",
+          "tcm_formula",
+          "tcm_clinical_case"
+        ],
+        "type": "string"
+      },
+      "title": "Knowledge Categories",
+      "type": "array"
+    },
+    "knowledge_layers": {
+      "items": {
+        "enum": [
+          "general_pathomechanism",
+          "physician_experience",
+          "individual_case"
+        ],
+        "type": "string"
+      },
+      "title": "Knowledge Layers",
+      "type": "array"
+    },
+    "material_types": {
+      "items": {
+        "enum": [
+          "textbook",
+          "paper",
+          "physician_experience",
+          "case_record",
+          "clinical_record",
+          "specialty_material",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "title": "Material Types",
+      "type": "array"
+    },
+    "medical_profiles": {
+      "items": {
+        "enum": [
+          "common",
+          "tcm",
+          "western",
+          "safety",
+          "formula"
+        ],
+        "type": "string"
+      },
+      "title": "Medical Profiles",
+      "type": "array"
+    },
+    "status": {
+      "default": "unclassified",
+      "enum": [
+        "unclassified",
+        "declared",
+        "candidate"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "subjects": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Subjects",
+      "type": "array"
+    }
+  },
+  "title": "PackageClassification",
+  "type": "object"
+}

@@ -1,0 +1,744 @@
+{
+  "$defs": {
+    "AnalysisGap": {
+      "additionalProperties": false,
+      "properties": {
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "quotes"
+      ],
+      "title": "AnalysisGap",
+      "type": "object"
+    },
+    "CorrectionEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "node_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Node Mapping",
+          "type": "object"
+        },
+        "origin": {
+          "const": "user_entered",
+          "default": "user_entered",
+          "title": "Origin",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent_graph": {
+          "$ref": "#/$defs/TCMKnowledgeGraph"
+        },
+        "parent_package_id": {
+          "title": "Parent Package Id",
+          "type": "string"
+        },
+        "parent_revision": {
+          "$ref": "#/$defs/PackageRevision"
+        },
+        "preserved_files": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Preserved Files",
+          "type": "object"
+        },
+        "review_history": {
+          "items": {
+            "$ref": "#/$defs/ReviewRecord"
+          },
+          "minItems": 1,
+          "title": "Review History",
+          "type": "array"
+        },
+        "reviews": {
+          "items": {
+            "$ref": "#/$defs/ReviewRecord"
+          },
+          "minItems": 1,
+          "title": "Reviews",
+          "type": "array"
+        }
+      },
+      "required": [
+        "parent_package_id",
+        "package_id",
+        "parent_revision",
+        "parent_graph",
+        "reviews",
+        "review_history",
+        "node_mapping",
+        "preserved_files"
+      ],
+      "title": "CorrectionEvent",
+      "type": "object"
+    },
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    },
+    "GroundedFact": {
+      "additionalProperties": false,
+      "properties": {
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "state": {
+          "default": "stated",
+          "enum": [
+            "stated",
+            "inferred",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "field_id"
+      ],
+      "title": "GroundedFact",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "MedicalRecordGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "about_group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "About Group Id"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/GroundedFact"
+          },
+          "minItems": 1,
+          "title": "Facts",
+          "type": "array"
+        },
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "theory",
+            "herb",
+            "differentiation",
+            "formula",
+            "case",
+            "dose",
+            "outcome",
+            "safety"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id",
+        "kind",
+        "facts"
+      ],
+      "title": "MedicalRecordGroup",
+      "type": "object"
+    },
+    "PackageClassification": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "knowledge_categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Categories",
+          "type": "array"
+        },
+        "knowledge_layers": {
+          "items": {
+            "enum": [
+              "general_pathomechanism",
+              "physician_experience",
+              "individual_case"
+            ],
+            "type": "string"
+          },
+          "title": "Knowledge Layers",
+          "type": "array"
+        },
+        "material_types": {
+          "items": {
+            "enum": [
+              "textbook",
+              "paper",
+              "physician_experience",
+              "case_record",
+              "clinical_record",
+              "specialty_material",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "title": "Material Types",
+          "type": "array"
+        },
+        "medical_profiles": {
+          "items": {
+            "enum": [
+              "common",
+              "tcm",
+              "western",
+              "safety",
+              "formula"
+            ],
+            "type": "string"
+          },
+          "title": "Medical Profiles",
+          "type": "array"
+        },
+        "status": {
+          "default": "unclassified",
+          "enum": [
+            "unclassified",
+            "declared",
+            "candidate"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "subjects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subjects",
+          "type": "array"
+        }
+      },
+      "title": "PackageClassification",
+      "type": "object"
+    },
+    "PackageRevision": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_use": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allowed Use"
+        },
+        "changes": {
+          "additionalProperties": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "title": "Changes",
+          "type": "object"
+        },
+        "classification": {
+          "$ref": "#/$defs/PackageClassification"
+        },
+        "family": {
+          "title": "Family",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent"
+        },
+        "processing_scope": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Processing Scope"
+        },
+        "review_status": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runtime"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "source_sha256": {
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "units": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Units",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "family",
+        "task_id",
+        "source_sha256",
+        "parent",
+        "sequence",
+        "units",
+        "changes"
+      ],
+      "title": "PackageRevision",
+      "type": "object"
+    },
+    "ReviewRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/ReviewRequest"
+        },
+        "review_id": {
+          "title": "Review Id",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "review_id",
+        "created_at",
+        "request"
+      ],
+      "title": "ReviewRecord",
+      "type": "object"
+    },
+    "ReviewRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "confirmed",
+            "needs_revision",
+            "rejected"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "expected_previous_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Previous Id"
+        },
+        "origin": {
+          "const": "user_entered",
+          "default": "user_entered",
+          "title": "Origin",
+          "type": "string"
+        },
+        "proposed_value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "reviewer": {
+          "minLength": 1,
+          "title": "Reviewer",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ReviewTarget"
+        }
+      },
+      "required": [
+        "target",
+        "decision",
+        "reviewer",
+        "reason"
+      ],
+      "title": "ReviewRequest",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    },
+    "TCMKnowledgeGraph": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_status": {
+          "const": "candidate_partial",
+          "default": "candidate_partial",
+          "title": "Analysis Status",
+          "type": "string"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/TCMKnowledgeNode"
+          },
+          "title": "Nodes",
+          "type": "array"
+        },
+        "semantic_version": {
+          "default": "0.3.2",
+          "enum": [
+            "0.3.0",
+            "0.3.2"
+          ],
+          "title": "Semantic Version",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "TCMKnowledgeGraph",
+      "type": "object"
+    },
+    "TCMKnowledgeNode": {
+      "additionalProperties": false,
+      "properties": {
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Categories",
+          "type": "array"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "generation_method": {
+          "const": "model",
+          "default": "model",
+          "title": "Generation Method",
+          "type": "string"
+        },
+        "groups": {
+          "items": {
+            "$ref": "#/$defs/MedicalRecordGroup"
+          },
+          "minItems": 1,
+          "title": "Groups",
+          "type": "array"
+        },
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "review_status": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "source_id": {
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "topics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Topics",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node_id",
+        "source_id",
+        "title",
+        "statement",
+        "categories",
+        "quotes",
+        "groups"
+      ],
+      "title": "TCMKnowledgeNode",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "history": {
+      "items": {
+        "$ref": "#/$defs/CorrectionEvent"
+      },
+      "minItems": 1,
+      "title": "History",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "history"
+  ],
+  "title": "CorrectionBundle",
+  "type": "object"
+}

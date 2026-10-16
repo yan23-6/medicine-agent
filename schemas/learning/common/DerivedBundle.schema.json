@@ -1,0 +1,183 @@
+{
+  "$defs": {
+    "BundleComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "default": true,
+          "description": "该来源版本是否进入默认知识视图；历史内容仍保存在文件内",
+          "title": "Active",
+          "type": "boolean"
+        },
+        "manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "description": "原来源包身份，复制后保持稳定以回溯原节点",
+          "title": "Package Id",
+          "type": "string"
+        },
+        "path": {
+          "description": "归档文件内部的来源分区路径，由运行时管理",
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "package_id",
+        "manifest_sha256"
+      ],
+      "title": "BundleComponent",
+      "type": "object"
+    },
+    "ConceptGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "concept_id": {
+          "description": "候选概念入口身份，不替代来源节点",
+          "title": "Concept Id",
+          "type": "string"
+        },
+        "label": {
+          "description": "规范化标题或别名，用于候选查找，不代表医学同义结论",
+          "title": "Label",
+          "type": "string"
+        },
+        "matching_method": {
+          "const": "normalized_title_or_alias",
+          "default": "normalized_title_or_alias",
+          "title": "Matching Method",
+          "type": "string"
+        },
+        "members": {
+          "description": "关联的各来源节点地址；每个节点的原文、解释和字段独立保留",
+          "items": {
+            "$ref": "#/$defs/KnowledgeAddress"
+          },
+          "minItems": 2,
+          "title": "Members",
+          "type": "array"
+        },
+        "status": {
+          "const": "candidate",
+          "default": "candidate",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "concept_id",
+        "label",
+        "members"
+      ],
+      "title": "ConceptGroup",
+      "type": "object"
+    },
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "base_package_ids": {
+      "description": "本次继承的基础数据包身份；实际必要来源内容同时内置",
+      "items": {
+        "type": "string"
+      },
+      "title": "Base Package Ids",
+      "type": "array"
+    },
+    "bundle_id": {
+      "description": "由文件内容清单、来源分区、关联和贡献记录计算的数据包身份",
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "components": {
+      "description": "文件内完整保存的来源包及版本，包含原文、字段、分类和更正历史",
+      "items": {
+        "$ref": "#/$defs/BundleComponent"
+      },
+      "minItems": 1,
+      "title": "Components",
+      "type": "array"
+    },
+    "concept_groups": {
+      "description": "统一候选概念入口和独立来源成员，便于联合分析",
+      "items": {
+        "$ref": "#/$defs/ConceptGroup"
+      },
+      "title": "Concept Groups",
+      "type": "array"
+    },
+    "contributor_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "本次贡献者的可选声明；不限制任何人的继续学习或更新",
+      "title": "Contributor Id"
+    },
+    "files": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "关联、复核记录和基础包血缘快照的包内路径到SHA256校验和",
+      "title": "Files",
+      "type": "object"
+    },
+    "status": {
+      "const": "research_candidate",
+      "default": "research_candidate",
+      "title": "Status",
+      "type": "string"
+    },
+    "unresolved_package_ids": {
+      "description": "原先已缺失的外部联系；保留引用并明确未解析，不伪造内容",
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Package Ids",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "bundle_id",
+    "base_package_ids",
+    "components",
+    "files"
+  ],
+  "title": "DerivedBundle",
+  "type": "object"
+}

@@ -1,0 +1,117 @@
+{
+  "$defs": {
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "focus_evidence_ids": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "本次处理的证据ID；其余只作上下文，不自动标为本次未覆盖",
+      "title": "Focus Evidence Ids"
+    },
+    "layout_evidence_ids": {
+      "description": "确定性版面匹配的候选ID；仅分类提示，原文仍完整保留",
+      "items": {
+        "type": "string"
+      },
+      "title": "Layout Evidence Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "evidence"
+  ],
+  "title": "TCMAnalysisInput",
+  "type": "object"
+}

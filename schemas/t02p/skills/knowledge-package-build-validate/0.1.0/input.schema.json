@@ -1,0 +1,694 @@
+{
+  "$defs": {
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "DocumentFragment": {
+      "additionalProperties": false,
+      "properties": {
+        "end_line": {
+          "title": "End Line",
+          "type": "integer"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "start_line": {
+          "title": "Start Line",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fragment_id",
+        "source_id",
+        "ordinal",
+        "text",
+        "start_line",
+        "end_line"
+      ],
+      "title": "DocumentFragment",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "FieldMappingCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_field": {
+          "title": "Canonical Field",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonical_field",
+        "rationale"
+      ],
+      "title": "FieldMappingCandidate",
+      "type": "object"
+    },
+    "FieldMappingStatus": {
+      "enum": [
+        "mapped",
+        "ambiguous",
+        "unmapped",
+        "rejected"
+      ],
+      "title": "FieldMappingStatus",
+      "type": "string"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "IssueSeverity": {
+      "enum": [
+        "warning",
+        "error"
+      ],
+      "title": "IssueSeverity",
+      "type": "string"
+    },
+    "KnowledgeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "knowledge_id": {
+          "title": "Knowledge Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_id",
+        "kind",
+        "label",
+        "statement",
+        "evidence_refs",
+        "generation_method"
+      ],
+      "title": "KnowledgeCandidate",
+      "type": "object"
+    },
+    "RawFieldObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "mapping_candidates": {
+          "items": {
+            "$ref": "#/$defs/FieldMappingCandidate"
+          },
+          "title": "Mapping Candidates",
+          "type": "array"
+        },
+        "mapping_rule_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mapping Rule Version"
+        },
+        "mapping_status": {
+          "$ref": "#/$defs/FieldMappingStatus"
+        },
+        "observation_id": {
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "occurrence": {
+          "title": "Occurrence",
+          "type": "integer"
+        },
+        "raw_key": {
+          "title": "Raw Key",
+          "type": "string"
+        },
+        "raw_type": {
+          "title": "Raw Type",
+          "type": "string"
+        },
+        "raw_value": {
+          "title": "Raw Value"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observation_id",
+        "source_id",
+        "raw_key",
+        "raw_value",
+        "occurrence",
+        "location",
+        "raw_type",
+        "mapping_status"
+      ],
+      "title": "RawFieldObservation",
+      "type": "object"
+    },
+    "RelationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "relation_id": {
+          "title": "Relation Id",
+          "type": "string"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "source_knowledge_id": {
+          "title": "Source Knowledge Id",
+          "type": "string"
+        },
+        "target_knowledge_id": {
+          "title": "Target Knowledge Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relation_id",
+        "relation_type",
+        "source_knowledge_id",
+        "target_knowledge_id",
+        "generation_method"
+      ],
+      "title": "RelationCandidate",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "RunRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "caller": {
+          "title": "Caller",
+          "type": "string"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "input_id": {
+          "title": "Input Id",
+          "type": "string"
+        },
+        "input_schema_id": {
+          "title": "Input Schema Id",
+          "type": "string"
+        },
+        "invocation_id": {
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/SkillIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "output_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Id"
+        },
+        "output_schema_id": {
+          "title": "Output Schema Id",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus"
+        },
+        "runtime": {
+          "additionalProperties": true,
+          "title": "Runtime",
+          "type": "object"
+        },
+        "skill_id": {
+          "title": "Skill Id",
+          "type": "string"
+        },
+        "skill_version": {
+          "title": "Skill Version",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/SkillStatus"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "invocation_id",
+        "task_id",
+        "caller",
+        "skill_id",
+        "skill_version",
+        "input_id",
+        "input_schema_id",
+        "output_schema_id",
+        "status",
+        "generation_method",
+        "review_status",
+        "started_at",
+        "completed_at",
+        "duration_ms"
+      ],
+      "title": "RunRecord",
+      "type": "object"
+    },
+    "SkillIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "SkillIssue",
+      "type": "object"
+    },
+    "SkillStatus": {
+      "enum": [
+        "success",
+        "partial_success",
+        "failure",
+        "needs_review"
+      ],
+      "title": "SkillStatus",
+      "type": "string"
+    },
+    "SourceDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "file_name": {
+          "title": "File Name",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/SourceMetadata"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "file_name",
+        "media_type",
+        "sha256",
+        "metadata"
+      ],
+      "title": "SourceDocument",
+      "type": "object"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "fragments": {
+      "items": {
+        "$ref": "#/$defs/DocumentFragment"
+      },
+      "title": "Fragments",
+      "type": "array"
+    },
+    "knowledge": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeCandidate"
+      },
+      "title": "Knowledge",
+      "type": "array"
+    },
+    "output_root": {
+      "title": "Output Root",
+      "type": "string"
+    },
+    "raw_fields": {
+      "items": {
+        "$ref": "#/$defs/RawFieldObservation"
+      },
+      "title": "Raw Fields",
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/RelationCandidate"
+      },
+      "title": "Relations",
+      "type": "array"
+    },
+    "runs": {
+      "items": {
+        "$ref": "#/$defs/RunRecord"
+      },
+      "title": "Runs",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceDocument"
+    }
+  },
+  "required": [
+    "output_root",
+    "source",
+    "fragments",
+    "evidence",
+    "knowledge"
+  ],
+  "title": "KnowledgePackageBuildValidateInput",
+  "type": "object"
+}

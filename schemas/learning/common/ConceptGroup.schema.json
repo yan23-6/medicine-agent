@@ -1,0 +1,66 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "concept_id": {
+      "description": "候选概念入口身份，不替代来源节点",
+      "title": "Concept Id",
+      "type": "string"
+    },
+    "label": {
+      "description": "规范化标题或别名，用于候选查找，不代表医学同义结论",
+      "title": "Label",
+      "type": "string"
+    },
+    "matching_method": {
+      "const": "normalized_title_or_alias",
+      "default": "normalized_title_or_alias",
+      "title": "Matching Method",
+      "type": "string"
+    },
+    "members": {
+      "description": "关联的各来源节点地址；每个节点的原文、解释和字段独立保留",
+      "items": {
+        "$ref": "#/$defs/KnowledgeAddress"
+      },
+      "minItems": 2,
+      "title": "Members",
+      "type": "array"
+    },
+    "status": {
+      "const": "candidate",
+      "default": "candidate",
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "concept_id",
+    "label",
+    "members"
+  ],
+  "title": "ConceptGroup",
+  "type": "object"
+}

@@ -18,3 +18,7 @@ runs/
 dist/
 build/
 
+# User-provided source material: retain the directory marker, never source files
+/pdfs/**
+!/pdfs/.gitkeep
+

@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "node_id": {
+      "minLength": 1,
+      "title": "Node Id",
+      "type": "string"
+    },
+    "package_id": {
+      "minLength": 1,
+      "title": "Package Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "package_id",
+    "node_id"
+  ],
+  "title": "KnowledgeAddress",
+  "type": "object"
+}

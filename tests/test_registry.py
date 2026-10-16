@@ -12,6 +12,8 @@ def test_registry_exposes_implemented_skills() -> None:
         "quality-evaluation",
         "case-distillation",
         "tcm-reasoning",
+        "document-extraction",
+        "tcm-knowledge-analysis",
     }
     for manifest in manifests:
         description = create_facade().describe_skill(manifest.skill_id)

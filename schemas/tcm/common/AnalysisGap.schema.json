@@ -1,0 +1,47 @@
+{
+  "$defs": {
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "quotes": {
+      "items": {
+        "$ref": "#/$defs/EvidenceQuote"
+      },
+      "minItems": 1,
+      "title": "Quotes",
+      "type": "array"
+    },
+    "reason": {
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason",
+    "quotes"
+  ],
+  "title": "AnalysisGap",
+  "type": "object"
+}
