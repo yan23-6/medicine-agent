@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "files": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Files",
+      "type": "object"
+    },
+    "medical_review": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Medical Review",
+      "type": "string"
+    },
+    "preparation_id": {
+      "title": "Preparation Id",
+      "type": "string"
+    },
+    "release_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Release Allowed",
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial",
+        "empty"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "preparation_id",
+    "status",
+    "files"
+  ],
+  "title": "ReviewPreparationExport",
+  "type": "object"
+}

@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "archives": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10000,
+      "title": "Archives",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "title": "ReviewPreparationRequest",
+  "type": "object"
+}

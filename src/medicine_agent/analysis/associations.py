@@ -102,26 +102,37 @@ def read_associations(catalog, index=None):
     return {'associations': records, 'errors': errors}
 
 
-def related(catalog, addresses, index=None):
+def related(catalog, addresses, index=None, *, max_hops=None, max_nodes=None):
     index = node_index(catalog) if index is None else index
     active_packages = {p['package_id'] for p in catalog.selected()}
     active = {k:v for k,v in index.items() if k[0] in active_packages}
-    keys = {address_key(a) for a in addresses} & active.keys()
+    requested = {address_key(a) for a in addresses}
+    available = sorted(requested & active.keys())
+    truncated = bool(max_nodes is not None and len(available) > max_nodes)
+    keys = set(available[:max_nodes] if max_nodes is not None else available)
     report = read_associations(catalog, index)
     adjacency = {}
     for edge in report['associations']:
         for side in ('source','target'):
             adjacency.setdefault(address_key(edge[side]),[]).append(edge)
-    visited, queue, used = set(keys), deque(sorted(keys)), {}
+    for edges in adjacency.values():
+        edges.sort(key=lambda item:item['association_id'])
+    visited, queue, used = set(keys), deque((key,0) for key in sorted(keys)), {}
     while queue:
-        current = queue.popleft()
+        current,depth = queue.popleft()
+        if max_hops is not None and depth >= max_hops:
+            if adjacency.get(current):truncated = True
+            continue
         for edge in adjacency.get(current,[]):
             used[edge['association_id']] = edge
             for side in ('source','target'):
                 neighbor = address_key(edge[side])
                 if neighbor in active and neighbor not in visited:
+                    if max_nodes is not None and len(visited) >= max_nodes:
+                        truncated = True
+                        continue
                     visited.add(neighbor)
-                    queue.append(neighbor)
+                    queue.append((neighbor,depth+1))
     edges = []
     for edge in used.values():
         inactive = [edge[side] for side in ('source','target') if address_key(edge[side]) not in active]
@@ -140,4 +151,8 @@ def related(catalog, addresses, index=None):
         'category_union': sorted({c for item in selected for c in item['node']['categories']}),
         'topic_union': sorted({c for item in selected for c in item['node']['topics']}),
         'material_type_union': sorted({c for item in selected for c in item['package']['classification']['material_types']}),
-        'association_errors': report['errors']}
+        'association_errors': report['errors'],
+        'traversal':{'max_hops':max_hops,'max_nodes':max_nodes,'visited_nodes':len(visited),
+                     'traversed_edges':len(edges),'truncated':truncated,
+                     'visited_addresses':[{'package_id':p,'node_id':n} for p,n in sorted(visited)],
+                     'missing_seed_addresses':[{'package_id':p,'node_id':n} for p,n in sorted(requested-active.keys())]}}

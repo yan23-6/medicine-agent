@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "enum": [
+        "engineering",
+        "source",
+        "medical",
+        "license",
+        "performance",
+        "training",
+        "case_baseline",
+        "cross_source"
+      ],
+      "title": "Name",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "blocked",
+        "not_evaluated"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "status",
+    "reasons"
+  ],
+  "title": "PreparationQualityGate",
+  "type": "object"
+}

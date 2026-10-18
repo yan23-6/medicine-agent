@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import copy
 from pydantic import Field, ValidationError, model_validator
 from medicine_agent.domain.ids import stable_id
 from medicine_agent.domain.models import StrictModel, EvidenceRecord, KnowledgeCandidate
-from medicine_agent.domain.tcm_knowledge import TCMKnowledgeGraph, AnalysisGap, EvidenceQuote, validate_graph_evidence
+from medicine_agent.domain.tcm_knowledge import (TCMKnowledgeGraph, TCMKnowledgeNode, MedicalRecordGroup,
+    GroundedFact, AnalysisGap, EvidenceQuote, RejectedAnalysisCandidate, validate_graph_evidence)
 from medicine_agent.runtime.base import manifest_path
 from medicine_agent.runtime.manifest import load_manifest
 from medicine_agent.runtime.errors import ModelConfigMissingError, OutputSchemaInvalidError
@@ -32,6 +34,77 @@ class TCMAnalysisOutput(StrictModel):
     graph: TCMKnowledgeGraph
     knowledge: list[KnowledgeCandidate]
     relations: list = Field(default_factory=list)
+
+
+def _candidate_evidence_ids(value, available):
+    found=set()
+    def visit(item):
+        if isinstance(item,dict):
+            evidence_id=item.get('evidence_id')
+            if evidence_id in available:found.add(evidence_id)
+            for child in item.values():visit(child)
+        elif isinstance(item,list):
+            for child in item:visit(child)
+    visit(value)
+    return sorted(found)
+
+
+def _reason(exc):
+    if isinstance(exc,ValidationError):
+        return '; '.join(f"{'.'.join(map(str,e['loc']))}: {e['msg']}" for e in exc.errors(include_input=False,include_url=False))
+    if isinstance(exc,FaithfulnessError):
+        return '; '.join(i['message'] for i in exc.issues)
+    return str(exc)
+
+
+def _salvage_partial_graph(generated, evidence, registry_version):
+    """Keep valid siblings and quarantine invalid model candidates without coercing medicine."""
+    if not isinstance(generated,dict) or not isinstance(generated.get('nodes'),list):return None
+    available={e.evidence_id for e in evidence};records=[e.model_dump(mode='json') for e in evidence]
+    rejected=[];nodes=[];gaps=[]
+    def reject(code,path,raw,exc):
+        rejected.append(RejectedAnalysisCandidate(code=code,path=path,reason=_reason(exc),
+            raw_candidate=raw,evidence_ids=_candidate_evidence_ids(raw,available)))
+    for gi,raw_gap in enumerate(generated.get('gaps') or []):
+        try:gaps.append(AnalysisGap.model_validate(raw_gap))
+        except (ValueError,ValidationError,TypeError) as exc:reject('GAP_REJECTED',f'gaps.{gi}',raw_gap,exc)
+    for ni,raw_node in enumerate(generated['nodes']):
+        if not isinstance(raw_node,dict):
+            reject('NODE_REJECTED',f'nodes.{ni}',raw_node,ValueError('Node candidate is not an object'));continue
+        node=copy.deepcopy(raw_node);valid_groups=[]
+        groups=node.get('groups')
+        if not isinstance(groups,list):
+            reject('NODE_REJECTED',f'nodes.{ni}.groups',groups,ValueError('Node groups are missing'));continue
+        for gi,raw_group in enumerate(groups):
+            if not isinstance(raw_group,dict):
+                reject('GROUP_REJECTED',f'nodes.{ni}.groups.{gi}',raw_group,ValueError('Group candidate is not an object'));continue
+            group=copy.deepcopy(raw_group);facts=group.get('facts');valid_facts=[]
+            if not isinstance(facts,list):
+                reject('GROUP_REJECTED',f'nodes.{ni}.groups.{gi}.facts',facts,ValueError('Group facts are missing'));continue
+            for fi,raw_fact in enumerate(facts):
+                try:valid_facts.append(GroundedFact.model_validate(raw_fact).model_dump(mode='json'))
+                except (ValueError,ValidationError,TypeError) as exc:
+                    reject('FIELD_REJECTED',f'nodes.{ni}.groups.{gi}.facts.{fi}',raw_fact,exc)
+            if not valid_facts:
+                reject('GROUP_REJECTED',f'nodes.{ni}.groups.{gi}',raw_group,ValueError('No valid facts remain'));continue
+            group['facts']=valid_facts
+            try:valid_groups.append(MedicalRecordGroup.model_validate(group).model_dump(mode='json'))
+            except (ValueError,ValidationError,TypeError) as exc:
+                reject('GROUP_REJECTED',f'nodes.{ni}.groups.{gi}',raw_group,exc)
+        if not valid_groups:
+            reject('NODE_REJECTED',f'nodes.{ni}',raw_node,ValueError('No valid groups remain'));continue
+        node['groups']=valid_groups
+        try:
+            candidate=TCMKnowledgeNode.model_validate(node)
+            trial=TCMKnowledgeGraph(semantic_version=registry_version,nodes=[candidate])
+            validate_graph_evidence(trial,evidence)
+            violations=analysis_violations(trial.model_dump(mode='json'),records)
+            if violations:raise FaithfulnessError(violations)
+            nodes.append(candidate)
+        except (ValueError,ValidationError,TypeError) as exc:
+            reject('NODE_REJECTED',f'nodes.{ni}',raw_node,exc)
+    if not nodes:return None
+    return TCMKnowledgeGraph(semantic_version=registry_version,nodes=nodes,gaps=gaps,rejected_candidates=rejected)
 
 
 class TCMKnowledgeAnalysisSkill:
@@ -92,6 +165,9 @@ class TCMKnowledgeAnalysisSkill:
                         graph = retain_ambiguous_drafts(graph, exc.issues)
                         validate_graph_evidence(graph, value.evidence)
                         graph.semantic_version = registry.version
+                        break
+                    graph=_salvage_partial_graph(generated,value.evidence,registry.version)
+                    if graph is not None:
                         break
                     raise OutputSchemaInvalidError('TCM output failed schema or evidence validation') from exc
                 errors = ([{'location': list(e['loc']), 'message': e['msg']}

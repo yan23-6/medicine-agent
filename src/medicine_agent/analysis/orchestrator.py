@@ -21,10 +21,12 @@ class OrchestratorAgent:
         if goal == "analyze_files":
             return self.files.submit(payload)
         if goal == "query_knowledge":
-            allowed = {"text", "knowledge_id", "subject", "material_type",
-                       "medical_profile", "knowledge_layer", "knowledge_category"}
-            if set(payload) - allowed or not (payload.get("text") or payload.get("knowledge_id")):
-                raise AnalysisError("QUERY_INVALID", "Provide a supported knowledge query")
+            from pydantic import ValidationError
+            from medicine_agent.domain.retrieval import LocalKnowledgeQuery
+            try:
+                payload=LocalKnowledgeQuery.model_validate(payload).model_dump(mode='json',exclude_none=True)
+            except ValidationError as exc:
+                raise AnalysisError("QUERY_INVALID", "Provide a supported knowledge query") from exc
             if not list(self.files.library.root.glob('*.medpkg')) and list(self.files.library.root.rglob('manifest.json')):
                 return self.data_agent.catalog.query(self.data_agent.facade,**payload)
             return self.files.query(**payload)

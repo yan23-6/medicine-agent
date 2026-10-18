@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from medicine_agent.analysis.orchestrator import OrchestratorAgent
+from medicine_agent.analysis.models import AnalysisError
 from medicine_agent.analysis.file_learning import FileLearningService
 from medicine_agent.analysis.library import PackageLibrary, default_knowledge_root
 from medicine_agent.domain.ids import file_sha256
@@ -16,6 +17,9 @@ from medicine_agent.packages.archive import unpack_archive
 from medicine_agent.packages.tcm import read_graph
 from medicine_agent.contracts import export_schemas
 from medicine_agent.bootstrap import create_facade
+from medicine_agent.analysis.store import atomic_json
+from medicine_agent.packages.io import validate_package_path
+from medicine_agent.packages.owned import read_owned_cache
 
 
 class ConceptModel:
@@ -50,6 +54,48 @@ def nodes(library,file):
     root,bundle=library.load(file)
     return {(c.package_id,n.node_id):n.model_dump(mode='json') for c in bundle.components
             for n in (read_graph(root/c.path).nodes if read_graph(root/c.path) else [])}
+
+
+@pytest.mark.parametrize('owner', [None, 'user-a'])
+def test_owned_file_delivery_preserves_rejected_candidates_across_units(tmp_path, owner):
+    class RejectedFieldModel(ConceptModel):
+        def generate_json(self, *, system, user, schema):
+            records = json.loads(user)
+            if isinstance(records, dict):
+                user = json.dumps(records['evidence'], ensure_ascii=False)
+            graph = super().generate_json(system=system, user=user, schema=schema)
+            quote = graph['nodes'][0]['quotes'][0]
+            graph['nodes'][0]['groups'][0]['facts'].append({
+                'field_id': 'tcm.unregistered_test_field', 'value': 'synthetic rejected value',
+                'quotes': [quote]})
+            return graph
+
+    source = tmp_path / 'partial.txt'
+    source.write_text('气|自制第一单元。\n阴阳|自制第二单元。', encoding='utf-8')
+    service = FileLearningService(tmp_path / 'work', tmp_path / 'knowledge', RejectedFieldModel())
+    task = service.submit({'paths': [str(source)], 'owner_id': owner,
+                           'allowed_use': 'synthetic-software-test'})
+    result = service.run(task['task_id'])
+    assert result['status'] == 'completed', result
+    root, bundle = service.library.load(service.library.root / result['package_path'])
+    component = root / bundle.components[0].path
+    graph = read_graph(component)
+    cache = read_owned_cache(component)
+    assert len(graph.nodes) == 2 and len(graph.rejected_candidates) == 2
+    assert graph.rejected_candidates == [candidate for unit in cache.units
+                                         for candidate in unit.analysis.tcm_graph.rejected_candidates]
+    assert validate_package_path(component).valid
+
+    payload = json.loads((component / 'tcm.json').read_text('utf-8'))
+    payload['rejected_candidates'] = []
+    atomic_json(component / 'tcm.json', payload)
+    manifest = json.loads((component / 'manifest.json').read_text('utf-8'))
+    manifest['files']['tcm.json'] = file_sha256((component / 'tcm.json').read_bytes())
+    atomic_json(component / 'manifest.json', manifest)
+    atomic_json(component / 'checksums.json', manifest['files'])
+    with pytest.raises(ValueError, match='Packaged graph differs'):
+        read_owned_cache(component)
+    assert not validate_package_path(component).valid
 
 
 def test_three_source_concept_new_heat_and_untouched_knowledge_in_one_file(tmp_path,monkeypatch):
@@ -116,6 +162,16 @@ def test_default_fixed_path_ignores_working_directory(tmp_path,monkeypatch):
     monkeypatch.chdir(tmp_path/'profile')
     fresh=OrchestratorAgent(tmp_path/'new-work')
     assert any(p['medical_nodes'] for p in fresh.receive('query_knowledge',{'text':'气'})['packages'])
+
+
+def test_orchestrator_exposes_bounded_multidimensional_query_contract(tmp_path):
+    agent,_,_,_=learn(tmp_path,tmp_path/'knowledge','faceted','气|多维查询自制说明。','user')
+    result=agent.receive('query_knowledge',{'text':'气','knowledge_type':'theory',
+        'evidence_state':'stated','max_hops':0,'max_nodes':5})
+    assert result['local_graph']['audit']['requested_max_hops']==0
+    assert result['local_graph']['nodes'][0]['facets']['knowledge_types']==['tcm_foundation','theory']
+    with pytest.raises(AnalysisError,match='supported knowledge query'):
+        agent.receive('query_knowledge',{'text':'气','max_nodes':0})
 
 
 def test_failed_final_commit_is_retryable_without_reanalysis(tmp_path,monkeypatch):

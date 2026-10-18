@@ -1,0 +1,1303 @@
+{
+  "$defs": {
+    "AnalysisGap": {
+      "additionalProperties": false,
+      "properties": {
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "quotes"
+      ],
+      "title": "AnalysisGap",
+      "type": "object"
+    },
+    "CandidateReviewItem": {
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Categories",
+          "type": "array"
+        },
+        "expected_previous_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Previous Id"
+        },
+        "fact_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact State"
+        },
+        "field_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field Id"
+        },
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "item_id": {
+          "title": "Item Id",
+          "type": "string"
+        },
+        "origins": {
+          "items": {
+            "$ref": "#/$defs/CoverageAddress"
+          },
+          "title": "Origins",
+          "type": "array"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/PreparationQuote"
+          },
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "target": {
+          "$ref": "#/$defs/ReviewTarget"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "user_review_state": {
+          "enum": [
+            "unreviewed",
+            "confirmed",
+            "needs_revision",
+            "rejected",
+            "history_invalid"
+          ],
+          "title": "User Review State",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "worksheet": {
+          "$ref": "#/$defs/PreparationWorksheet"
+        }
+      },
+      "required": [
+        "item_id",
+        "target",
+        "title",
+        "categories",
+        "quotes",
+        "flags",
+        "user_review_state",
+        "origins"
+      ],
+      "title": "CandidateReviewItem",
+      "type": "object"
+    },
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "CoverageAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "archive": {
+          "title": "Archive",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "component": {
+          "title": "Component",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "archive",
+        "archive_sha256",
+        "bundle_id",
+        "package_id",
+        "manifest_sha256",
+        "component",
+        "active",
+        "resources"
+      ],
+      "title": "CoverageAddress",
+      "type": "object"
+    },
+    "CoverageInventory": {
+      "additionalProperties": false,
+      "properties": {
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/CoverageIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "records": {
+          "items": {
+            "$ref": "#/$defs/CoverageRecord"
+          },
+          "title": "Records",
+          "type": "array"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "records",
+        "issues"
+      ],
+      "title": "CoverageInventory",
+      "type": "object"
+    },
+    "CoverageIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "archive": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archive"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "reason"
+      ],
+      "title": "CoverageIssue",
+      "type": "object"
+    },
+    "CoveragePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Analysis Policy"
+        },
+        "context_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Policy"
+        },
+        "semantic_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Version"
+        }
+      },
+      "title": "CoveragePolicy",
+      "type": "object"
+    },
+    "CoverageRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Adapter Versions",
+          "type": "object"
+        },
+        "address": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoverageAddress"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "document_unit_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Unit Count"
+        },
+        "extraction_methods": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Extraction Methods",
+          "type": "array"
+        },
+        "history_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "History Reference"
+        },
+        "integrity_basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Integrity Basis",
+          "type": "array"
+        },
+        "policy": {
+          "$ref": "#/$defs/CoveragePolicy"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "stage": {
+          "enum": [
+            "extraction",
+            "semantic_candidate"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "verified",
+            "historical_pending",
+            "unknown",
+            "partial_failed"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "unit_kind": {
+          "default": "unknown",
+          "enum": [
+            "physical_page",
+            "text_line",
+            "structured_unit",
+            "image",
+            "unknown"
+          ],
+          "title": "Unit Kind",
+          "type": "string"
+        },
+        "units": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stage",
+        "state",
+        "reason"
+      ],
+      "title": "CoverageRecord",
+      "type": "object"
+    },
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "PreparationAnomaly": {
+      "additionalProperties": false,
+      "properties": {
+        "anomaly_id": {
+          "title": "Anomaly Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "gap": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnalysisGap"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "enum": [
+            "graph_gap",
+            "node_gap",
+            "rejected_candidate"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "occurrence": {
+          "minimum": 0,
+          "title": "Occurrence",
+          "type": "integer"
+        },
+        "origins": {
+          "items": {
+            "$ref": "#/$defs/CoverageAddress"
+          },
+          "title": "Origins",
+          "type": "array"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "rejected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RejectedAnalysisCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unresolved_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unresolved Evidence Ids",
+          "type": "array"
+        },
+        "worksheet": {
+          "$ref": "#/$defs/PreparationWorksheet"
+        },
+        "writable_review_target": {
+          "const": false,
+          "default": false,
+          "title": "Writable Review Target",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "anomaly_id",
+        "kind",
+        "package_id",
+        "occurrence",
+        "evidence",
+        "origins"
+      ],
+      "title": "PreparationAnomaly",
+      "type": "object"
+    },
+    "PreparationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "archive": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archive"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "severity": {
+          "default": "error",
+          "enum": [
+            "warning",
+            "error"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "reason"
+      ],
+      "title": "PreparationIssue",
+      "type": "object"
+    },
+    "PreparationQualityGate": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "engineering",
+            "source",
+            "medical",
+            "license",
+            "performance",
+            "training",
+            "case_baseline",
+            "cross_source"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "blocked",
+            "not_evaluated"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status",
+        "reasons"
+      ],
+      "title": "PreparationQualityGate",
+      "type": "object"
+    },
+    "PreparationQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Location",
+          "type": "object"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text",
+        "source_id",
+        "source_sha256",
+        "location"
+      ],
+      "title": "PreparationQuote",
+      "type": "object"
+    },
+    "PreparationWorksheet": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "anyOf": [
+            {
+              "enum": [
+                "accept",
+                "revise",
+                "reject",
+                "unable_to_judge"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewer"
+        },
+        "submitted": {
+          "const": false,
+          "default": false,
+          "title": "Submitted",
+          "type": "boolean"
+        }
+      },
+      "title": "PreparationWorksheet",
+      "type": "object"
+    },
+    "RejectedAnalysisCandidate": {
+      "additionalProperties": false,
+      "description": "An invalid model candidate retained outside the medical fact graph.",
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "raw_candidate": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "reason"
+      ],
+      "title": "RejectedAnalysisCandidate",
+      "type": "object"
+    },
+    "ReviewRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/ReviewRequest"
+        },
+        "review_id": {
+          "title": "Review Id",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "review_id",
+        "created_at",
+        "request"
+      ],
+      "title": "ReviewRecord",
+      "type": "object"
+    },
+    "ReviewRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "confirmed",
+            "needs_revision",
+            "rejected"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "expected_previous_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Previous Id"
+        },
+        "origin": {
+          "const": "user_entered",
+          "default": "user_entered",
+          "title": "Origin",
+          "type": "string"
+        },
+        "proposed_value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "reviewer": {
+          "minLength": 1,
+          "title": "Reviewer",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ReviewTarget"
+        }
+      },
+      "required": [
+        "target",
+        "decision",
+        "reviewer",
+        "reason"
+      ],
+      "title": "ReviewRequest",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    },
+    "SourceAnnotation": {
+      "additionalProperties": false,
+      "properties": {
+        "annotation_id": {
+          "title": "Annotation Id",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRecord"
+        },
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "origins": {
+          "items": {
+            "$ref": "#/$defs/CoverageAddress"
+          },
+          "title": "Origins",
+          "type": "array"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceDocument"
+        },
+        "unit_kind": {
+          "enum": [
+            "physical_page",
+            "text_line",
+            "structured_unit",
+            "image",
+            "unknown"
+          ],
+          "title": "Unit Kind",
+          "type": "string"
+        },
+        "worksheet": {
+          "$ref": "#/$defs/PreparationWorksheet"
+        }
+      },
+      "required": [
+        "annotation_id",
+        "source",
+        "evidence",
+        "unit_kind",
+        "origins"
+      ],
+      "title": "SourceAnnotation",
+      "type": "object"
+    },
+    "SourceDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "file_name": {
+          "title": "File Name",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/SourceMetadata"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "file_name",
+        "media_type",
+        "sha256",
+        "metadata"
+      ],
+      "title": "SourceDocument",
+      "type": "object"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "anomalies": {
+      "items": {
+        "$ref": "#/$defs/PreparationAnomaly"
+      },
+      "title": "Anomalies",
+      "type": "array"
+    },
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CandidateReviewItem"
+      },
+      "title": "Candidates",
+      "type": "array"
+    },
+    "counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Counts",
+      "type": "object"
+    },
+    "coverage": {
+      "$ref": "#/$defs/CoverageInventory"
+    },
+    "gates": {
+      "items": {
+        "$ref": "#/$defs/PreparationQualityGate"
+      },
+      "title": "Gates",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/PreparationIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "medical_review": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Medical Review",
+      "type": "string"
+    },
+    "preparation_id": {
+      "title": "Preparation Id",
+      "type": "string"
+    },
+    "release_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Release Allowed",
+      "type": "boolean"
+    },
+    "review_records": {
+      "items": {
+        "$ref": "#/$defs/ReviewRecord"
+      },
+      "title": "Review Records",
+      "type": "array"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/SourceAnnotation"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial",
+        "empty"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "preparation_id",
+    "status",
+    "coverage",
+    "sources",
+    "candidates",
+    "anomalies",
+    "review_records",
+    "issues",
+    "gates",
+    "counts"
+  ],
+  "title": "ReviewPreparationReport",
+  "type": "object"
+}

@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "analysis_policy": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Analysis Policy"
+    },
+    "context_policy": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context Policy"
+    },
+    "semantic_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Semantic Version"
+    }
+  },
+  "title": "CoveragePolicy",
+  "type": "object"
+}

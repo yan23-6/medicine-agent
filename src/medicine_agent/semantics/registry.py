@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+from contextlib import contextmanager
+from contextvars import ContextVar
+from functools import lru_cache
 from importlib.resources import files
-from typing import Literal, Self
+from types import MappingProxyType
+from typing import Literal, NamedTuple, Self
 
 from pydantic import Field, model_validator
 
@@ -196,9 +201,49 @@ def _require_unique(label: str, values: list[str]) -> None:
         raise ValueError(f"duplicate {label}: {sorted(duplicates)}")
 
 
-def load_semantic_registry() -> SemanticRegistry:
+def _registry_text() -> str:
     registry_path = files("medicine_agent.semantics").joinpath("registry.json")
-    return SemanticRegistry.model_validate_json(registry_path.read_text(encoding="utf-8"))
+    return registry_path.read_text(encoding="utf-8")
+
+
+def load_semantic_registry() -> SemanticRegistry:
+    return SemanticRegistry.model_validate_json(_registry_text())
+
+
+class SemanticFieldConstraints(NamedTuple):
+    owner_profile: str
+    allowed_on: tuple[str, ...]
+
+
+_ACTIVE_FIELD_CONSTRAINTS: ContextVar[Mapping[str, SemanticFieldConstraints] | None] = ContextVar(
+    'medicine_agent_semantic_constraints', default=None)
+
+
+@lru_cache(maxsize=4)
+def _field_constraints_for_text(registry_text: str) -> Mapping[str, SemanticFieldConstraints]:
+    registry = SemanticRegistry.model_validate_json(registry_text)
+    return MappingProxyType({field.field_id: SemanticFieldConstraints(
+        field.owner_profile, tuple(field.allowed_on)) for field in registry.fields})
+
+
+def semantic_field_constraints(field_id: str) -> SemanticFieldConstraints | None:
+    constraints = _ACTIVE_FIELD_CONSTRAINTS.get()
+    if constraints is None:
+        constraints = _field_constraints_for_text(_registry_text())
+    return constraints.get(field_id)
+
+
+@contextmanager
+def semantic_constraint_snapshot():
+    if _ACTIVE_FIELD_CONSTRAINTS.get() is not None:
+        yield
+        return
+    constraints = _field_constraints_for_text(_registry_text())
+    token = _ACTIVE_FIELD_CONSTRAINTS.set(constraints)
+    try:
+        yield
+    finally:
+        _ACTIVE_FIELD_CONSTRAINTS.reset(token)
 
 
 def validate_semantic_registry() -> dict[str, object]:

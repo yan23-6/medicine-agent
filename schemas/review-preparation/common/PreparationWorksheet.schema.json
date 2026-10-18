@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "anyOf": [
+        {
+          "enum": [
+            "accept",
+            "revise",
+            "reject",
+            "unable_to_judge"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decision"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "reviewer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewer"
+    },
+    "submitted": {
+      "const": false,
+      "default": false,
+      "title": "Submitted",
+      "type": "boolean"
+    }
+  },
+  "title": "PreparationWorksheet",
+  "type": "object"
+}

@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active": {
+      "title": "Active",
+      "type": "boolean"
+    },
+    "archive": {
+      "title": "Archive",
+      "type": "string"
+    },
+    "archive_sha256": {
+      "title": "Archive Sha256",
+      "type": "string"
+    },
+    "bundle_id": {
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "component": {
+      "title": "Component",
+      "type": "string"
+    },
+    "family": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Family"
+    },
+    "manifest_sha256": {
+      "title": "Manifest Sha256",
+      "type": "string"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "parent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent"
+    },
+    "resources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Resources",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archive",
+    "archive_sha256",
+    "bundle_id",
+    "package_id",
+    "manifest_sha256",
+    "component",
+    "active",
+    "resources"
+  ],
+  "title": "CoverageAddress",
+  "type": "object"
+}

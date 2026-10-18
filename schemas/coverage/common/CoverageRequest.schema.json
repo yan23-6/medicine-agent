@@ -1,0 +1,164 @@
+{
+  "$defs": {
+    "CoverageHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "reference": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "stage": {
+          "enum": [
+            "extraction",
+            "semantic_candidate"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "unit_kind": {
+          "default": "unknown",
+          "enum": [
+            "physical_page",
+            "text_line",
+            "structured_unit",
+            "image",
+            "unknown"
+          ],
+          "title": "Unit Kind",
+          "type": "string"
+        },
+        "units": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 100000,
+          "title": "Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stage",
+        "reference"
+      ],
+      "title": "CoverageHistory",
+      "type": "object"
+    },
+    "CoveragePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Analysis Policy"
+        },
+        "context_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Policy"
+        },
+        "semantic_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Version"
+        }
+      },
+      "title": "CoveragePolicy",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "document_unit_count": {
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Document Unit Count",
+      "type": "integer"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/CoverageHistory"
+      },
+      "maxItems": 10000,
+      "title": "History",
+      "type": "array"
+    },
+    "policy": {
+      "$ref": "#/$defs/CoveragePolicy"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "unit_kind": {
+      "enum": [
+        "physical_page",
+        "text_line",
+        "structured_unit",
+        "image",
+        "unknown"
+      ],
+      "title": "Unit Kind",
+      "type": "string"
+    },
+    "units": {
+      "items": {
+        "type": "integer"
+      },
+      "maxItems": 100000,
+      "minItems": 1,
+      "title": "Units",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_sha256",
+    "unit_kind",
+    "document_unit_count",
+    "units"
+  ],
+  "title": "CoverageRequest",
+  "type": "object"
+}

@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "filters": {
+      "additionalProperties": true,
+      "title": "Filters",
+      "type": "object"
+    },
+    "missing_seed_addresses": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeAddress"
+      },
+      "title": "Missing Seed Addresses",
+      "type": "array"
+    },
+    "requested_max_hops": {
+      "title": "Requested Max Hops",
+      "type": "integer"
+    },
+    "requested_max_nodes": {
+      "title": "Requested Max Nodes",
+      "type": "integer"
+    },
+    "traversed_edges": {
+      "title": "Traversed Edges",
+      "type": "integer"
+    },
+    "truncated": {
+      "default": false,
+      "title": "Truncated",
+      "type": "boolean"
+    },
+    "visited_nodes": {
+      "title": "Visited Nodes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "requested_max_hops",
+    "requested_max_nodes",
+    "visited_nodes",
+    "traversed_edges"
+  ],
+  "title": "RetrievalAudit",
+  "type": "object"
+}

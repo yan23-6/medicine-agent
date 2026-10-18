@@ -95,11 +95,16 @@ class PackageCatalog:
             atomic_json(path, pins)
         return item
 
-    def query(self, facade, text=None, knowledge_id=None, *, subject=None, material_type=None,
-              medical_profile=None, knowledge_layer=None, knowledge_category=None):
+    def query(self, facade, text=None, knowledge_id=None, *, seed_addresses=(), subject=None, material_type=None,
+              medical_profile=None, knowledge_layer=None, knowledge_category=None,
+              knowledge_type=None, evidence_state=None, topic=None, tcm_layer=None,
+              max_hops=2, max_nodes=50):
         results = []
         from medicine_agent.analysis.associations import node_index, related
+        from medicine_agent.analysis.retrieval import derive_facets, matches_facets
+        from medicine_agent.analysis.associations import address_key
         index = node_index(self)
+        seed_keys = {address_key(a) for a in seed_addresses}
         addresses = []
         for item in self.selected():
             categories = item["classification"]
@@ -107,15 +112,29 @@ class PackageCatalog:
                 ("subjects", subject), ("material_types", material_type),
                 ("medical_profiles", medical_profile), ("knowledge_layers", knowledge_layer))):
                 continue
+            item_seeds=sorted(nid for pid,nid in seed_keys if pid==item['package_id'])
+            if not (text or knowledge_id or item_seeds):
+                continue
             response = facade.query_package(str(self._path(item["path"])),
-                                            text=text, knowledge_id=knowledge_id)
+                                            text=text, knowledge_id=knowledge_id or (item_seeds[0] if item_seeds else None))
             # Rich text search includes facts, not just the legacy label/statement projection.
             import json
-            matched = [record for (pid, nid), record in index.items() if pid == item['package_id']
-                and (not knowledge_id or nid == knowledge_id)
-                and (not text or text.casefold() in json.dumps(record['node'], ensure_ascii=False).casefold())
-                and (not knowledge_category or knowledge_category in record['node']['categories'])]
-            response['medical_nodes'] = [record['node'] for record in matched]
+            matched = []
+            for (pid,nid),record in index.items():
+                if pid != item['package_id']:
+                    continue
+                selected_by_seed=(pid,nid) in seed_keys
+                selected_by_query=bool(knowledge_id or text) and (not knowledge_id or nid==knowledge_id) and (
+                    not text or text.casefold() in json.dumps(record['node'],ensure_ascii=False).casefold())
+                facets=derive_facets(record['node'],record['package'])
+                if not (selected_by_seed or selected_by_query):continue
+                if knowledge_category and knowledge_category not in record['node']['categories']:continue
+                if not matches_facets(facets,knowledge_type=knowledge_type,evidence_state=evidence_state,
+                                      topic=topic,tcm_layer=tcm_layer):continue
+                matched.append({**record,'facets':facets})
+            response['medical_nodes'] = [{**record['node'],'retrieval_facets':record['facets']} for record in matched]
+            if any((knowledge_category,knowledge_type,evidence_state,topic,tcm_layer)) and not matched:
+                continue
             if knowledge_category:
                 ids = {record['node']['node_id'] for record in matched}
                 response['matches'] = [m for m in response.get('matches', []) if m['knowledge_id'] in ids]
@@ -138,21 +157,49 @@ class PackageCatalog:
             addresses.extend(record['address'] for record in matched)
             results.append({"package": item, **response})
         from medicine_agent.analysis.reviews import read_reviews
-        from medicine_agent.analysis.associations import address_key
-        linked = related(self, addresses, index)
+        linked = related(self, [*addresses,*seed_addresses], index,max_hops=max_hops,max_nodes=max_nodes)
         visible = {address_key(a) for a in addresses}
         visible.update(address_key(n['address']) for n in linked['related_nodes'])
         reviews = read_reviews(self, index)
-        from medicine_agent.analysis.concepts import concept_groups
+        from medicine_agent.analysis.concepts import concept_groups, concept_candidates
         active_ids={p['package_id'] for p in self.selected()}
         groups=concept_groups({k:v for k,v in index.items() if k[0] in active_ids})
+        candidate_index={k:v for k,v in index.items() if k[0] in active_ids}
+        linked_pairs={tuple(sorted((address_key(e['source']),address_key(e['target'])))) for e in linked['associations']}
+        candidates=concept_candidates(candidate_index,{address_key(a) for a in addresses},excluded=linked_pairs)
+        local_records=[]
+        traversed={address_key(a) for a in linked['traversal']['visited_addresses']}
+        for address in addresses:
+            key=address_key(address)
+            if key in index and key in traversed:local_records.append((index[key],'seed'))
+        for record in linked['related_nodes']:local_records.append((record,'related'))
+        seen=set();local_nodes=[]
+        for record,role in local_records:
+            key=address_key(record['address'])
+            if key in seen:continue
+            seen.add(key)
+            local_nodes.append({'address':record['address'],'title':record['node']['title'],
+                'statement':record['node']['statement'],'facets':derive_facets(record['node'],record['package']),'role':role})
+        from medicine_agent.domain.retrieval import LocalKnowledgeGraph
+        graph=LocalKnowledgeGraph.model_validate({'nodes':local_nodes,
+            'edges':[{k:edge[k] for k in ('association_id','source','target','relation','rationale','status','resolution')}
+                     for edge in linked['associations']],
+            'audit':{'requested_max_hops':max_hops,'requested_max_nodes':max_nodes,
+                'visited_nodes':linked['traversal']['visited_nodes'],'traversed_edges':linked['traversal']['traversed_edges'],
+                'truncated':linked['traversal']['truncated'],
+                'missing_seed_addresses':linked['traversal']['missing_seed_addresses'],
+                'filters':{k:v for k,v in {'subject':subject,'material_type':material_type,
+                    'medical_profile':medical_profile,'knowledge_layer':knowledge_layer,
+                    'knowledge_category':knowledge_category,'knowledge_type':knowledge_type,
+                    'evidence_state':evidence_state,'topic':topic,'tcm_layer':tcm_layer}.items() if v is not None}}})
         return {"status": "research_candidate", "packages": results,
                 'concept_groups':[{**g,'source_records':[index[address_key(a)] for a in g['members']]}
                     for g in groups if any(address_key(a) in visible for a in g['members'])],
                 "medical_review": "unreviewed", "consultation_available": False,
                 'user_reviews': [r for r in reviews['records'] if address_key(r['request']['target']['address']) in visible],
                 'user_review_states': [s for s in reviews['states'].values() if address_key(s['target']['address']) in visible],
-                'review_errors': reviews['errors'], **linked}
+                'review_errors': reviews['errors'],'local_graph':graph.model_dump(mode='json'),
+                'concept_link_candidates':candidates, **linked}
 
     def associate(self, source, target, relation, rationale):
         from medicine_agent.analysis.associations import associate

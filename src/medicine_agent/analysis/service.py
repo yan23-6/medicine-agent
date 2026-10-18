@@ -25,7 +25,7 @@ from medicine_agent.packages.owned import read_owned_cache, analysis_options, at
 class DataAnalysisAgent:
     """Constrained product agent: durable child task, allowlisted tools, checked output."""
     TOOLS = {"document-extraction": "0.1.0", "knowledge-distillation": "0.1.0",
-             "tcm-knowledge-analysis": "0.2.0",
+             "tcm-knowledge-analysis": "0.3.0",
              "knowledge-package-build-validate": "0.1.0"}
 
     def __init__(self, workspace: Path, package_root: Path | None = None, model_client=None, *, branch_id=None):
@@ -55,7 +55,7 @@ class DataAnalysisAgent:
                 model["endpoint_fingerprint"] = digest(config.base_url)
         return {"contract": "t02p-0.2.0", "semantics": load_semantic_registry().version,
                 "adapters": adapter_versions(), "tools": self.TOOLS, "model": model,
-                "context_policy": "previous-unit-plus-current-v1", "analysis_policy": "source-faithfulness-v2"}
+                "context_policy": "previous-unit-plus-current-v1", "analysis_policy": "source-faithfulness-v3"}
 
     def upgrade_unanalyzed_task(self, task):
         """Explicitly reuse only verified OCR when no analysis was committed."""
@@ -352,7 +352,7 @@ class DataAnalysisAgent:
                 "package_path": target.relative_to(self.catalog.root).as_posix()}))
             return
         evidence, fragments, knowledge, relations, warnings = {}, {}, {}, {}, set()
-        medical_nodes, medical_gaps = {}, []
+        medical_nodes, medical_gaps, rejected_candidates = {}, [], []
         for row in self.store.rows(task):
             if row["analysis"] is None:
                 raise AnalysisError("TASK_INCOMPLETE", "Not all units have committed analysis")
@@ -365,6 +365,7 @@ class DataAnalysisAgent:
             if payload.get('tcm_graph'):
                 medical_nodes.update({n['node_id']: n for n in payload['tcm_graph']['nodes']})
                 medical_gaps.extend(payload['tcm_graph']['gaps'])
+                rejected_candidates.extend(payload['tcm_graph'].get('rejected_candidates', []))
         if not knowledge:
             raise AnalysisError("NO_KNOWLEDGE", "No analyzable text; no complete package was committed")
         source = SourceDocument(source_id=data["source_id"], file_name=data["file_name"],
@@ -386,7 +387,8 @@ class DataAnalysisAgent:
         if data['request']['mode'] == 'model':
             from medicine_agent.domain.tcm_knowledge import TCMKnowledgeGraph
             from medicine_agent.packages.tcm import attach_graph
-            attach_graph(candidate, TCMKnowledgeGraph(nodes=list(medical_nodes.values()), gaps=medical_gaps))
+            attach_graph(candidate, TCMKnowledgeGraph(nodes=list(medical_nodes.values()), gaps=medical_gaps,
+                rejected_candidates=rejected_candidates))
         prior_classification = None
         if data["request"]["parent_package"]:
             previous = self.catalog._path(data["request"]["parent_package"]) / "revision.json"

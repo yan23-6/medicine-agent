@@ -71,6 +71,7 @@ def read_owned_cache(path: Path):
     if len(sources)!=1 or sources[0]['source_id']!=cache.source_id or sources[0]['sha256']!=cache.source_sha256:
         raise ValueError('Cache belongs to another source')
     all_evidence, all_fragments, knowledge, relations, nodes, gaps = {}, {}, {}, {}, {}, []
+    rejected_candidates = []
     previous = []
     for unit in cache.units:
         payload = unit.analysis.model_dump(mode='json')
@@ -91,6 +92,7 @@ def read_owned_cache(path: Path):
                     raise ValueError('Cached node identity mismatch')
                 nodes[node.node_id]=node.model_dump(mode='json')
             gaps += [g.model_dump(mode='json') for g in graph.gaps]
+            rejected_candidates.extend(graph.rejected_candidates)
         for name, key, destination in (('current_evidence','evidence_id',all_evidence),
             ('fragments','fragment_id',all_fragments),('knowledge','knowledge_id',knowledge),('relations','relation_id',relations)):
             destination.update({item[key]:item for item in payload[name]})
@@ -110,7 +112,8 @@ def read_owned_cache(path: Path):
             raise ValueError('Cached graph semantic versions differ')
         # Reconstruct with the recorded version, never today's default. Reading
         # an old archive must not silently migrate its metadata or invalidate it.
-        expected = TCMKnowledgeGraph(semantic_version=next(iter(versions)), nodes=list(nodes.values()), gaps=gaps)
+        expected = TCMKnowledgeGraph(semantic_version=next(iter(versions)), nodes=list(nodes.values()),
+                                     gaps=gaps, rejected_candidates=rejected_candidates)
         actual = audit.history[0].parent_graph if corrected else TCMKnowledgeGraph.model_validate_json((path/'tcm.json').read_text('utf-8'))
         if expected != actual:
             raise ValueError('Packaged graph differs from committed analysis')

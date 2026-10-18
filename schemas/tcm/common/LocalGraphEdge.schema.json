@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "association_id": {
+      "title": "Association Id",
+      "type": "string"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "relation": {
+      "title": "Relation",
+      "type": "string"
+    },
+    "resolution": {
+      "title": "Resolution",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    }
+  },
+  "required": [
+    "association_id",
+    "source",
+    "target",
+    "relation",
+    "rationale",
+    "status",
+    "resolution"
+  ],
+  "title": "LocalGraphEdge",
+  "type": "object"
+}

@@ -1,0 +1,367 @@
+{
+  "$defs": {
+    "CoverageAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "archive": {
+          "title": "Archive",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "component": {
+          "title": "Component",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "archive",
+        "archive_sha256",
+        "bundle_id",
+        "package_id",
+        "manifest_sha256",
+        "component",
+        "active",
+        "resources"
+      ],
+      "title": "CoverageAddress",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "PreparationQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Location",
+          "type": "object"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text",
+        "source_id",
+        "source_sha256",
+        "location"
+      ],
+      "title": "PreparationQuote",
+      "type": "object"
+    },
+    "PreparationWorksheet": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "anyOf": [
+            {
+              "enum": [
+                "accept",
+                "revise",
+                "reject",
+                "unable_to_judge"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewer"
+        },
+        "submitted": {
+          "const": false,
+          "default": false,
+          "title": "Submitted",
+          "type": "boolean"
+        }
+      },
+      "title": "PreparationWorksheet",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "categories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Categories",
+      "type": "array"
+    },
+    "expected_previous_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Previous Id"
+    },
+    "fact_state": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fact State"
+    },
+    "field_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Field Id"
+    },
+    "flags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Flags",
+      "type": "array"
+    },
+    "item_id": {
+      "title": "Item Id",
+      "type": "string"
+    },
+    "origins": {
+      "items": {
+        "$ref": "#/$defs/CoverageAddress"
+      },
+      "title": "Origins",
+      "type": "array"
+    },
+    "quotes": {
+      "items": {
+        "$ref": "#/$defs/PreparationQuote"
+      },
+      "title": "Quotes",
+      "type": "array"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "target": {
+      "$ref": "#/$defs/ReviewTarget"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "user_review_state": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "needs_revision",
+        "rejected",
+        "history_invalid"
+      ],
+      "title": "User Review State",
+      "type": "string"
+    },
+    "value": {
+      "$ref": "#/$defs/JsonValue",
+      "default": null
+    },
+    "worksheet": {
+      "$ref": "#/$defs/PreparationWorksheet"
+    }
+  },
+  "required": [
+    "item_id",
+    "target",
+    "title",
+    "categories",
+    "quotes",
+    "flags",
+    "user_review_state",
+    "origins"
+  ],
+  "title": "CandidateReviewItem",
+  "type": "object"
+}

@@ -50,12 +50,14 @@ class PackageLibrary:
         from medicine_agent.semantics.guide import export_tcm_field_guide
         from medicine_agent.domain.learning import DerivedBundle
         from medicine_agent.domain.tcm_knowledge import TCMKnowledgeGraph
+        from medicine_agent.domain.retrieval import LocalKnowledgeQuery, LocalKnowledgeGraph, ConceptLinkCandidate
         from medicine_agent.domain.reviews import ReviewRecord
         from medicine_agent.domain.corrections import CorrectionBundle
         specification={'file_format':'medpkg-0.1.0',
             'semantics':load_semantic_registry().model_dump(mode='json'),
             'container_schema':DerivedBundle.model_json_schema(),
-            'data_schemas':{m.__name__:m.model_json_schema() for m in (TCMKnowledgeGraph,ReviewRecord,CorrectionBundle)}}
+            'data_schemas':{m.__name__:m.model_json_schema() for m in (
+                TCMKnowledgeGraph,ReviewRecord,CorrectionBundle,LocalKnowledgeQuery,LocalKnowledgeGraph,ConceptLinkCandidate)}}
         target=self.root/'package-spec.json'
         try:current=json.loads(target.read_text('utf-8'))
         except (OSError,ValueError):current=None

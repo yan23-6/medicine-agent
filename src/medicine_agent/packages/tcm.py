@@ -6,7 +6,8 @@ from medicine_agent.domain.ids import file_sha256, stable_id
 from medicine_agent.domain.tcm_knowledge import TCMKnowledgeGraph, validate_graph_evidence
 from medicine_agent.analysis.store import atomic_json
 
-EXTENSIONS = {'tcm-knowledge': '0.1.0'}
+CURRENT_EXTENSIONS = {'tcm-knowledge': '0.2.0'}
+SUPPORTED_EXTENSIONS = ({'tcm-knowledge': '0.1.0'}, CURRENT_EXTENSIONS)
 
 
 def read_graph(path: Path) -> TCMKnowledgeGraph | None:
@@ -17,7 +18,7 @@ def read_graph(path: Path) -> TCMKnowledgeGraph | None:
     manifest = json.loads((path / 'manifest.json').read_text('utf-8'))
     if not {'extensions.json', 'tcm.json'} <= manifest['files'].keys():
         raise ValueError('Unprotected medical extension')
-    if json.loads(extension.read_text('utf-8')) != EXTENSIONS:
+    if json.loads(extension.read_text('utf-8')) not in SUPPORTED_EXTENSIONS:
         raise ValueError('Unsupported medical extension version')
     graph = TCMKnowledgeGraph.model_validate_json(graph_path.read_text('utf-8'))
     records = [EvidenceRecord.model_validate_json(line) for line in
@@ -34,7 +35,7 @@ def read_graph(path: Path) -> TCMKnowledgeGraph | None:
 
 
 def attach_graph(path: Path, graph: TCMKnowledgeGraph):
-    atomic_json(path / 'extensions.json', EXTENSIONS)
+    atomic_json(path / 'extensions.json', CURRENT_EXTENSIONS)
     atomic_json(path / 'tcm.json', graph.model_dump(mode='json'))
     manifest = json.loads((path / 'manifest.json').read_text('utf-8'))
     for name in ('extensions.json', 'tcm.json'):

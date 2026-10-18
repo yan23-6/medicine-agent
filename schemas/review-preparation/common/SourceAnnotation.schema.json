@@ -1,0 +1,372 @@
+{
+  "$defs": {
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "CoverageAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "archive": {
+          "title": "Archive",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "component": {
+          "title": "Component",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "archive",
+        "archive_sha256",
+        "bundle_id",
+        "package_id",
+        "manifest_sha256",
+        "component",
+        "active",
+        "resources"
+      ],
+      "title": "CoverageAddress",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "PreparationWorksheet": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "anyOf": [
+            {
+              "enum": [
+                "accept",
+                "revise",
+                "reject",
+                "unable_to_judge"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewer"
+        },
+        "submitted": {
+          "const": false,
+          "default": false,
+          "title": "Submitted",
+          "type": "boolean"
+        }
+      },
+      "title": "PreparationWorksheet",
+      "type": "object"
+    },
+    "SourceDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "file_name": {
+          "title": "File Name",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/SourceMetadata"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "file_name",
+        "media_type",
+        "sha256",
+        "metadata"
+      ],
+      "title": "SourceDocument",
+      "type": "object"
+    },
+    "SourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Author"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Edition"
+        },
+        "isbn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Isbn"
+        },
+        "publication_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publication Year"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Publisher"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "edition",
+        "publication_year",
+        "publisher",
+        "isbn"
+      ],
+      "title": "SourceMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "annotation_id": {
+      "title": "Annotation Id",
+      "type": "string"
+    },
+    "evidence": {
+      "$ref": "#/$defs/EvidenceRecord"
+    },
+    "flags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Flags",
+      "type": "array"
+    },
+    "origins": {
+      "items": {
+        "$ref": "#/$defs/CoverageAddress"
+      },
+      "title": "Origins",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceDocument"
+    },
+    "unit_kind": {
+      "enum": [
+        "physical_page",
+        "text_line",
+        "structured_unit",
+        "image",
+        "unknown"
+      ],
+      "title": "Unit Kind",
+      "type": "string"
+    },
+    "worksheet": {
+      "$ref": "#/$defs/PreparationWorksheet"
+    }
+  },
+  "required": [
+    "annotation_id",
+    "source",
+    "evidence",
+    "unit_kind",
+    "origins"
+  ],
+  "title": "SourceAnnotation",
+  "type": "object"
+}

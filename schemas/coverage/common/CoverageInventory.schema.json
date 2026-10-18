@@ -1,0 +1,319 @@
+{
+  "$defs": {
+    "CoverageAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "archive": {
+          "title": "Archive",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "component": {
+          "title": "Component",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "archive",
+        "archive_sha256",
+        "bundle_id",
+        "package_id",
+        "manifest_sha256",
+        "component",
+        "active",
+        "resources"
+      ],
+      "title": "CoverageAddress",
+      "type": "object"
+    },
+    "CoverageIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "archive": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Archive"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "reason"
+      ],
+      "title": "CoverageIssue",
+      "type": "object"
+    },
+    "CoveragePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Analysis Policy"
+        },
+        "context_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Policy"
+        },
+        "semantic_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Version"
+        }
+      },
+      "title": "CoveragePolicy",
+      "type": "object"
+    },
+    "CoverageRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Adapter Versions",
+          "type": "object"
+        },
+        "address": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoverageAddress"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "document_unit_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Unit Count"
+        },
+        "extraction_methods": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Extraction Methods",
+          "type": "array"
+        },
+        "history_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "History Reference"
+        },
+        "integrity_basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Integrity Basis",
+          "type": "array"
+        },
+        "policy": {
+          "$ref": "#/$defs/CoveragePolicy"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "stage": {
+          "enum": [
+            "extraction",
+            "semantic_candidate"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "verified",
+            "historical_pending",
+            "unknown",
+            "partial_failed"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "unit_kind": {
+          "default": "unknown",
+          "enum": [
+            "physical_page",
+            "text_line",
+            "structured_unit",
+            "image",
+            "unknown"
+          ],
+          "title": "Unit Kind",
+          "type": "string"
+        },
+        "units": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stage",
+        "state",
+        "reason"
+      ],
+      "title": "CoverageRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/CoverageIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "records": {
+      "items": {
+        "$ref": "#/$defs/CoverageRecord"
+      },
+      "title": "Records",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "records",
+    "issues"
+  ],
+  "title": "CoverageInventory",
+  "type": "object"
+}

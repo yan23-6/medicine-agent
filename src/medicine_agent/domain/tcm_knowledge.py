@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import Field, JsonValue, model_validator
 
 from medicine_agent.domain.models import StrictModel, EvidenceRecord
-from medicine_agent.semantics import load_semantic_registry
+from medicine_agent.semantics.registry import semantic_constraint_snapshot, semantic_field_constraints
 
 KnowledgeCategory = Literal['tcm_foundation', 'chinese_materia_medica',
     'tcm_pattern_differentiation', 'tcm_formula', 'tcm_clinical_case']
@@ -26,8 +26,7 @@ class GroundedFact(StrictModel):
 
     @model_validator(mode='after')
     def check(self):
-        registry = load_semantic_registry()
-        field = next((f for f in registry.fields if f.field_id == self.field_id), None)
+        field = semantic_field_constraints(self.field_id)
         if field is None or field.owner_profile == 'western':
             raise ValueError('Unknown or out-of-scope medical field')
         if self.state in {'missing', 'not_applicable', 'ambiguous'}:
@@ -49,9 +48,11 @@ class MedicalRecordGroup(StrictModel):
 
     @model_validator(mode='after')
     def check(self):
-        fields = {f.field_id: f for f in load_semantic_registry().fields}
         for fact in self.facts:
-            allowed = fields[fact.field_id].allowed_on
+            field = semantic_field_constraints(fact.field_id)
+            if field is None or field.owner_profile == 'western':
+                raise ValueError('Unknown or out-of-scope medical field')
+            allowed = field.allowed_on
             grouped = [x.split(':', 1)[1] for x in allowed if x.startswith('tcm_group:')]
             if grouped and self.kind not in grouped:
                 raise ValueError('Medical field placed in the wrong record group')
@@ -72,6 +73,15 @@ class MedicalRecordGroup(StrictModel):
 class AnalysisGap(StrictModel):
     reason: str = Field(min_length=1)
     quotes: list[EvidenceQuote] = Field(min_length=1)
+
+
+class RejectedAnalysisCandidate(StrictModel):
+    """An invalid model candidate retained outside the medical fact graph."""
+    code: str = Field(min_length=1)
+    path: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    raw_candidate: JsonValue = None
+    evidence_ids: list[str] = Field(default_factory=list)
 
 
 class TCMKnowledgeNode(StrictModel):
@@ -118,6 +128,13 @@ class TCMKnowledgeGraph(StrictModel):
     analysis_status: Literal['candidate_partial'] = 'candidate_partial'
     nodes: list[TCMKnowledgeNode] = Field(default_factory=list)
     gaps: list[AnalysisGap] = Field(default_factory=list)
+    rejected_candidates: list[RejectedAnalysisCandidate] = Field(default_factory=list)
+
+    @model_validator(mode='wrap')
+    @classmethod
+    def validate_with_semantic_snapshot(cls, value, handler):
+        with semantic_constraint_snapshot():
+            return handler(value)
 
 
 class KnowledgeAddress(StrictModel):
@@ -162,5 +179,5 @@ def validate_graph_evidence(graph: TCMKnowledgeGraph, records: list[EvidenceReco
             check(gap.quotes, node.source_id)
 
 
-TCM_MODELS = (EvidenceQuote, GroundedFact, MedicalRecordGroup, AnalysisGap,
+TCM_MODELS = (EvidenceQuote, GroundedFact, MedicalRecordGroup, AnalysisGap, RejectedAnalysisCandidate,
     TCMKnowledgeNode, TCMKnowledgeGraph, KnowledgeAddress, KnowledgeAssociation)

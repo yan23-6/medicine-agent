@@ -1,0 +1,57 @@
+{
+  "additionalProperties": false,
+  "description": "Derived query dimensions; never an independent medical assertion.",
+  "properties": {
+    "applicability": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Applicability",
+      "type": "array"
+    },
+    "evidence_states": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence States",
+      "type": "array"
+    },
+    "field_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Field Ids",
+      "type": "array"
+    },
+    "governance_states": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Governance States",
+      "type": "array"
+    },
+    "knowledge_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Knowledge Types",
+      "type": "array"
+    },
+    "source_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Types",
+      "type": "array"
+    },
+    "tcm_layers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tcm Layers",
+      "type": "array"
+    }
+  },
+  "title": "KnowledgeFacets",
+  "type": "object"
+}

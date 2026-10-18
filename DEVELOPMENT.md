@@ -72,4 +72,8 @@ uv run medicine-agent pipeline tests/fixtures/basic.md --output-root artifacts/p
 - 受控总智能体/数据分析 Agent、断点续跑和包目录查询已有首版；MCP/REST 服务、LadybugDB、正式医学蒸馏与完整问诊尚未实现。
 
 
-产品入口使用 `analyze submit <新资料> --base-package <包1.medpkg> --base-package <包2.medpkg> --allowed-use <用途>`；owner-id 可选，仅记录贡献。最终单文件放固定用户目录，操作命令见 [数据分析说明](src/medicine_agent/analysis/README.md)。目录 API 仅内部兼容；精确缓存与新资料学习分开。验收见 tasks/STATE.md 与当前阶段 T02B2_ACCEPTANCE.md。
+产品入口使用 `analyze submit <新资料> --base-package <包1.medpkg> --base-package <包2.medpkg> --allowed-use <用途>`；owner-id 可选，仅记录贡献。最终单文件放固定用户目录，操作命令见 [数据分析说明](src/medicine_agent/analysis/README.md)。目录 API 仅内部兼容；精确缓存与新资料学习分开。当前能力和验收边界见 [tasks/STATE.md](tasks/STATE.md)。
+
+新资料处理前用 `analyze coverage --packages <包目录> --workspace <独立缓存>` 只读盘点；加 `--input-file <CoverageRequest.json>` 生成最早缺失阶段计划。契约为 `schemas/coverage/`，源码为 `domain/coverage.py`；用 `export-schemas --contract-set coverage --output-dir schemas/coverage` 重建，`python -m pytest tests/test_coverage.py` 验证。它不是新Agent/Skill，不调用模型或自动派发；旧包可选字段缺失保留待核而非要求重蒸馏。
+
+复核准备使用 `analyze review-prepare --packages <包目录> --workspace <独立缓存> --output-dir <新目录>`；契约为review-preparation/0.1.0，独立导出全部原文、候选、异常、空白模板和质量门。用 `python -m pytest tests/test_review_preparation.py tests/test_reviews.py` 检查。完整数据含原文，只放本地运行产物，不提交；准备完成不等于专家确认或可发布。

@@ -1,0 +1,227 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "KnowledgeFacets": {
+      "additionalProperties": false,
+      "description": "Derived query dimensions; never an independent medical assertion.",
+      "properties": {
+        "applicability": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applicability",
+          "type": "array"
+        },
+        "evidence_states": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence States",
+          "type": "array"
+        },
+        "field_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Field Ids",
+          "type": "array"
+        },
+        "governance_states": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Governance States",
+          "type": "array"
+        },
+        "knowledge_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Knowledge Types",
+          "type": "array"
+        },
+        "source_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Types",
+          "type": "array"
+        },
+        "tcm_layers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tcm Layers",
+          "type": "array"
+        }
+      },
+      "title": "KnowledgeFacets",
+      "type": "object"
+    },
+    "LocalGraphEdge": {
+      "additionalProperties": false,
+      "properties": {
+        "association_id": {
+          "title": "Association Id",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "relation": {
+          "title": "Relation",
+          "type": "string"
+        },
+        "resolution": {
+          "title": "Resolution",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        }
+      },
+      "required": [
+        "association_id",
+        "source",
+        "target",
+        "relation",
+        "rationale",
+        "status",
+        "resolution"
+      ],
+      "title": "LocalGraphEdge",
+      "type": "object"
+    },
+    "LocalGraphNode": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "facets": {
+          "$ref": "#/$defs/KnowledgeFacets"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "title",
+        "statement",
+        "facets",
+        "role"
+      ],
+      "title": "LocalGraphNode",
+      "type": "object"
+    },
+    "RetrievalAudit": {
+      "additionalProperties": false,
+      "properties": {
+        "filters": {
+          "additionalProperties": true,
+          "title": "Filters",
+          "type": "object"
+        },
+        "missing_seed_addresses": {
+          "items": {
+            "$ref": "#/$defs/KnowledgeAddress"
+          },
+          "title": "Missing Seed Addresses",
+          "type": "array"
+        },
+        "requested_max_hops": {
+          "title": "Requested Max Hops",
+          "type": "integer"
+        },
+        "requested_max_nodes": {
+          "title": "Requested Max Nodes",
+          "type": "integer"
+        },
+        "traversed_edges": {
+          "title": "Traversed Edges",
+          "type": "integer"
+        },
+        "truncated": {
+          "default": false,
+          "title": "Truncated",
+          "type": "boolean"
+        },
+        "visited_nodes": {
+          "title": "Visited Nodes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "requested_max_hops",
+        "requested_max_nodes",
+        "visited_nodes",
+        "traversed_edges"
+      ],
+      "title": "RetrievalAudit",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "audit": {
+      "$ref": "#/$defs/RetrievalAudit"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/LocalGraphEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/LocalGraphNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "audit"
+  ],
+  "title": "LocalKnowledgeGraph",
+  "type": "object"
+}

@@ -1,0 +1,427 @@
+{
+  "$defs": {
+    "AnalysisGap": {
+      "additionalProperties": false,
+      "properties": {
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "quotes"
+      ],
+      "title": "AnalysisGap",
+      "type": "object"
+    },
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    },
+    "GenerationMethod": {
+      "enum": [
+        "rule",
+        "model",
+        "human",
+        "imported"
+      ],
+      "title": "GenerationMethod",
+      "type": "string"
+    },
+    "GroundedFact": {
+      "additionalProperties": false,
+      "properties": {
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "state": {
+          "default": "stated",
+          "enum": [
+            "stated",
+            "inferred",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "field_id"
+      ],
+      "title": "GroundedFact",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "KnowledgeCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "generation_method": {
+          "$ref": "#/$defs/GenerationMethod"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "knowledge_id": {
+          "title": "Knowledge Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "unreviewed"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_id",
+        "kind",
+        "label",
+        "statement",
+        "evidence_refs",
+        "generation_method"
+      ],
+      "title": "KnowledgeCandidate",
+      "type": "object"
+    },
+    "MedicalRecordGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "about_group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "About Group Id"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/GroundedFact"
+          },
+          "minItems": 1,
+          "title": "Facts",
+          "type": "array"
+        },
+        "group_id": {
+          "minLength": 1,
+          "title": "Group Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "theory",
+            "herb",
+            "differentiation",
+            "formula",
+            "case",
+            "dose",
+            "outcome",
+            "safety"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id",
+        "kind",
+        "facts"
+      ],
+      "title": "MedicalRecordGroup",
+      "type": "object"
+    },
+    "RejectedAnalysisCandidate": {
+      "additionalProperties": false,
+      "description": "An invalid model candidate retained outside the medical fact graph.",
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "raw_candidate": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "reason"
+      ],
+      "title": "RejectedAnalysisCandidate",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "TCMKnowledgeGraph": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_status": {
+          "const": "candidate_partial",
+          "default": "candidate_partial",
+          "title": "Analysis Status",
+          "type": "string"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/TCMKnowledgeNode"
+          },
+          "title": "Nodes",
+          "type": "array"
+        },
+        "rejected_candidates": {
+          "items": {
+            "$ref": "#/$defs/RejectedAnalysisCandidate"
+          },
+          "title": "Rejected Candidates",
+          "type": "array"
+        },
+        "semantic_version": {
+          "default": "0.3.2",
+          "enum": [
+            "0.3.0",
+            "0.3.2"
+          ],
+          "title": "Semantic Version",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "TCMKnowledgeGraph",
+      "type": "object"
+    },
+    "TCMKnowledgeNode": {
+      "additionalProperties": false,
+      "properties": {
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "categories": {
+          "items": {
+            "enum": [
+              "tcm_foundation",
+              "chinese_materia_medica",
+              "tcm_pattern_differentiation",
+              "tcm_formula",
+              "tcm_clinical_case"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Categories",
+          "type": "array"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/AnalysisGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "generation_method": {
+          "const": "model",
+          "default": "model",
+          "title": "Generation Method",
+          "type": "string"
+        },
+        "groups": {
+          "items": {
+            "$ref": "#/$defs/MedicalRecordGroup"
+          },
+          "minItems": 1,
+          "title": "Groups",
+          "type": "array"
+        },
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "review_status": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "source_id": {
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "topics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Topics",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node_id",
+        "source_id",
+        "title",
+        "statement",
+        "categories",
+        "quotes",
+        "groups"
+      ],
+      "title": "TCMKnowledgeNode",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "graph": {
+      "$ref": "#/$defs/TCMKnowledgeGraph"
+    },
+    "knowledge": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeCandidate"
+      },
+      "title": "Knowledge",
+      "type": "array"
+    },
+    "relations": {
+      "items": {},
+      "title": "Relations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "graph",
+    "knowledge"
+  ],
+  "title": "TCMAnalysisOutput",
+  "type": "object"
+}

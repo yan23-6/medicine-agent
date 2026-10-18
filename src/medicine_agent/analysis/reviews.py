@@ -107,6 +107,13 @@ def review_queue(catalog, scope='node'):
     index = node_index(catalog)
     history = read_reviews(catalog, index)
     selected = {p['package_id'] for p in catalog.selected()}
+    return build_review_queue(index, history, selected, scope)
+
+
+def build_review_queue(index, history, selected, scope='all'):
+    """Pure internal projection shared by catalogs and read-only preparation."""
+    if scope not in {'node', 'fact', 'all'}:
+        raise AnalysisError('REVIEW_SCOPE_INVALID', 'Use node, fact or all')
     items = []
     for (pid, nid), record in index.items():
         if pid not in selected:
@@ -138,12 +145,13 @@ def review_queue(catalog, scope='node'):
             if any(q['location'].get('confidence') is not None and q['location']['confidence'] < .9 for q in quotes):
                 flags.append('low_ocr_confidence')
             state = history['states'].get(digest(target))
+            invalid = bool(history['errors']) or bool(state and state['resolution'] != 'resolved')
             items.append({'target': target, 'title': node['title'], 'categories': node['categories'],
                 'field_id': value.get('field_id'), 'value': value.get('value', node['statement']),
                 'fact_state': value.get('state'), 'reason': value.get('reason'),
                 'quotes': quotes, 'flags': flags, 'user_review_state':
-                    ('history_invalid' if history['errors'] else state['user_review_state'] if state else 'unreviewed'),
-                'expected_previous_id': state['latest_review_id'] if state else None})
+                    ('history_invalid' if invalid else state['user_review_state'] if state else 'unreviewed'),
+                'expected_previous_id': state['latest_review_id'] if state and not invalid else None})
     items.sort(key=lambda i: (-len(i['flags']), i['target']['address']['package_id'],
                              i['target']['address']['node_id'], i['target']['scope'],
                              i['target']['group_id'] or '', i['target']['fact_index'] or 0))
@@ -162,9 +170,9 @@ def render_review_markdown(queue, limit=10):
         'field_missing': '资料缺失', 'field_not_applicable': '标为不适用'}
     states = {'unreviewed': '待核对', 'confirmed': '用户认可', 'needs_revision': '需修改',
               'rejected': '用户否定', 'history_invalid': '复核历史异常'}
-    lines = ['# 基础理论候选：逐条核对清单', '',
-        '资料分析首版已获暂时认可；以下知识条目仍需逐条核对。用户意见单独保存，不覆盖原文，也不等于专家医学审核。', '',
-        '请用“编号＋认可/需修改/不认可＋原因”反馈；有改法可直接写。先看前三条即可，不需要提供新文件。', '',
+    lines = ['# 中医候选：逐条核对清单', '',
+        '以下候选尚待核对。用户意见单独保存，不覆盖原文，也不等于专家医学审核。', '',
+        '先独立标注来源原文，再对照候选；保存意见须使用完整稳定目标、目标指纹和前序记录，不能只靠显示序号。', '',
         f"当前共 {len(queue['items'])} 个复核目标；下面展示前 {min(limit,len(queue['items']))} 个，完整定位和引文保存在同批 JSON 清单中。", '']
     if queue['errors']:
         lines += ['复核记录存在异常，暂不展示最终确认结论。', '']
@@ -187,6 +195,6 @@ def render_review_markdown(queue, limit=10):
         if item['reason']:
             lines += ['**已有理由**：'+item['reason'], '']
     lines += ['## 如何保存意见', '',
-        '当前没有替你填写任何条目的确认意见。可直接在聊天中按编号反馈；运行时也提供 review-record 命令，记录每次意见与前序。',
+        '当前没有替你填写任何条目的确认意见。review-record接收明确填写的ReviewRequest；准备表或无法判断项不可直接当作确认意见提交。',
         '保存意见后，原数据仍可回查。更正候选不会自动替换源字段；新修订也不自动继承旧确认。', '']
     return '\n'.join(lines)

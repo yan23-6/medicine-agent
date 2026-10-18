@@ -1,0 +1,15 @@
+{
+  "contract_set": "coverage",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/CoverageAddress.schema.json": "90089ba778ee57283a97ff8d85fa55989d2996dd6a40451f4e45a7572c5d63ec",
+    "common/CoverageDecision.schema.json": "54ca944338d55fbb500c0d7a53b8ce224cbd7c7890d9dfe84d123ceb7a4645da",
+    "common/CoverageHistory.schema.json": "5c0570a63c2c6d49a5455872b1c64e14a9ff5d5dfbf954a608bcbff60389b684",
+    "common/CoverageInventory.schema.json": "e43c9501cf89b3914af7c1cb3fff60855039918df8704f17be64c673eddb23b8",
+    "common/CoverageIssue.schema.json": "c2322ea8fe0b56795e15e0ede766a65a7d57e053ae3d4c48af25f46c6f991cfe",
+    "common/CoveragePlan.schema.json": "e8c12a5c4c248a8baeb37f9046d370a7858316b6cd2ed7802f43c6a06981b56a",
+    "common/CoveragePolicy.schema.json": "9ebfd1b7781ea3de152029ea93d68ab087489b2cb28e97c914796f16bf66e589",
+    "common/CoverageRecord.schema.json": "8113092407acaf918eaf9fbd824bceb7af43c7b1a65cfff03d4e6b0e3992bf7c",
+    "common/CoverageRequest.schema.json": "fb8f49bf7097619d7de69da71d6fa3f950706312912a6e682da8742570094439"
+  }
+}

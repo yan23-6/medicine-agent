@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_type": {
+      "title": "Candidate Type",
+      "type": "string"
+    },
+    "matched_terms": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Matched Terms",
+      "type": "array"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "score": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Score",
+      "type": "number"
+    },
+    "source": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    },
+    "status": {
+      "default": "candidate",
+      "title": "Status",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/KnowledgeAddress"
+    }
+  },
+  "required": [
+    "source",
+    "target",
+    "candidate_type",
+    "score",
+    "rationale"
+  ],
+  "title": "ConceptLinkCandidate",
+  "type": "object"
+}

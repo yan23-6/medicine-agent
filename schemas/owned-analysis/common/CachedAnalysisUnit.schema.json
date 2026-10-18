@@ -481,6 +481,45 @@
       "title": "MedicalRecordGroup",
       "type": "object"
     },
+    "RejectedAnalysisCandidate": {
+      "additionalProperties": false,
+      "description": "An invalid model candidate retained outside the medical fact graph.",
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "raw_candidate": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "reason"
+      ],
+      "title": "RejectedAnalysisCandidate",
+      "type": "object"
+    },
     "RelationCandidate": {
       "additionalProperties": false,
       "properties": {
@@ -555,6 +594,13 @@
             "$ref": "#/$defs/TCMKnowledgeNode"
           },
           "title": "Nodes",
+          "type": "array"
+        },
+        "rejected_candidates": {
+          "items": {
+            "$ref": "#/$defs/RejectedAnalysisCandidate"
+          },
+          "title": "Rejected Candidates",
           "type": "array"
         },
         "semantic_version": {

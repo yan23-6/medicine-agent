@@ -1,0 +1,392 @@
+{
+  "$defs": {
+    "AnalysisGap": {
+      "additionalProperties": false,
+      "properties": {
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/EvidenceQuote"
+          },
+          "minItems": 1,
+          "title": "Quotes",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "quotes"
+      ],
+      "title": "AnalysisGap",
+      "type": "object"
+    },
+    "CorrectionStatus": {
+      "enum": [
+        "none",
+        "proposed",
+        "confirmed",
+        "rejected"
+      ],
+      "title": "CorrectionStatus",
+      "type": "string"
+    },
+    "CoverageAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "archive": {
+          "title": "Archive",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "component": {
+          "title": "Component",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "archive",
+        "archive_sha256",
+        "bundle_id",
+        "package_id",
+        "manifest_sha256",
+        "component",
+        "active",
+        "resources"
+      ],
+      "title": "CoverageAddress",
+      "type": "object"
+    },
+    "EvidenceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "EvidenceQuote",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "corrected_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corrected Text"
+        },
+        "correction_status": {
+          "$ref": "#/$defs/CorrectionStatus",
+          "default": "none"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "location": {
+          "additionalProperties": true,
+          "title": "Location",
+          "type": "object"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "fragment_id",
+        "raw_text",
+        "location"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "PreparationWorksheet": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "anyOf": [
+            {
+              "enum": [
+                "accept",
+                "revise",
+                "reject",
+                "unable_to_judge"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewer"
+        },
+        "submitted": {
+          "const": false,
+          "default": false,
+          "title": "Submitted",
+          "type": "boolean"
+        }
+      },
+      "title": "PreparationWorksheet",
+      "type": "object"
+    },
+    "RejectedAnalysisCandidate": {
+      "additionalProperties": false,
+      "description": "An invalid model candidate retained outside the medical fact graph.",
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "raw_candidate": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "reason"
+      ],
+      "title": "RejectedAnalysisCandidate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "anomaly_id": {
+      "title": "Anomaly Id",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "gap": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AnalysisGap"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "kind": {
+      "enum": [
+        "graph_gap",
+        "node_gap",
+        "rejected_candidate"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "node_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Node Id"
+    },
+    "occurrence": {
+      "minimum": 0,
+      "title": "Occurrence",
+      "type": "integer"
+    },
+    "origins": {
+      "items": {
+        "$ref": "#/$defs/CoverageAddress"
+      },
+      "title": "Origins",
+      "type": "array"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "rejected": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RejectedAnalysisCandidate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "unresolved_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Evidence Ids",
+      "type": "array"
+    },
+    "worksheet": {
+      "$ref": "#/$defs/PreparationWorksheet"
+    },
+    "writable_review_target": {
+      "const": false,
+      "default": false,
+      "title": "Writable Review Target",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "anomaly_id",
+    "kind",
+    "package_id",
+    "occurrence",
+    "evidence",
+    "origins"
+  ],
+  "title": "PreparationAnomaly",
+  "type": "object"
+}

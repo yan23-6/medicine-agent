@@ -175,6 +175,21 @@ def test_unknown_extension_or_ungrounded_fact_quarantines_package(tmp_path):
     assert catalog.scan()[0]['state'] == 'quarantined'
 
 
+def test_legacy_tcm_extension_remains_readable_without_reextracting_source(tmp_path):
+    catalog,path=create_medical_package(tmp_path,'legacy')
+    graph=json.loads((path/'tcm.json').read_text('utf-8'))
+    graph.pop('rejected_candidates',None)
+    atomic_json(path/'tcm.json',graph)
+    atomic_json(path/'extensions.json',{'tcm-knowledge':'0.1.0'})
+    manifest=json.loads((path/'manifest.json').read_text('utf-8'))
+    for name in ('tcm.json','extensions.json'):
+        manifest['files'][name]=file_sha256((path/name).read_bytes())
+    atomic_json(path/'manifest.json',manifest)
+    atomic_json(path/'checksums.json',manifest['files'])
+    assert validate_package_path(path).valid
+    assert catalog.query(create_facade(),text='甘能缓急')['packages']
+
+
 def test_corrupt_link_is_reported_and_does_not_damage_source_packages(tmp_path):
     catalog, first = create_medical_package(tmp_path, 'book')
     (catalog.root / 'links').mkdir()
@@ -260,3 +275,100 @@ def test_field_level_quotes_count_as_coverage_without_removing_model_gaps():
     result=create_facade(FieldCoverageModel()).invoke_skill(SkillInvocation(task_id='field-coverage',
         skill_id='tcm-knowledge-analysis',input_data={'evidence':[e.model_dump(),second.model_dump()]}))
     assert result.status=='success' and result.output['graph']['gaps']==[]
+
+
+def test_one_invalid_field_is_quarantined_without_losing_valid_siblings():
+    class MixedFieldModel(FixtureModel):
+        def generate_json(self, **kwargs):
+            payload=super().generate_json(**kwargs)
+            quote=payload['nodes'][0]['quotes'][0]
+            payload['nodes'][0]['groups'][0]['facts'].append({
+                'field_id':'tcm.unknown_from_model','value':'不应进入事实层','quotes':[quote]})
+            return payload
+    e=EvidenceRecord(evidence_id='e1',source_id='s1',fragment_id='f1',raw_text=TEXT,location={})
+    result=create_facade(MixedFieldModel()).invoke_skill(SkillInvocation(task_id='partial-field',
+        skill_id='tcm-knowledge-analysis',input_data={'evidence':[e.model_dump()]}))
+    assert result.status=='success'
+    graph=result.output['graph']
+    assert graph['nodes'][0]['groups'][0]['facts'][0]['field_id']=='tcm.theory_proposition_text'
+    assert all(f['field_id']!='tcm.unknown_from_model' for g in graph['nodes'][0]['groups'] for f in g['facts'])
+    rejected=graph['rejected_candidates']
+    assert rejected[0]['code']=='FIELD_REJECTED'
+    assert rejected[0]['path']=='nodes.0.groups.0.facts.1'
+    assert rejected[0]['raw_candidate']['value']=='不应进入事实层'
+    assert rejected[0]['evidence_ids']==['e1']
+
+
+def test_rejected_candidates_are_preserved_in_final_package(tmp_path):
+    class MixedFieldModel(FixtureModel):
+        def generate_json(self, **kwargs):
+            payload=super().generate_json(**kwargs)
+            quote=payload['nodes'][0]['quotes'][0]
+            payload['nodes'][0]['groups'][0]['facts'].append({
+                'field_id':'tcm.unknown_from_model','value':'隔离审计值','quotes':[quote]})
+            return payload
+    source=tmp_path/'mixed.txt'
+    source.write_text(TEXT,encoding='utf-8')
+    agent=DataAnalysisAgent(tmp_path/'work-mixed',tmp_path/'packages',MixedFieldModel())
+    task=agent.submit(AnalysisRequest(paths=[str(source)],allowed_use='synthetic-software-test'))
+    result=agent.run(task['task_id'])
+    assert result['status']=='completed',result
+    package=agent.catalog._path(result['children'][0]['package_path'])
+    graph=json.loads((package/'tcm.json').read_text('utf-8'))
+    assert graph['rejected_candidates'][0]['raw_candidate']['value']=='隔离审计值'
+    assert validate_package_path(package).valid
+
+
+def test_multidimensional_facets_and_bounded_local_graph_are_derived_from_old_shape(tmp_path):
+    catalog, first=create_medical_package(tmp_path,'book',material='textbook')
+    _, second=create_medical_package(tmp_path,'paper',TEXT+' 第二来源。',material='paper')
+    initial=catalog.query(create_facade(),text='甘能缓急',knowledge_type='theory',evidence_state='stated')
+    assert len(initial['packages'])==2
+    for package in initial['packages']:
+        facets=package['medical_nodes'][0]['retrieval_facets']
+        assert 'theory' in facets['knowledge_types']
+        assert 'stated' in facets['evidence_states']
+        assert facets['source_types'] in (['textbook'],['paper'])
+    addresses=[{'package_id':p['package']['package_id'],'node_id':p['medical_nodes'][0]['node_id']}
+               for p in initial['packages']]
+    catalog.associate(addresses[0],addresses[1],'related','自制局部图边界检查')
+    stopped=catalog.query(create_facade(),seed_addresses=[addresses[0]],max_hops=0,max_nodes=10)
+    assert len(stopped['local_graph']['nodes'])==1
+    assert stopped['local_graph']['audit']['truncated'] is True
+    expanded=catalog.query(create_facade(),seed_addresses=[addresses[0]],max_hops=1,max_nodes=10)
+    assert len(expanded['local_graph']['nodes'])==2
+    assert len(expanded['local_graph']['edges'])==1
+    assert expanded['local_graph']['audit']['requested_max_hops']==1
+    bounded=catalog.query(create_facade(),seed_addresses=addresses,max_hops=1,max_nodes=1)
+    assert len(bounded['local_graph']['nodes'])==1
+    assert bounded['local_graph']['audit']['truncated'] is True
+    missing=catalog.query(create_facade(),seed_addresses=[{'package_id':'missing','node_id':'missing'}])
+    assert missing['local_graph']['nodes']==[]
+    assert missing['local_graph']['audit']['missing_seed_addresses'][0]['package_id']=='missing'
+    no_match=catalog.query(create_facade(),text='甘能缓急',knowledge_type='formula')
+    assert no_match['packages']==[] and no_match['local_graph']['nodes']==[]
+
+
+def test_lexical_concept_candidate_is_auditable_and_never_auto_merged(tmp_path):
+    class NamedModel(FixtureModel):
+        def __init__(self,title,topics):self.title,self.topics=title,topics
+        def generate_json(self,**kwargs):
+            payload=super().generate_json(**kwargs)
+            payload['nodes'][0]['title']=self.title
+            payload['nodes'][0]['topics']=self.topics
+            return payload
+    def make(name,title,text,topics):
+        source=tmp_path/(name+'.txt');source.write_text(text,encoding='utf-8')
+        agent=DataAnalysisAgent(tmp_path/('work-'+name),tmp_path/'packages',NamedModel(title,topics))
+        task=agent.submit(AnalysisRequest(paths=[str(source)],allowed_use='synthetic-software-test'))
+        assert agent.run(task['task_id'])['status']=='completed'
+        return agent.catalog
+    catalog=make('a','气的运动变化',TEXT,['气化'])
+    make('b','气的运动与变化',TEXT+' 第二来源。',['气化'])
+    make('c','气温升高',TEXT+' 无关反例。',['天气'])
+    result=catalog.query(create_facade(),text='气的运动变化')
+    assert result['associations']==[]
+    candidates=result['concept_link_candidates']
+    assert len(candidates)==1
+    assert candidates[0]['candidate_type'] in {'topic_and_lexical','lexical_overlap'}
+    assert candidates[0]['status']=='candidate' and '不能' in candidates[0]['rationale']

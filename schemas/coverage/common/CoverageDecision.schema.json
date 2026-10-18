@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "covered",
+        "held",
+        "needs_check",
+        "proposed"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "record_indexes": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Record Indexes",
+      "type": "array"
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "enum": [
+            "extraction",
+            "semantic_candidate"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Stage"
+    },
+    "unit": {
+      "title": "Unit",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "unit",
+    "action",
+    "reason"
+  ],
+  "title": "CoverageDecision",
+  "type": "object"
+}

@@ -75,5 +75,5 @@ uv run medicine-agent pipeline tests/fixtures/basic.md `
 
 两个命令都默认读取 `config/llm.local.toml`。只有使用其他配置文件时才需要显式增加 `--config <path>`。
 
-自动测试默认使用 FakeModel，不读取本地密钥，也不访问网络。完整 T01 验收要求见 `tasks/phases/01-skill-foundation/ONLINE_ACCEPTANCE.md`。
+自动测试默认使用 FakeModel，不读取本地密钥，也不访问网络。历史 T01 验收要求见 `tasks/archive/phase-01/ONLINE_ACCEPTANCE.md`；当前任务和外发范围以 `tasks/CURRENT.md` 为准。
 

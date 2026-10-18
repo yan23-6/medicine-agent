@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "source_sha256": "031007fc2caa796ed6b72f8b6ea4a512a861660e84349c936a5160782b0dded9",
+  "unit_kind": "physical_page",
+  "document_unit_count": 246,
+  "units": [34, 35, 36, 37, 38, 39, 40],
+  "history": [
+    {
+      "source_sha256": "031007fc2caa796ed6b72f8b6ea4a512a861660e84349c936a5160782b0dded9",
+      "unit_kind": "physical_page",
+      "units": [34, 35, 36, 37, 38],
+      "stage": "extraction",
+      "reference": "tasks/archive/phase-02/T02B5_ACCEPTANCE.md (includes B4 34-36; historical declaration, archives pending restoration)"
+    },
+    {
+      "source_sha256": "031007fc2caa796ed6b72f8b6ea4a512a861660e84349c936a5160782b0dded9",
+      "unit_kind": "physical_page",
+      "units": [34, 35, 36, 37, 38],
+      "stage": "semantic_candidate",
+      "reference": "tasks/archive/phase-02/T02B5_ACCEPTANCE.md (includes B4 34-36; historical declaration, archives pending restoration)"
+    }
+  ]
+}

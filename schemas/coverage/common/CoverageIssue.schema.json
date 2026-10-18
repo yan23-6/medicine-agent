@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "archive": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Archive"
+    },
+    "code": {
+      "title": "Code",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "reason"
+  ],
+  "title": "CoverageIssue",
+  "type": "object"
+}

@@ -28,7 +28,7 @@ def export_tcm_field_guide(path: Path):
             rows.append(f"| {', '.join(grouped)} | `{f.field_id}` | {f.label_zh} | {f.definition.replace('|', '/')} |")
     rows += ['', '## 已有可复用语义', '',
         '辨证仍复用已有 tcm.etiology、tcm.disease_location、tcm.disease_nature、tcm.pathomechanism、tcm.syndrome、tcm.treatment_principle、tcm.treatment_method、tcm.transformation 等字段。',
-        '方中角色、配伍等仍可引用已有 formula.*，通用适用条件、否定、确定性和时间复用 common.*。西医字段不在本轮分析输出范围。', '',
+        '方中角色、配伍等仍可引用已有 formula.*，通用适用条件、否定、确定性和时间复用 common.*。当前中医分析接口不输出西医字段，西医扩展保留独立接口。', '',
         '## 物理结构与关联', '',
         '`tcm.json` 保存节点、分组、事实和分析缺口；`extensions.json` 声明版本；两者受包 manifest 校验。',
         '`links/*.json` 是包根目录内独立的关联记录，source/target 各有 package_id、node_id；relation 为 same_definition、related、expands、contradicts，当前均为候选。',

@@ -21,6 +21,15 @@ def add_commands(subparsers):
     parser = subparsers.add_parser("analyze", help="Native file analysis, durable tasks and portable packages")
     commands = parser.add_subparsers(dest="action", required=True)
     commands.add_parser("capabilities")
+    coverage = commands.add_parser('coverage', help='Read-only source inventory and optional incremental plan')
+    coverage.add_argument('--packages', type=Path, default=default_knowledge_root())
+    coverage.add_argument('--workspace', type=Path, default=Path.home()/'MedicineAgent'/'coverage-cache')
+    coverage.add_argument('--input-file', type=Path, help='CoverageRequest JSON; omit for inventory only')
+    prepare = commands.add_parser('review-prepare', help='Read-only review material and quality-gate preparation')
+    prepare.add_argument('--packages', type=Path, default=default_knowledge_root())
+    prepare.add_argument('--workspace', type=Path, default=Path.home()/'MedicineAgent'/'review-preparation-cache')
+    prepare.add_argument('--input-file', type=Path, help='ReviewPreparationRequest JSON; default all top-level medpkg files')
+    prepare.add_argument('--output-dir', type=Path, help='New directory; never overwrite existing output or source files')
     submit = commands.add_parser("submit")
     submit.add_argument("paths", nargs="+", type=Path)
     submit.add_argument("--workspace", type=Path, default=Path.home()/'MedicineAgent'/'workspace')
@@ -63,6 +72,13 @@ def add_commands(subparsers):
             cmd.add_argument("--medical-profile")
             cmd.add_argument("--knowledge-layer")
             cmd.add_argument('--knowledge-category')
+            cmd.add_argument('--knowledge-type')
+            cmd.add_argument('--evidence-state')
+            cmd.add_argument('--topic')
+            cmd.add_argument('--tcm-layer')
+            cmd.add_argument('--seed-file',type=Path,help='JSON array of {package_id,node_id}')
+            cmd.add_argument('--max-hops',type=int,default=2)
+            cmd.add_argument('--max-nodes',type=int,default=50)
         if name == 'link':
             cmd.add_argument('--input-file', required=True, type=Path,
                 help='JSON: source/target {package_id,node_id}, relation, rationale')
@@ -101,6 +117,26 @@ def execute(args):
     try:
         if args.action == "capabilities":
             return capabilities()
+        if args.action == 'coverage':
+            from medicine_agent.analysis.coverage import CoverageService
+            from medicine_agent.domain.coverage import CoverageRequest
+            try:
+                request = CoverageRequest.model_validate_json(args.input_file.read_text('utf-8')) if args.input_file else None
+            except (OSError, ValueError, TypeError) as exc:
+                raise AnalysisError('COVERAGE_REQUEST_INVALID', 'Supply a valid coverage/0.1.0 request') from exc
+            service = CoverageService(args.packages, args.workspace)
+            return (service.plan(request) if request is not None else service.inventory()).model_dump(mode='json')
+        if args.action == 'review-prepare':
+            from medicine_agent.analysis.review_preparation import ReviewPreparationService
+            from medicine_agent.domain.review_preparation import ReviewPreparationRequest
+            try:
+                request = ReviewPreparationRequest.model_validate_json(args.input_file.read_text('utf-8')) if args.input_file else ReviewPreparationRequest()
+            except (OSError, ValueError, TypeError) as exc:
+                raise AnalysisError('PREPARATION_REQUEST_INVALID', 'Supply a valid review-preparation/0.1.0 request') from exc
+            service = ReviewPreparationService(args.packages, args.workspace)
+            if args.output_dir:
+                return service.export(args.output_dir, request).model_dump(mode='json')
+            return service.prepare(request).model_dump(mode='json')
         if args.action in {"packages", "query", "select", "link", "links", 'review-queue', 'review-record', 'reviews', 'revise'}:
             public = bool(list(args.packages.glob('*.medpkg'))) or not list(args.packages.rglob('manifest.json'))
             files = FileLearningService(args.workspace,args.packages) if public else None
@@ -141,15 +177,18 @@ def execute(args):
                         'markdown':str(args.markdown_file) if args.markdown_file else None,
                         'count':len(queue['items']), 'errors':queue['errors']}
                 return queue
-            if not args.text and not args.knowledge_id:
-                raise AnalysisError("QUERY_REQUIRED", "Supply text or a knowledge identity")
-            if files:return files.query(text=args.text,knowledge_id=args.knowledge_id,subject=args.subject,
-                material_type=args.material_type,medical_profile=args.medical_profile,
-                knowledge_layer=args.knowledge_layer,knowledge_category=args.knowledge_category)
-            return catalog.query(create_facade(), args.text, args.knowledge_id,
-                subject=args.subject, material_type=args.material_type,
-                medical_profile=args.medical_profile, knowledge_layer=args.knowledge_layer,
-                knowledge_category=args.knowledge_category)
+            try:
+                seeds=json.loads(args.seed_file.read_text('utf-8')) if args.seed_file else []
+                from medicine_agent.domain.retrieval import LocalKnowledgeQuery
+                query=LocalKnowledgeQuery(text=args.text,knowledge_id=args.knowledge_id,seed_addresses=seeds,
+                    subject=args.subject,material_type=args.material_type,medical_profile=args.medical_profile,
+                    knowledge_layer=args.knowledge_layer,knowledge_category=args.knowledge_category,
+                    knowledge_type=args.knowledge_type,evidence_state=args.evidence_state,topic=args.topic,
+                    tcm_layer=args.tcm_layer,max_hops=args.max_hops,max_nodes=args.max_nodes).model_dump(mode='json',exclude_none=True)
+            except (OSError,ValueError,TypeError) as exc:
+                raise AnalysisError('QUERY_INVALID','Supply a valid text, knowledge identity, or seed file and bounded filters') from exc
+            if files:return files.query(**query)
+            return catalog.query(create_facade(),**query)
         client = None
         if args.action == "submit" and args.mode == "model":
             client = OpenAICompatibleModelClient(load_llm_config(args.config))

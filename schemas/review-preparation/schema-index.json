@@ -1,0 +1,16 @@
+{
+  "contract_set": "review-preparation",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/CandidateReviewItem.schema.json": "07815b9c4ac842a286924b50d3577263b000576de2fc0d7fc100a7e72ef078fa",
+    "common/PreparationAnomaly.schema.json": "7384a27320ceb241098b6a565ef8cf152f038c416e2208f16991914ee18dc77e",
+    "common/PreparationIssue.schema.json": "941140d48e5b46c410ebb703eb5bd80963d70c36d388cb18e3153c42fac661f8",
+    "common/PreparationQualityGate.schema.json": "b4a53092a9ac57049fc1cd9fbe0e58eba0a1a82bdda650ec62f4fe4f6e0282bf",
+    "common/PreparationQuote.schema.json": "b59311567169e3362e1f9265e96abd449a2b90d647e6178f688694e55f72369a",
+    "common/PreparationWorksheet.schema.json": "60fe135cfb43bd1879434b3ba291c42a259831643a9724d008a7759195f83e77",
+    "common/ReviewPreparationExport.schema.json": "2c68b748bad56fe72e26d71012aec7f1173687d82642629a32206bd7e8bc3397",
+    "common/ReviewPreparationReport.schema.json": "0e63d2715da717bb3d1799fd325a54f03a96e5ce2aa3ad292f9d9d876fe9aba1",
+    "common/ReviewPreparationRequest.schema.json": "9b8b4f027cc90e252b8b3eb066996420fff66cb371821dede2edb3d969125c71",
+    "common/SourceAnnotation.schema.json": "f3f74903f267ef0ce0486ba950130fcc7689caf03bc4e14b2745dc647850757d"
+  }
+}

@@ -1,5 +1,6 @@
 # Local Python environment and generated caches
 .venv/
+.tools/
 .uv-cache/
 __pycache__/
 *.py[cod]
