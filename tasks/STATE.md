@@ -46,4 +46,6 @@ B4/B5包仍待后补；tasks/evidence/T02B10_COVERAGE_REQUEST.json保存历史�
 
 用户本次已授权日志报告、提交并推送此前未提交的工程/文档成果，最终结果以Git及交付答复为准；不包含真实.medpkg，本地包不是远程备份。历史核查见tasks/evidence/B7_REMOTE_PACKAGE_AUDIT.md。
 
+报告及工程主提交已在本地保存为bb85f62。向origin/master推送被自动安全审核拦截：尚需用户明确确认具体目的地https://github.com/yan23-6/medicine-agent.git的master分支；不得换方式绕过。当前尚未推送，项目保持暂停；本说明随本地后续文档提交保存。
+
 按用户要求新增log/2026-10-19-项目周报.md，实际进度截止2026-10-18；历史log不改。docs、原件和本地配置未改；密钥不读入报告。PDF、环境、知识包和artifacts不进Git，不擅自上传备份。
