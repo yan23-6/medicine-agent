@@ -1,0 +1,200 @@
+{
+  "$id": "urn:medicine-agent:runtime-readiness:0.1.0:EnvironmentPreflightReport",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "architecture": {
+      "type": "string"
+    },
+    "contract": {
+      "const": "environment-preflight"
+    },
+    "diagnostic_codes": {
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]*$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "distributions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "python_status": {
+            "enum": [
+              "passed",
+              "not_evaluated",
+              "incompatible"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "python_status"
+        ],
+        "type": "object"
+      },
+      "maxItems": 500,
+      "type": "array"
+    },
+    "implementation": {
+      "type": "string"
+    },
+    "model_resources": {
+      "const": "not_evaluated"
+    },
+    "offline_cache": {
+      "const": "not_evaluated"
+    },
+    "os": {
+      "type": "string"
+    },
+    "project": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "medicine-agent"
+        },
+        "source": {
+          "enum": [
+            "unknown",
+            "installed_metadata",
+            "editable",
+            "local_directory",
+            "archive",
+            "other_direct_source"
+          ],
+          "type": "string"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "source"
+      ],
+      "type": "object"
+    },
+    "python": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "reproducible_lock": {
+      "const": false
+    },
+    "requirements": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "extras": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "installed_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "parent": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "requirement": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "not_applicable",
+              "not_evaluated",
+              "missing",
+              "incompatible"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "parent",
+          "name",
+          "requirement",
+          "extras",
+          "status",
+          "installed_version"
+        ],
+        "type": "object"
+      },
+      "maxItems": 5000,
+      "type": "array"
+    },
+    "runtime_imports": {
+      "const": "not_evaluated"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "blocked",
+        "not_evaluated"
+      ],
+      "type": "string"
+    },
+    "version": {
+      "const": "0.1.0"
+    },
+    "version_snapshot": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 500,
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "contract",
+    "status",
+    "python",
+    "implementation",
+    "os",
+    "architecture",
+    "project",
+    "distributions",
+    "requirements",
+    "diagnostic_codes",
+    "version_snapshot",
+    "offline_cache",
+    "runtime_imports",
+    "model_resources",
+    "reproducible_lock"
+  ],
+  "title": "EnvironmentPreflightReport",
+  "type": "object"
+}

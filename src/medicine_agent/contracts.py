@@ -146,7 +146,10 @@ def export_schemas(
     *,
     contract_set: str = "t01",
 ) -> dict[str, Any]:
-    if contract_set not in {"t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation'}:
+    if contract_set == 'runtime-readiness':
+        from medicine_agent.runtime_readiness_schemas import export_runtime_schemas
+        return export_runtime_schemas(output_root)
+    if contract_set not in {"t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation', 'review-session', 'review-progress'}:
         raise ValueError(f"Unsupported contract set: {contract_set}")
     output_root = output_root.resolve()
     written: list[Path] = []
@@ -157,6 +160,12 @@ def export_schemas(
     if contract_set == 'review-preparation':
         from medicine_agent.domain.review_preparation import PREPARATION_MODELS
         common_models = PREPARATION_MODELS
+    if contract_set == 'review-session':
+        from medicine_agent.domain.review_session import REVIEW_SESSION_MODELS
+        common_models = REVIEW_SESSION_MODELS
+    if contract_set == 'review-progress':
+        from medicine_agent.domain.review_progress import REVIEW_PROGRESS_MODELS
+        common_models = REVIEW_PROGRESS_MODELS
     if contract_set in {"t02p", "tcm"}:
         from medicine_agent.analysis.models import (
             AnalysisRequest, DocumentPosition, DocumentBlock, DocumentUnit, ExtractionInput,
@@ -190,7 +199,7 @@ def export_schemas(
         written.append(path)
 
     for manifest in facade.list_skills():
-        if contract_set in {'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation'}:
+        if contract_set in {'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation', 'review-session', 'review-progress'}:
             continue
         if contract_set != 'tcm' and manifest.skill_id == 'tcm-knowledge-analysis':
             continue
@@ -214,7 +223,7 @@ def export_schemas(
     }
     index = {
         "contract_set": contract_set,
-        "contract_version": {"t01": "0.1.0", "t02": "0.4.0", "t02p": "0.2.0", "tcm": "0.3.0", 'review': '0.1.0', 'correction': '0.2.0', 'owned-analysis': '0.3.0','learning':'0.2.0', 'coverage':'0.1.0', 'review-preparation':'0.1.0'}[contract_set],
+        "contract_version": {"t01": "0.1.0", "t02": "0.4.0", "t02p": "0.2.0", "tcm": "0.3.0", 'review': '0.1.0', 'correction': '0.2.0', 'owned-analysis': '0.3.0','learning':'0.2.0', 'coverage':'0.1.0', 'review-preparation':'0.1.0', 'review-session':'0.1.0', 'review-progress':'0.1.0'}[contract_set],
         "files": files,
     }
     _write_json(output_root / "schema-index.json", index)

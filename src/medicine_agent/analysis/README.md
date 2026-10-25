@@ -112,3 +112,93 @@ medicine-agent export-schemas --contract-set review-preparation --output-dir "D:
 
 
 当前分析工具 `tcm-knowledge-analysis@0.3.0/source-faithfulness-v3` 强制理论原话逐字保真、文献转引与人物归属分开、独立主命题分节点，并提供字段/分组/节点级失败隔离。不合法候选进入 `rejected_candidates`，保留错误码、路径、原候选值和证据 ID，并汇总进最终包；无依赖的有效内容继续，但不自动修医学值。旧未完成任务不静默混用新策略；只有其他运行版本完全一致且尚无分析结果的子任务才能显式升级。`analysis_quality` 保留全部原提示并区分布局、已有引用、当前未覆盖和模型报告，不自动升级医学状态。
+
+### 复核会话（包外，review-session/0.1.0）
+
+会话不写 `.medpkg`、不改准备目录和既有意见：只在独立的被忽略目录保存只读准备副本与追加事件。三个命令的路径参数都必填，不使用 HOME 默认值，不读本地模型配置，也不通过 PackageCatalog/FileLearningService 写包；会话目录、知识包目录和缓存目录三者必须互不嵌套，输出目录已存在则拒绝，不覆盖。
+
+```powershell
+python -m medicine_agent.cli analyze review-session-create --preparation-dir <新准备目录> --output-dir <新会话目录> --packages <知识包目录> --workspace <私有缓存目录>
+python -m medicine_agent.cli analyze review-session-inspect --session-dir <会话目录> --packages <知识包目录> --workspace <私有缓存目录> [--include-opinions]
+python -m medicine_agent.cli analyze review-session-submit --session-dir <会话目录> --input-file <意见批JSON> --packages <知识包目录> --workspace <私有缓存目录>
+```
+
+`inspect` 默认只返回摘要（会话身份、writable、目标数、各目标状态计数、issues），不含理由或纠正值；`--include-opinions` 才返回完整意见正文。提交输入示例（自制占位材料，仅示意字段；`target` 必须从同一会话的完整视图复制，不能只写显示序号）：
+
+```json
+{"version":"0.1.0","session_id":"reviewsession_000000000000000000000000",
+ "submission_id":"submission-1",
+ "reviewer":{"reviewer_id":"reviewer-a","display_name":"占位评审者","declared_role":"占位角色"},
+ "opinions":[{"target":{"snapshot_id":"snapshot_000000000000000000000000",
+   "kind":"candidate","material_id":"reviewitem_000000000000000000000000",
+   "review_target":{"address":{"package_id":"占位包","node_id":"占位节点"},"scope":"node",
+     "fingerprint":"0000000000000000000000000000000000000000000000000000000000000000"}},
+   "decision":"accept","reason":"占位理由","expected_previous_id":null}]}
+```
+
+- `submission_id` 在会话内幂等：同 ID 同内容重试返回原事件、不改历史；同 ID 不同内容按 `SESSION_SUBMISSION_CONFLICT` 拒绝。
+- `reviewer_id` 去首尾空白并 casefold，大小写变化不产生第二票；`reviewer_identity` 恒为 `self_declared`，不认证专家。
+- `expected_previous_id` 只能引用“本评审者、本材料”的最新意见；旧值、他人意见或不存在 ID 均按 `SESSION_STALE_WRITE` 拒绝。
+- `unable_to_judge` 与分歧不改医学状态：`medical_review` 恒 `unreviewed`，`release_allowed` 恒 `false`，分歧保持 `awaiting_adjudication`。
+- 历史出现坏事件、分支、缺前序或重复 `submission_id` 时整体 `writable=false`，`inspect` 仍成功并展示 issue，`submit` 按 `SESSION_HISTORY_INVALID` 拒绝。
+- `--include-opinions` 含理由与纠正值正文，只供本地人工查看；不要把真实输出交给模型或写入提交物。
+
+### 复核覆盖与声明意见统计
+
+```powershell
+python -m medicine_agent.cli analyze review-session-progress --session-dir <会话目录> --packages <知识包目录> --workspace <私有缓存目录>
+python -m medicine_agent.cli export-schemas --contract-set review-progress --output-dir <新契约目录>
+```
+
+只读API为`ReviewProgressService(packages, workspace).report(session_dir)`。先复用会话inspect重验源包/快照和历史，再按原文标注、候选节点、候选字段、异常分别统计覆盖与每声明ID的最新意见；同人更新不增加一票。成对比较显式列overlap/comparable/matched/conflicting/unable，双方都有明确决定才入comparable；分母0时agreement_fraction=null，不报100%。即使两人没有任何重叠材料，也保留该组0分母行。
+
+报告不包含原文、理由或纠正值，仅保存计数/声明ID与session/snapshot/事件身份。坏历史输出diagnostics且metrics_available=false、比较列表为空；健康空白会话为0评审/无可比较对，不等于审核完成。最多100名声明评审者和100000目标，超限明确拒绝、不截断统计；该上限不是性能SLO。
+
+`declared_agreement_complete`只表示所有非空目标在声明意见层面一致，不证明真实专家资格或医学正确性。medical_gate恒blocked，许可/性能not_evaluated，phase02_complete/release_allowed/training_allowed恒false。数据包、会话和原意见不因统计而改变。
+# 只读环境预检
+
+三个诊断报告与OCR资源描述共用包外`runtime-readiness/0.1.0` Schema集合，单一来源为
+`medicine_agent.runtime_readiness_schemas`，不修改医学Schema。导出：
+`python -m medicine_agent.runtime_readiness_schemas --output-dir <新目录>`（标准库可启动），
+或`medicine-agent export-schemas --contract-set runtime-readiness --output-dir <新目录>`。
+仓库快照位于`schemas/runtime-readiness/`，索引记录四份Schema的SHA256。
+
+本地OCR资源：`medicine-agent-ocr-resources [--model-root <目录>]`或
+`python -m medicine_agent.ocr_resources`只读核验受测RapidOCR版本/配置及det/cls/rec三份模型。
+当前受测基线是RapidOCR3.10.0；其他版本为not_evaluated，不能只按版本元数据声称可用。
+通过退出0，缺失/变化/未评估退出1；不下载/复制/创建资源目录，不输出绝对路径。
+显式model-root仅供核验，不改变业务配置。`analyze capabilities`追加资源状态和判断依据；
+TXT/MD仍保留支持。实际OCR缺资源返回OCR_RESOURCES_UNAVAILABLE，需受控准备资源后重试。
+运行时显式传入已核验模型路径，不走后端默认下载分支；资源就绪不等于识字质量或再分发许可。
+
+离线材料核验：`medicine-agent-wheelhouse --wheel-dir <目录> --snapshot <预检报告.json>`
+（或`python -m medicine_agent.wheelhouse`）只读核对当前平台冻结依赖的wheel集合、
+兼容标签、METADATA和逐文件RECORD及SHA256。不解包、不导入或安装wheel。
+目录缺件/版本不兼容/内容损坏/依赖闭包不符返回blocked、退出1；通过退出0。
+仅接受当前Python/OS/架构的通过预检报告，最多500wheel，总压缩/展开各2GiB。
+通过只证明显式材料自洽，不能证明供应链可信、实际安装、原生库或OCR模型可用。
+普通版本清单和依赖物理复制都不能替代完整wheel集合。
+
+离线材料核验：`medicine-agent-wheelhouse --wheel-dir <目录> --snapshot <预检报告.json>`
+（或`python -m medicine_agent.wheelhouse`）只读核对当前平台冻结依赖的wheel集合、
+兼容标签、METADATA和逐文件RECORD及SHA256。不解包、不导入或安装wheel。
+目录缺件/版本不兼容/内容损坏/依赖闭包不符返回blocked、退出1；通过退出0。
+仅接受当前Python/OS/架构的通过预检报告，最多500wheel，总压缩/展开各2GiB。
+通过只证明显式材料自洽，不能证明供应链可信、实际安装、原生库或OCR模型可用。
+普通版本清单和依赖物理复制都不能替代完整wheel集合。
+
+`medicine-agent-preflight`或`python -m medicine_agent.preflight`直接输出
+`environment-preflight/0.1.0`清单，独立于主业务CLI启动，仅使用标准库和可选packaging。
+不导入OCR/模型库，不读配置，不联网或安装。退出0只表示活动依赖闭包的元数据满足要求；
+退出1表示阻塞或未评估。解析器缺失会明确标记，不能猜测版本规范。
+清单列出安装版本和editable/归档来源类别，不输出本地安装路径或下载URL。
+版本快照不是哈希锁或离线wheel集合；原生库可加载性、OCR模型资源、离线缓存仍未评估。
+
+# 只读环境预检
+
+`medicine-agent-preflight`或`python -m medicine_agent.preflight`直接输出
+`environment-preflight/0.1.0`清单，独立于主业务CLI启动，仅使用标准库和可选packaging。
+不导入OCR/模型库，不读配置，不联网或安装。退出0只表示活动依赖闭包的元数据满足要求；
+退出1表示阻塞或未评估。解析器缺失会明确标记，不能猜测版本规范。
+清单列出安装版本和editable/归档来源类别，不输出本地安装路径或下载URL。
+版本快照不是哈希锁或离线wheel集合；原生库可加载性、OCR模型资源、离线缓存仍未评估。

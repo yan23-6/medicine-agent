@@ -1,0 +1,17 @@
+{
+  "contract_set": "review-session",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/ReviewSessionManifest.schema.json": "7e6eb57212ac440c16f6c61446aa64d650a62b5c4d43636a101970ab6dcc7ee0",
+    "common/ReviewSessionView.schema.json": "84aa766d86d5abd0ac7f341ca583fb5ec2821f032ac8afe02538ea24daa0bd7e",
+    "common/SessionEvent.schema.json": "2d03f326820fa719d4eebf7873388029b4b7429d98b0148dcd510d268d671762",
+    "common/SessionIssue.schema.json": "b160b324159c32476ba5ddd23d972e15c8e934998bbe14222811ca9768d592db",
+    "common/SessionOpinion.schema.json": "538467a2f17a9eb5cecac434a888d6c42e8c3f5fef21bcfc5cb68df1a6faaf95",
+    "common/SessionOpinionRecord.schema.json": "cbf3370e524f46fac7022637f7a04d8a247d1f509ab5862b08f73f072a048274",
+    "common/SessionReviewer.schema.json": "01958e1fd048be55ae8cda1f909a37503e11aff7a507fc382760711477b49561",
+    "common/SessionSnapshotBinding.schema.json": "d2a4b197709ebc3f12e125c5d68a16ba4eba9a3265ff10e14be819ff3ad4400f",
+    "common/SessionSubmission.schema.json": "ef62979413ae363e1e8e178b32ee5e9d397d74432658776b8483d637006f4606",
+    "common/SessionTarget.schema.json": "c5a96fb9cbd6b4518ea421016bca9f664c81167f9d2bd60d3ed0280a074a9851",
+    "common/TargetReviewSummary.schema.json": "0eeda4329ffe8adde4c08508332d5becc78b58c08b23286d015b06d2489d8676"
+  }
+}

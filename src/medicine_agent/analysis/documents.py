@@ -22,8 +22,13 @@ def adapter_versions() -> dict[str, str]:
 def capabilities() -> dict:
     try:
         versions = adapter_versions()
+        from medicine_agent.ocr_resources import inspect_ocr_resources
+        resources = inspect_ocr_resources()
         return {"formats": ["pdf", "docx", "txt", "md", "png", "jpeg"],
-                "available": True, "versions": versions,
+                "available": resources['status'] == 'passed', "versions": versions,
+                "availability_basis": "installed_metadata_and_local_ocr_hashes",
+                "native_runtime": "not_evaluated", "ocr_resources": resources,
+                "native_text_inputs": ["txt", "md"],
                 "ocr": "local RapidOCR/ONNX CPU", "other_formats": "unsupported"}
     except importlib.metadata.PackageNotFoundError as exc:
         return {"available": False, "error": str(exc)}
@@ -128,9 +133,17 @@ def inspect_document(path: Path) -> tuple[str, int]:
 
 
 def _ocr(image) -> tuple[list, list[str]]:
+    from medicine_agent.ocr_resources import validated_model_paths, ResourceInvalid
+    try:
+        paths = validated_model_paths()
+    except ResourceInvalid:
+        raise AnalysisError('OCR_RESOURCES_UNAVAILABLE',
+            'Local OCR resources are missing, changed or not evaluated; prepare verified resources before OCR') from None
     from rapidocr import RapidOCR
     import numpy as np
-    engine = RapidOCR(params={"Global.log_level": "error"})
+    engine = RapidOCR(params={"Global.log_level": "error",
+        "Det.model_path": str(paths['det']), "Cls.model_path": str(paths['cls']),
+        "Rec.model_path": str(paths['rec'])})
     result = engine(np.asarray(image.convert("RGB"))[:, :, ::-1])
     boxes, texts, scores = result.boxes, result.txts, result.scores
     if texts is None:

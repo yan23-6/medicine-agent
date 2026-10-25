@@ -5,3 +5,7 @@
 *.jpg binary
 *.jpeg binary
 *.medpkg binary
+
+# Frozen probes are byte-hashed; schema manifests hash CRLF export bytes.
+/tasks/benchmarks/*.py text eol=lf
+/schemas/**/*.json text eol=crlf

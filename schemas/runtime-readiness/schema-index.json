@@ -1,0 +1,10 @@
+{
+  "contract_set": "runtime-readiness",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/EnvironmentPreflightReport.schema.json": "a642d0ce70accd990cc4e9bc5ffd0486e4a11a90b475d1969f982f6a1f53e119",
+    "common/OCRResourceDescription.schema.json": "ef15e804db4956fc7b4b81b3f06511518183a1ccc56b0e5c6588114e9d63fbb0",
+    "common/OCRResourceReport.schema.json": "bda849f7cb9d4102ba6a1172d1549bf380bad75f130b8d9a0d6773fadb6cac9c",
+    "common/WheelhouseReadinessReport.schema.json": "3153ff5e892d8096a43ac3191b57fd4a15217d5c0b8a84119e3266d82d8ad3ad"
+  }
+}

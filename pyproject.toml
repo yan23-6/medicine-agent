@@ -16,6 +16,9 @@ dependencies = [
 
 [project.scripts]
 medicine-agent = "medicine_agent.cli:main"
+medicine-agent-preflight = "medicine_agent.preflight:main"
+medicine-agent-wheelhouse = "medicine_agent.wheelhouse:main"
+medicine-agent-ocr-resources = "medicine_agent.ocr_resources:main"
 
 [dependency-groups]
 dev = [
@@ -24,7 +27,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["uv_build>=0.12.18,<0.13"]
+requires = ["uv_build==0.13.1"]
 build-backend = "uv_build"
 
 [tool.pytest.ini_options]

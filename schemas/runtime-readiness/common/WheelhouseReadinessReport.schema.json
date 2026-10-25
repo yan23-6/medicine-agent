@@ -1,0 +1,109 @@
+{
+  "$id": "urn:medicine-agent:runtime-readiness:0.1.0:WheelhouseReadinessReport",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "wheelhouse-readiness"
+    },
+    "diagnostic_codes": {
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]*$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "installation": {
+      "const": "not_evaluated"
+    },
+    "metadata_resolution": {
+      "enum": [
+        "passed",
+        "not_evaluated"
+      ],
+      "type": "string"
+    },
+    "missing": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 500,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "model_resources": {
+      "const": "not_evaluated"
+    },
+    "native_runtime": {
+      "const": "not_evaluated"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "blocked",
+        "not_evaluated"
+      ],
+      "type": "string"
+    },
+    "supply_chain_trust": {
+      "const": "not_evaluated"
+    },
+    "version": {
+      "const": "0.1.0"
+    },
+    "wheels": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "filename": {
+            "pattern": "^[^/\\\\]+\\.whl$",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "version": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "filename",
+          "bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "maxItems": 500,
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "version",
+    "status",
+    "metadata_resolution",
+    "wheels",
+    "missing",
+    "diagnostic_codes",
+    "installation",
+    "native_runtime",
+    "model_resources",
+    "supply_chain_trust"
+  ],
+  "title": "WheelhouseReadinessReport",
+  "type": "object"
+}

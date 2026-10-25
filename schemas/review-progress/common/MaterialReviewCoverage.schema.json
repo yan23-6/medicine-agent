@@ -1,0 +1,56 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agreement": {
+      "minimum": 0,
+      "title": "Agreement",
+      "type": "integer"
+    },
+    "disagreement": {
+      "minimum": 0,
+      "title": "Disagreement",
+      "type": "integer"
+    },
+    "insufficient_opinions": {
+      "minimum": 0,
+      "title": "Insufficient Opinions",
+      "type": "integer"
+    },
+    "pending": {
+      "minimum": 0,
+      "title": "Pending",
+      "type": "integer"
+    },
+    "scope": {
+      "enum": [
+        "source_annotation",
+        "candidate_node",
+        "candidate_fact",
+        "anomaly"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    },
+    "unable_votes": {
+      "minimum": 0,
+      "title": "Unable Votes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "scope",
+    "total",
+    "pending",
+    "insufficient_opinions",
+    "agreement",
+    "disagreement",
+    "unable_votes"
+  ],
+  "title": "MaterialReviewCoverage",
+  "type": "object"
+}

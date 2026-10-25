@@ -1,0 +1,120 @@
+{
+  "$id": "urn:medicine-agent:runtime-readiness:0.1.0:OCRResourceReport",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "const": "rapidocr"
+    },
+    "backend_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contract": {
+      "const": "ocr-resources"
+    },
+    "diagnostic_codes": {
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]*$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "inference": {
+      "const": "not_evaluated"
+    },
+    "license": {
+      "const": "not_evaluated"
+    },
+    "models": {
+      "items": {
+        "additionalProperties": false,
+        "if": {
+          "properties": {
+            "status": {
+              "const": "passed"
+            }
+          }
+        },
+        "properties": {
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "filename": {
+            "pattern": "^[A-Za-z0-9_.-]+\\.onnx$",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "det",
+              "cls",
+              "rec"
+            ],
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "blocked"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "filename",
+          "status"
+        ],
+        "then": {
+          "required": [
+            "sha256",
+            "bytes"
+          ]
+        },
+        "type": "object"
+      },
+      "maxItems": 3,
+      "type": "array"
+    },
+    "native_runtime": {
+      "const": "not_evaluated"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "blocked",
+        "not_evaluated"
+      ],
+      "type": "string"
+    },
+    "supply_chain_trust": {
+      "const": "not_evaluated"
+    },
+    "version": {
+      "const": "0.1.0"
+    }
+  },
+  "required": [
+    "contract",
+    "version",
+    "backend",
+    "backend_version",
+    "status",
+    "models",
+    "diagnostic_codes",
+    "native_runtime",
+    "inference",
+    "license",
+    "supply_chain_trust"
+  ],
+  "title": "OCRResourceReport",
+  "type": "object"
+}

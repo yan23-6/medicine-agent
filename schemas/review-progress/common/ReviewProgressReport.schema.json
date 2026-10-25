@@ -1,0 +1,344 @@
+{
+  "$defs": {
+    "MaterialReviewCoverage": {
+      "additionalProperties": false,
+      "properties": {
+        "agreement": {
+          "minimum": 0,
+          "title": "Agreement",
+          "type": "integer"
+        },
+        "disagreement": {
+          "minimum": 0,
+          "title": "Disagreement",
+          "type": "integer"
+        },
+        "insufficient_opinions": {
+          "minimum": 0,
+          "title": "Insufficient Opinions",
+          "type": "integer"
+        },
+        "pending": {
+          "minimum": 0,
+          "title": "Pending",
+          "type": "integer"
+        },
+        "scope": {
+          "enum": [
+            "source_annotation",
+            "candidate_node",
+            "candidate_fact",
+            "anomaly"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "unable_votes": {
+          "minimum": 0,
+          "title": "Unable Votes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scope",
+        "total",
+        "pending",
+        "insufficient_opinions",
+        "agreement",
+        "disagreement",
+        "unable_votes"
+      ],
+      "title": "MaterialReviewCoverage",
+      "type": "object"
+    },
+    "ReviewerAgreementPair": {
+      "additionalProperties": false,
+      "properties": {
+        "agreement_fraction": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agreement Fraction"
+        },
+        "comparable": {
+          "minimum": 0,
+          "title": "Comparable",
+          "type": "integer"
+        },
+        "conflicting": {
+          "minimum": 0,
+          "title": "Conflicting",
+          "type": "integer"
+        },
+        "matched": {
+          "minimum": 0,
+          "title": "Matched",
+          "type": "integer"
+        },
+        "overlap": {
+          "minimum": 0,
+          "title": "Overlap",
+          "type": "integer"
+        },
+        "reviewer_a": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Reviewer A",
+          "type": "string"
+        },
+        "reviewer_b": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Reviewer B",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "source_annotation",
+            "candidate_node",
+            "candidate_fact",
+            "anomaly"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "unable": {
+          "minimum": 0,
+          "title": "Unable",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "reviewer_a",
+        "reviewer_b",
+        "scope",
+        "overlap",
+        "comparable",
+        "matched",
+        "conflicting",
+        "unable"
+      ],
+      "title": "ReviewerAgreementPair",
+      "type": "object"
+    },
+    "ReviewerCoverage": {
+      "additionalProperties": false,
+      "properties": {
+        "decisive": {
+          "minimum": 0,
+          "title": "Decisive",
+          "type": "integer"
+        },
+        "reviewer_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Reviewer Id",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "source_annotation",
+            "candidate_node",
+            "candidate_fact",
+            "anomaly"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "targets": {
+          "minimum": 0,
+          "title": "Targets",
+          "type": "integer"
+        },
+        "unable": {
+          "minimum": 0,
+          "title": "Unable",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "reviewer_id",
+        "scope",
+        "targets",
+        "decisive",
+        "unable"
+      ],
+      "title": "ReviewerCoverage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "coverage": {
+      "items": {
+        "$ref": "#/$defs/MaterialReviewCoverage"
+      },
+      "title": "Coverage",
+      "type": "array"
+    },
+    "declared_agreement_complete": {
+      "title": "Declared Agreement Complete",
+      "type": "boolean"
+    },
+    "diagnostic_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Diagnostic Codes",
+      "type": "array"
+    },
+    "engineering_gate": {
+      "enum": [
+        "passed",
+        "blocked"
+      ],
+      "title": "Engineering Gate",
+      "type": "string"
+    },
+    "event_ids": {
+      "items": {
+        "pattern": "^sessionevent_[0-9a-f]{24}$",
+        "type": "string"
+      },
+      "title": "Event Ids",
+      "type": "array"
+    },
+    "license_gate": {
+      "const": "not_evaluated",
+      "default": "not_evaluated",
+      "title": "License Gate",
+      "type": "string"
+    },
+    "measurement_scope": {
+      "const": "latest_self_declared_opinions_only",
+      "default": "latest_self_declared_opinions_only",
+      "title": "Measurement Scope",
+      "type": "string"
+    },
+    "medical_gate": {
+      "const": "blocked",
+      "default": "blocked",
+      "title": "Medical Gate",
+      "type": "string"
+    },
+    "metrics_available": {
+      "title": "Metrics Available",
+      "type": "boolean"
+    },
+    "pairwise": {
+      "items": {
+        "$ref": "#/$defs/ReviewerAgreementPair"
+      },
+      "title": "Pairwise",
+      "type": "array"
+    },
+    "performance_gate": {
+      "const": "not_evaluated",
+      "default": "not_evaluated",
+      "title": "Performance Gate",
+      "type": "string"
+    },
+    "phase02_complete": {
+      "const": false,
+      "default": false,
+      "title": "Phase02 Complete",
+      "type": "boolean"
+    },
+    "release_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Release Allowed",
+      "type": "boolean"
+    },
+    "report_id": {
+      "pattern": "^reviewprogress_[0-9a-f]{24}$",
+      "title": "Report Id",
+      "type": "string"
+    },
+    "reviewer_count": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reviewer Count"
+    },
+    "reviewer_identity": {
+      "const": "self_declared",
+      "default": "self_declared",
+      "title": "Reviewer Identity",
+      "type": "string"
+    },
+    "reviewers": {
+      "items": {
+        "$ref": "#/$defs/ReviewerCoverage"
+      },
+      "title": "Reviewers",
+      "type": "array"
+    },
+    "session_id": {
+      "pattern": "^reviewsession_[0-9a-f]{24}$",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "pattern": "^snapshot_[0-9a-f]{24}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "target_count": {
+      "minimum": 0,
+      "title": "Target Count",
+      "type": "integer"
+    },
+    "training_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Training Allowed",
+      "type": "boolean"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report_id",
+    "session_id",
+    "snapshot_id",
+    "event_ids",
+    "target_count",
+    "reviewer_count",
+    "metrics_available",
+    "coverage",
+    "reviewers",
+    "pairwise",
+    "diagnostic_codes",
+    "declared_agreement_complete",
+    "engineering_gate"
+  ],
+  "title": "ReviewProgressReport",
+  "type": "object"
+}

@@ -1,0 +1,10 @@
+{
+  "contract_set": "review-progress",
+  "contract_version": "0.1.0",
+  "files": {
+    "common/MaterialReviewCoverage.schema.json": "c82ce74690171f726c8aa9c481ed88fa45d4a32c4c5f3373da9eb211413bf043",
+    "common/ReviewProgressReport.schema.json": "54b54c01008cb0417e4813287570c36c5cd7c58e6e414cd8b38a7800b1e35e97",
+    "common/ReviewerAgreementPair.schema.json": "c2633c8b3b422ce0eff64a4ebde7f545a1bbc5bb970e590d19a3edb8c780f54a",
+    "common/ReviewerCoverage.schema.json": "14336603d194b19dfb1fc9c2c34c0bbe1724f351d6f274bbd6b049e7f670046c"
+  }
+}

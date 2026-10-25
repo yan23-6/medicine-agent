@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Manifest Sha256",
+      "type": "string"
+    },
+    "preparation_id": {
+      "pattern": "^preparation_[0-9a-f]{24}$",
+      "title": "Preparation Id",
+      "type": "string"
+    },
+    "snapshot_files": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "maxProperties": 7,
+      "minProperties": 7,
+      "title": "Snapshot Files",
+      "type": "object"
+    },
+    "snapshot_id": {
+      "pattern": "^snapshot_[0-9a-f]{24}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "source_archives": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "maxProperties": 10000,
+      "minProperties": 1,
+      "title": "Source Archives",
+      "type": "object"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "preparation_id",
+    "manifest_sha256",
+    "snapshot_files",
+    "source_archives"
+  ],
+  "title": "SessionSnapshotBinding",
+  "type": "object"
+}

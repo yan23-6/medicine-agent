@@ -1,0 +1,87 @@
+{
+  "$id": "urn:medicine-agent:runtime-readiness:0.1.0:OCRResourceDescription",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "const": "rapidocr"
+    },
+    "backend_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "contract": {
+      "const": "ocr-resource-description"
+    },
+    "files": {
+      "additionalProperties": false,
+      "properties": {
+        "config.yaml": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "default_models.yaml": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "config.yaml",
+        "default_models.yaml"
+      ],
+      "type": "object"
+    },
+    "models": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "maximum": 536870912,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "filename": {
+            "pattern": "^[A-Za-z0-9_.-]+\\.onnx$",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "det",
+              "cls",
+              "rec"
+            ],
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "filename",
+          "bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "version": {
+      "const": "0.1.0"
+    }
+  },
+  "required": [
+    "contract",
+    "version",
+    "backend",
+    "backend_version",
+    "files",
+    "models"
+  ],
+  "title": "OCRResourceDescription",
+  "type": "object"
+}

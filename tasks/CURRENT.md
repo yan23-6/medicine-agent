@@ -1,57 +1,31 @@
-# T02-B12 复核意见接入与分歧治理
+# T02-B20 五类知识最小合成生产消费与复核准备闭环
 
-> 状态：paused（用户要求暂停推进）
->
-> 阶段：02 中医知识与病例蒸馏
->
-> 最后更新：2026-10-18
+> in_progress；D01 ready_for_execution，待DeepSeek固定执行；2026-10-25。
 
-## 一个正式交付
+## 本版本接手
 
-恢复后构建版本化复核会话首版：校验B11准备快照，接收独立、明确填写的意见，保留无法判断与分歧，不覆盖来源、准备材料或既有意见。当前用户暂停推进，仅允许本轮报告与提交推送维护；不执行B12，不需要用户补分析文件或AI代填专家意见。
+先读RESUME.md了解本次汇总改动、已确认边界、proposals未确认设计与本地前置。用户已授权本次本地commit，未授权push；下方D01执行范围/禁止事项仍适用于执行方，提交不改变ready_for_execution状态，也不构成思维实现许可。
 
-## 前置与当前实际状态
+## 依据与分工
 
-- B11已验收：tasks/archive/phase-02/T02B11_ACCEPTANCE.md；实现前设计在tasks/evidence/T02B11_REVIEW_PREPARATION_DESIGN.md。
-- review-preparation/0.1.0的Report/Export/Worksheet与prepare/export已实现；准备表仍不是ReviewRequest，尚无正式快照读入校验器或意见回收/分歧会话。
-- 当前准备ID preparation_718bf6c856acd871970f3eea，本地目录artifacts/b11-review-preparation/materials/preparation_718bf6c856acd871970f3eea/，含6项正文产物及manifest.json。
-- 原包artifacts/b7-real-compat/model-knowledge/bundle_a7c24a2ba66c6200241e87e0.medpkg，153943字节；SHA256 50742f7c32f7178c562ba2927ae070feac1e82696f7f86792157090fe2f7786d。
-- 来源SHA256 031007fc2caa796ed6b72f8b6ea4a512a861660e84349c936a5160782b0dded9，登记246物理页；34—38已有两阶段覆盖，不重复处理。
-- 材料188原文、541目标（63节点/478字段、133 inferred）、27gap/1隔离项；新表全部空白、意见写入0；节点unreviewed，release_allowed=false。
-- 当前208项测试通过，330项Schema哈希有效。既有ReviewRecord为用户声明身份的意见，不是已认证专家评审。
+总体分层口径：数据与思维的主体职责/业务逻辑分开，公共Schema、语义、模型适配、存储、运行时和注册入口可共用，不要求严格隔离，不新增隔离重构。B20归数据业务验证；AI后续设计/派单/实现/评审须明确所属职责与跨层接口。思维实现确认门不变。
 
-若新克隆缺真实材料，可从相同哈希的包重新运行B11只读准备（不用PDF/模型），或继续合成工程并明确真实验收待恢复；不得自行重新蒸馏或冒称读过不存在的材料。
+思维层设计确认门已生效：当前新设计未获用户确认。B20只验证独立数据闭环，不实现思维策略；将来任务一旦涉及病例驱动检索/联想/候选推演等新增或实质扩展实现，必须先停止并询问用户是否确认本次设计，记录明确确认的版本/范围后才编码或委派。详见overall/规则与变更策略.md。
 
-## 先设计与补最早前置
+B19已Codex核验、回读原产品并归档；其TXT/theory结果不能代替五类实际运行闭环。B20沿用现有category/group/field，区分类型能表示、最小软件闭环、真实材料医学确认，不改包或新增医学字典。只CURRENT正式，NEXT不执行。
 
-先检查第09/18章、现有ReviewTarget/Record、B11输出和本任务实际依赖，形成tasks/evidence/T02B12_REVIEW_SESSION_DESIGN.md并确定版本/Schema/兼容策略，再编码。
+Codex定方向、设计、冻结采集器并核验；DeepSeek只做固定重复构造/查询/独立机械校验/证据，不并发改文件、不调预期或扩医学判断。
 
-第一步必须补准备快照读入校验：检查目录资源集合、路径边界、manifest哈希、版本、Report稳定ID、材料身份和目标指纹一致性；仅Pydantic类型通过或文件名相同不能当作快照可信。校验失败不创建会话或写入部分意见。
+## 设计已完成
 
-## 实现范围
+设计evidence/T02B20_DESIGN.md；执行单evidence/T02B20_D01_EXECUTION.md；采集器tasks/benchmarks/b20_five_types_check.py（SHA见执行单），复用冻结B19和D01保护函数。五行映射来自既有test_all_five_categories_and_theory_without_symptoms与唯一注册表，无新Schema。
 
-1. 原准备快照保持只读；新会话明确绑定其完整身份和源材料版本，可迁移且不依赖开发对话。
-2. 意见输入与原准备表分开，逐项精确寻址；source annotation、node/fact、gap/隔离项各按其实际能力处理，不能把后两者伪装成既有ReviewTarget。
-3. 评审者身份/角色为声明而非认证；缺身份、空决定、无法判断均保持待审或明确拒绝非法提交，不自动转confirmed。不能把同一人重复提交算作两名独立专家。
-4. 独立意见追加保存、校验前序/快照/目标；重复导入可识别，过时、篡改、缺引用、分支和并发冲突不能静默覆盖健康记录。具体事务粒度先在设计中定清。
-5. 形成可审计的一致/分歧/待仲裁视图，保留每人原意见与理由；不按时间、票数或模型偏好自动把分歧变医学结论。仲裁权限/依据未成立时只显示待仲裁，不冒充已实现专家认证。
-6. 复用既有ReviewRequest/Record时必须显式转换并满足既有输入约束；本任务默认不写.medpkg，不自动修知识值或复制旧确认。原文纠错候选独立，不覆盖原OCR。
-7. 提供必要类型化管理API、CLI及使用说明，错误可恢复、健康材料可继续；不登记为新Agent/Skill，不开放外部服务。
+Codex已验证全部5类图类型/证据，foundation/case两端实际smoke通过：2包/2原文/2节点/2字段/4候选/6空白会话目标，0意见，状态未审、禁发布训练。555保护文件/349Schema不变。证据artifacts/b20-d01/codex-design-smoke-final-20261025/和codex-design-verification.json。完整5类产包/查询/准备矩阵未执行，留给DeepSeek。
 
-## 不做什么
+## 当前只执行D01
 
-不代签专家，不对真实材料生成合成认可，不升级医学状态/金标准，不发布正式知识、不权重训练、不开方、不扩展问诊。无需新PDF/OCR/蒸馏/模型外发；旧包待补不阻塞独立工程。docs只读，log仅按用户单独授权更新，本地模型配置不读取到日志或报告。
+DeepSeek按执行单运行1次完整5类：5条contract、5个实际自制包、共同查询5节点、逐类查询各1节点、准备5原文/5节点/5字段/10候选、空白会话15目标/0意见。checks应8行，全量正式矩阵尚未运行。只写新artifacts、RESULT及3状态事实进度，停executed_pending_review；不归档/不改NEXT，不写医学/许可/性能门passed。
 
-## 验收
+错误留证交Codex，不改三脚本、设计、执行单、生产src/tests、349Schema/字段或原包来全绿。每类只1字段：case_history不是CanonicalCase/诊次链；formula_original_composition不是配伍/剂量/安全处方，其他类别同样不等于完整业务或医学认可。完整能力缺口后续按原产品目标重评，不因最小验证通过自动消失。
 
-- 设计、版本化模型/Schema、快照校验器、会话实现、CLI和合成回归；
-- tasks/archive/phase-02/T02B12_ACCEPTANCE.md，区分软件通过与医学仍未确认；
-- 合成覆盖坏哈希/未知版本/路径越界/报告ID/目标指纹变化、缺字段、空表/缺身份/无法判断、两人独立意见、重复/冲突/分支/并发/迁移与恢复，坏输入不覆盖健康数据；
-- 对真实B11空白快照仅做读入和空表安全检查；保持全部材料、包/导出哈希和unreviewed不变，真实意见写入0，不伪造专家；
-- 定向/全量、Schema哈希、文档引用、发行/独立运行及受保护路径检查。
-
-## 当前步骤
-
-B11已完成并归档，B12尚未编码；2026-10-18用户明确暂停。未经用户恢复，不执行本任务。恢复后先核对真实快照与模型，输出设计并补快照读取校验；每完成一步同步STATE/HANDOFF/CURRENT，验收后才重评NEXT。
-
-本轮报告与工程已本地提交bb85f62；远程推送被自动审核拦截，需用户明确确认具体origin/master目的地，记录见STATE/HANDOFF。此阻塞不构成恢复开发或绕过审核的许可。
+无新真实资料/模型服务/网络/依赖/OCR/真实蒸馏/训练，不读模型配置，不改docs/log/pdfs，无commit/push。下一步无需新文件或权限，直接按D01执行。

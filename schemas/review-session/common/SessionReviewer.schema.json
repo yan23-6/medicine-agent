@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "declared_role": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Declared Role",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "identity_status": {
+      "const": "self_declared",
+      "default": "self_declared",
+      "title": "Identity Status",
+      "type": "string"
+    },
+    "reviewer_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Reviewer Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reviewer_id",
+    "display_name",
+    "declared_role"
+  ],
+  "title": "SessionReviewer",
+  "type": "object"
+}

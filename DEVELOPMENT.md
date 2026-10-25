@@ -7,15 +7,22 @@
 - 项目依赖以 `uv.lock` 为准；
 - 不需要 Docker、外部数据库或真实 LLM 才能运行默认测试。
 
-uv 已加入当前 Windows 用户 PATH；新终端可以直接使用。若当前终端尚未刷新 PATH，可临时使用：
+请先确认当前解释器满足 `pyproject.toml` 的 Python 版本要求；系统默认 `python` 不一定等于项目环境。
+若终端PATH中没有uv，可显式使用已经受控安装的uv路径，例如本工作区的工具：
 
 ```powershell
-$uv = "$env:USERPROFILE\.local\bin\uv.exe"
+$uv = ".tools/bin/uv.exe"
 & $uv sync
 & $uv run pytest
 ```
 
 其他机器安装 uv 后可直接使用 `uv sync` 和 `uv run`。不得依赖当前机器的绝对 Python 路径。
+
+本地环境诊断可直接运行 `.venv/Scripts/python.exe -m medicine_agent.preflight`；
+缺少医学依赖时仍能启动。`medicine-agent-preflight`、`medicine-agent-wheelhouse`
+和`medicine-agent-ocr-resources`三个console入口在安装当前wheel后提供；旧editable元数据可能需要重新受控安装才能更新入口。
+预检/离线wheel集合/OCR资源是三种独立检查，详见[文件分析说明](src/medicine_agent/analysis/README.md)。
+版本快照不是哈希锁，复制已安装依赖不是空缓存离线解析，资源检查不自动下载。
 
 ## 常用命令
 

@@ -1,0 +1,172 @@
+{
+  "$defs": {
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    },
+    "SessionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "source_annotation",
+            "candidate",
+            "anomaly"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "material_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Material Id",
+          "type": "string"
+        },
+        "review_target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReviewTarget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snapshot_id": {
+          "pattern": "^snapshot_[0-9a-f]{24}$",
+          "title": "Snapshot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "material_id"
+      ],
+      "title": "SessionTarget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "adjudication_state": {
+      "enum": [
+        "not_required",
+        "awaiting_adjudication"
+      ],
+      "title": "Adjudication State",
+      "type": "string"
+    },
+    "agreement_state": {
+      "enum": [
+        "pending",
+        "insufficient_opinions",
+        "agreement",
+        "disagreement"
+      ],
+      "title": "Agreement State",
+      "type": "string"
+    },
+    "history_invalid": {
+      "default": false,
+      "title": "History Invalid",
+      "type": "boolean"
+    },
+    "latest_opinion_ids": {
+      "items": {
+        "pattern": "^sessionopinion_[0-9a-f]{24}$",
+        "type": "string"
+      },
+      "title": "Latest Opinion Ids",
+      "type": "array"
+    },
+    "target": {
+      "$ref": "#/$defs/SessionTarget"
+    },
+    "unable_to_judge_count": {
+      "minimum": 0,
+      "title": "Unable To Judge Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "target",
+    "agreement_state",
+    "adjudication_state",
+    "latest_opinion_ids",
+    "unable_to_judge_count"
+  ],
+  "title": "TargetReviewSummary",
+  "type": "object"
+}

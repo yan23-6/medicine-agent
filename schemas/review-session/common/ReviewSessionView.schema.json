@@ -1,0 +1,492 @@
+{
+  "$defs": {
+    "JsonValue": {},
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "ReviewSessionManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "binding": {
+          "$ref": "#/$defs/SessionSnapshotBinding"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "medical_review": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Medical Review",
+          "type": "string"
+        },
+        "release_allowed": {
+          "const": false,
+          "default": false,
+          "title": "Release Allowed",
+          "type": "boolean"
+        },
+        "reviewer_identity": {
+          "const": "self_declared",
+          "default": "self_declared",
+          "title": "Reviewer Identity",
+          "type": "string"
+        },
+        "session_id": {
+          "pattern": "^reviewsession_[0-9a-f]{24}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "created_at",
+        "binding"
+      ],
+      "title": "ReviewSessionManifest",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    },
+    "SessionIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "event_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event File"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "SessionIssue",
+      "type": "object"
+    },
+    "SessionOpinion": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "accept",
+            "revise",
+            "reject",
+            "unable_to_judge"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "expected_previous_id": {
+          "anyOf": [
+            {
+              "pattern": "^sessionopinion_[0-9a-f]{24}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Previous Id"
+        },
+        "proposed_value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/SessionTarget"
+        }
+      },
+      "required": [
+        "target",
+        "decision",
+        "reason"
+      ],
+      "title": "SessionOpinion",
+      "type": "object"
+    },
+    "SessionOpinionRecord": {
+      "additionalProperties": false,
+      "description": "Derived from an event and list index, not an independently writable file.",
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "event_id": {
+          "pattern": "^sessionevent_[0-9a-f]{24}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "opinion": {
+          "$ref": "#/$defs/SessionOpinion"
+        },
+        "opinion_id": {
+          "pattern": "^sessionopinion_[0-9a-f]{24}$",
+          "title": "Opinion Id",
+          "type": "string"
+        },
+        "opinion_index": {
+          "minimum": 0,
+          "title": "Opinion Index",
+          "type": "integer"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/SessionReviewer"
+        }
+      },
+      "required": [
+        "opinion_id",
+        "event_id",
+        "opinion_index",
+        "created_at",
+        "reviewer",
+        "opinion"
+      ],
+      "title": "SessionOpinionRecord",
+      "type": "object"
+    },
+    "SessionReviewer": {
+      "additionalProperties": false,
+      "properties": {
+        "declared_role": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Declared Role",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "identity_status": {
+          "const": "self_declared",
+          "default": "self_declared",
+          "title": "Identity Status",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Reviewer Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reviewer_id",
+        "display_name",
+        "declared_role"
+      ],
+      "title": "SessionReviewer",
+      "type": "object"
+    },
+    "SessionSnapshotBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "preparation_id": {
+          "pattern": "^preparation_[0-9a-f]{24}$",
+          "title": "Preparation Id",
+          "type": "string"
+        },
+        "snapshot_files": {
+          "additionalProperties": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "maxProperties": 7,
+          "minProperties": 7,
+          "title": "Snapshot Files",
+          "type": "object"
+        },
+        "snapshot_id": {
+          "pattern": "^snapshot_[0-9a-f]{24}$",
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "source_archives": {
+          "additionalProperties": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "maxProperties": 10000,
+          "minProperties": 1,
+          "title": "Source Archives",
+          "type": "object"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "preparation_id",
+        "manifest_sha256",
+        "snapshot_files",
+        "source_archives"
+      ],
+      "title": "SessionSnapshotBinding",
+      "type": "object"
+    },
+    "SessionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "source_annotation",
+            "candidate",
+            "anomaly"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "material_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Material Id",
+          "type": "string"
+        },
+        "review_target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReviewTarget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snapshot_id": {
+          "pattern": "^snapshot_[0-9a-f]{24}$",
+          "title": "Snapshot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "material_id"
+      ],
+      "title": "SessionTarget",
+      "type": "object"
+    },
+    "TargetReviewSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "adjudication_state": {
+          "enum": [
+            "not_required",
+            "awaiting_adjudication"
+          ],
+          "title": "Adjudication State",
+          "type": "string"
+        },
+        "agreement_state": {
+          "enum": [
+            "pending",
+            "insufficient_opinions",
+            "agreement",
+            "disagreement"
+          ],
+          "title": "Agreement State",
+          "type": "string"
+        },
+        "history_invalid": {
+          "default": false,
+          "title": "History Invalid",
+          "type": "boolean"
+        },
+        "latest_opinion_ids": {
+          "items": {
+            "pattern": "^sessionopinion_[0-9a-f]{24}$",
+            "type": "string"
+          },
+          "title": "Latest Opinion Ids",
+          "type": "array"
+        },
+        "target": {
+          "$ref": "#/$defs/SessionTarget"
+        },
+        "unable_to_judge_count": {
+          "minimum": 0,
+          "title": "Unable To Judge Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "target",
+        "agreement_state",
+        "adjudication_state",
+        "latest_opinion_ids",
+        "unable_to_judge_count"
+      ],
+      "title": "TargetReviewSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/SessionIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "manifest": {
+      "$ref": "#/$defs/ReviewSessionManifest"
+    },
+    "medical_review": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Medical Review",
+      "type": "string"
+    },
+    "opinions": {
+      "items": {
+        "$ref": "#/$defs/SessionOpinionRecord"
+      },
+      "title": "Opinions",
+      "type": "array"
+    },
+    "release_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Release Allowed",
+      "type": "boolean"
+    },
+    "reviewer_identity": {
+      "const": "self_declared",
+      "default": "self_declared",
+      "title": "Reviewer Identity",
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/TargetReviewSummary"
+      },
+      "title": "Targets",
+      "type": "array"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "writable": {
+      "title": "Writable",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "manifest",
+    "opinions",
+    "targets",
+    "issues",
+    "writable"
+  ],
+  "title": "ReviewSessionView",
+  "type": "object"
+}

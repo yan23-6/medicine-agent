@@ -1,0 +1,46 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "decisive": {
+      "minimum": 0,
+      "title": "Decisive",
+      "type": "integer"
+    },
+    "reviewer_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Reviewer Id",
+      "type": "string"
+    },
+    "scope": {
+      "enum": [
+        "source_annotation",
+        "candidate_node",
+        "candidate_fact",
+        "anomaly"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "targets": {
+      "minimum": 0,
+      "title": "Targets",
+      "type": "integer"
+    },
+    "unable": {
+      "minimum": 0,
+      "title": "Unable",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "reviewer_id",
+    "scope",
+    "targets",
+    "decisive",
+    "unable"
+  ],
+  "title": "ReviewerCoverage",
+  "type": "object"
+}

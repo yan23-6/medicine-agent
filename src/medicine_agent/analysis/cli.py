@@ -30,6 +30,30 @@ def add_commands(subparsers):
     prepare.add_argument('--workspace', type=Path, default=Path.home()/'MedicineAgent'/'review-preparation-cache')
     prepare.add_argument('--input-file', type=Path, help='ReviewPreparationRequest JSON; default all top-level medpkg files')
     prepare.add_argument('--output-dir', type=Path, help='New directory; never overwrite existing output or source files')
+    session_create = commands.add_parser('review-session-create',
+        help='Create a package-external review session from a verified blank preparation snapshot')
+    session_create.add_argument('--preparation-dir', type=Path, required=True)
+    session_create.add_argument('--output-dir', type=Path, required=True)
+    session_create.add_argument('--packages', type=Path, required=True)
+    session_create.add_argument('--workspace', type=Path, required=True)
+    session_inspect = commands.add_parser('review-session-inspect',
+        help='Read-only session summary without opinion text unless explicitly requested')
+    session_inspect.add_argument('--session-dir', type=Path, required=True)
+    session_inspect.add_argument('--packages', type=Path, required=True)
+    session_inspect.add_argument('--workspace', type=Path, required=True)
+    session_inspect.add_argument('--include-opinions', action='store_true',
+        help='Return the full view including opinion reasons and correction values')
+    session_submit = commands.add_parser('review-session-submit',
+        help='Append one independent batch of declared opinions to a session')
+    session_submit.add_argument('--session-dir', type=Path, required=True)
+    session_submit.add_argument('--input-file', type=Path, required=True)
+    session_submit.add_argument('--packages', type=Path, required=True)
+    session_submit.add_argument('--workspace', type=Path, required=True)
+    progress = commands.add_parser('review-session-progress',
+        help='Read-only declared reviewer coverage and comparable opinion statistics')
+    progress.add_argument('--session-dir', type=Path, required=True)
+    progress.add_argument('--packages', type=Path, required=True)
+    progress.add_argument('--workspace', type=Path, required=True)
     submit = commands.add_parser("submit")
     submit.add_argument("paths", nargs="+", type=Path)
     submit.add_argument("--workspace", type=Path, default=Path.home()/'MedicineAgent'/'workspace')
@@ -137,6 +161,29 @@ def execute(args):
             if args.output_dir:
                 return service.export(args.output_dir, request).model_dump(mode='json')
             return service.prepare(request).model_dump(mode='json')
+        if args.action == 'review-session-progress':
+            from medicine_agent.analysis.review_progress import ReviewProgressService
+            return ReviewProgressService(args.packages, args.workspace).report(args.session_dir).model_dump(mode='json')
+        if args.action in {'review-session-create', 'review-session-inspect', 'review-session-submit'}:
+            from medicine_agent.analysis.review_sessions import ReviewSessionService
+            if args.action == 'review-session-create':
+                service = ReviewSessionService(args.packages, args.workspace)
+                return service.create(args.preparation_dir, args.output_dir).model_dump(mode='json')
+            if args.action == 'review-session-inspect':
+                service = ReviewSessionService(args.packages, args.workspace)
+                view = service.inspect(args.session_dir)
+                return view.model_dump(mode='json') if args.include_opinions else session_summary(view)
+            from medicine_agent.analysis.review_snapshot import _json_object, _read_file
+            try:
+                request = _json_object(_read_file(args.input_file, limit=64 * 1024 * 1024))
+            except (AnalysisError, OSError, ValueError, TypeError, RecursionError):
+                raise AnalysisError('SESSION_REQUEST_INVALID',
+                    'Supply a valid review-session/0.1.0 submission file') from None
+            if request.get('version') != '0.1.0':
+                raise AnalysisError('SESSION_REQUEST_INVALID',
+                    'Supply a valid review-session/0.1.0 submission file')
+            service = ReviewSessionService(args.packages, args.workspace)
+            return session_event_summary(service.submit(args.session_dir, request))
         if args.action in {"packages", "query", "select", "link", "links", 'review-queue', 'review-record', 'reviews', 'revise'}:
             public = bool(list(args.packages.glob('*.medpkg'))) or not list(args.packages.rglob('manifest.json'))
             files = FileLearningService(args.workspace,args.packages) if public else None
@@ -245,3 +292,36 @@ def execute(args):
 
 def split(value):
     return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def session_summary(view):
+    """Default inspect output: no opinion reasons or correction values."""
+    counts = {}
+    for target in view.targets:
+        counts[target.agreement_state] = counts.get(target.agreement_state, 0) + 1
+    return {
+        'version': view.version,
+        'session_id': view.manifest.session_id,
+        'snapshot_id': view.manifest.binding.snapshot_id,
+        'writable': view.writable,
+        'opinion_count': len(view.opinions),
+        'target_count': len(view.targets),
+        'state_counts': counts,
+        'issues': [issue.model_dump(mode='json') for issue in view.issues],
+        'reviewer_identity': view.reviewer_identity,
+        'medical_review': view.medical_review,
+        'release_allowed': view.release_allowed,
+    }
+
+
+def session_event_summary(event):
+    return {
+        'version': event.version,
+        'event_id': event.event_id,
+        'session_id': event.submission.session_id,
+        'submission_id': event.submission.submission_id,
+        'opinion_count': len(event.submission.opinions),
+        'reviewer_identity': 'self_declared',
+        'medical_review': 'unreviewed',
+        'release_allowed': False,
+    }

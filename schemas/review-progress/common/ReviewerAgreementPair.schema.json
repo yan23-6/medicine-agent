@@ -1,0 +1,80 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agreement_fraction": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Agreement Fraction"
+    },
+    "comparable": {
+      "minimum": 0,
+      "title": "Comparable",
+      "type": "integer"
+    },
+    "conflicting": {
+      "minimum": 0,
+      "title": "Conflicting",
+      "type": "integer"
+    },
+    "matched": {
+      "minimum": 0,
+      "title": "Matched",
+      "type": "integer"
+    },
+    "overlap": {
+      "minimum": 0,
+      "title": "Overlap",
+      "type": "integer"
+    },
+    "reviewer_a": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Reviewer A",
+      "type": "string"
+    },
+    "reviewer_b": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Reviewer B",
+      "type": "string"
+    },
+    "scope": {
+      "enum": [
+        "source_annotation",
+        "candidate_node",
+        "candidate_fact",
+        "anomaly"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "unable": {
+      "minimum": 0,
+      "title": "Unable",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "reviewer_a",
+    "reviewer_b",
+    "scope",
+    "overlap",
+    "comparable",
+    "matched",
+    "conflicting",
+    "unable"
+  ],
+  "title": "ReviewerAgreementPair",
+  "type": "object"
+}

@@ -1,0 +1,248 @@
+{
+  "$defs": {
+    "JsonValue": {},
+    "KnowledgeAddress": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "package_id": {
+          "minLength": 1,
+          "title": "Package Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_id",
+        "node_id"
+      ],
+      "title": "KnowledgeAddress",
+      "type": "object"
+    },
+    "ReviewTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/KnowledgeAddress"
+        },
+        "fact_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Index"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "scope": {
+          "enum": [
+            "node",
+            "fact"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "scope",
+        "fingerprint"
+      ],
+      "title": "ReviewTarget",
+      "type": "object"
+    },
+    "SessionOpinion": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "accept",
+            "revise",
+            "reject",
+            "unable_to_judge"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "expected_previous_id": {
+          "anyOf": [
+            {
+              "pattern": "^sessionopinion_[0-9a-f]{24}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Previous Id"
+        },
+        "proposed_value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "reason": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/SessionTarget"
+        }
+      },
+      "required": [
+        "target",
+        "decision",
+        "reason"
+      ],
+      "title": "SessionOpinion",
+      "type": "object"
+    },
+    "SessionReviewer": {
+      "additionalProperties": false,
+      "properties": {
+        "declared_role": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Declared Role",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "identity_status": {
+          "const": "self_declared",
+          "default": "self_declared",
+          "title": "Identity Status",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Reviewer Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reviewer_id",
+        "display_name",
+        "declared_role"
+      ],
+      "title": "SessionReviewer",
+      "type": "object"
+    },
+    "SessionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "source_annotation",
+            "candidate",
+            "anomaly"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "material_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Material Id",
+          "type": "string"
+        },
+        "review_target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReviewTarget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "snapshot_id": {
+          "pattern": "^snapshot_[0-9a-f]{24}$",
+          "title": "Snapshot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "material_id"
+      ],
+      "title": "SessionTarget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "opinions": {
+      "items": {
+        "$ref": "#/$defs/SessionOpinion"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Opinions",
+      "type": "array"
+    },
+    "reviewer": {
+      "$ref": "#/$defs/SessionReviewer"
+    },
+    "session_id": {
+      "pattern": "^reviewsession_[0-9a-f]{24}$",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "submission_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Submission Id",
+      "type": "string"
+    },
+    "version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "session_id",
+    "submission_id",
+    "reviewer",
+    "opinions"
+  ],
+  "title": "SessionSubmission",
+  "type": "object"
+}

@@ -69,7 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     schemas = subparsers.add_parser("export-schemas", help="Export versioned JSON Schemas")
     schemas.add_argument("--output-dir", type=Path, default=Path("schemas/t01"))
-    schemas.add_argument("--contract-set", choices=["t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation'], default="t01")
+    schemas.add_argument("--contract-set", choices=["t01", "t02", "t02p", "tcm", 'review', 'correction', 'owned-analysis','learning', 'coverage', 'review-preparation', 'review-session', 'review-progress', 'runtime-readiness'], default="t01")
 
     subparsers.add_parser(
         "validate-semantics", help="Validate the unified semantic registry"

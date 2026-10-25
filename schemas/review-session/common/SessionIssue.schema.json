@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Code",
+      "type": "string"
+    },
+    "event_file": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event File"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "title": "SessionIssue",
+  "type": "object"
+}
